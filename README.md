@@ -1,38 +1,49 @@
 # Bux Travel — website
 
-Static site. Push the whole folder to the root of `main`.
-
-## Upload these
+Push everything in this folder to the root of `main`.
 
 ```
-index.html
-privacy.html
-.nojekyll
-CNAME
-robots.txt
-sitemap.xml
-assets/          <-- all 15 files, or images break
+index.html   privacy.html   terms.html
+.nojekyll    CNAME          robots.txt    sitemap.xml
+assets/      <-- all 15 files
 ```
 
-## Contact details used across both pages
+## ⚠️ Do this before publishing — the reviews section
 
-| | |
+`index.html` has a Reviews section with **placeholder slots**, shown on the page in
+dashed champagne boxes. Search `index.html` for `class="slot"`. Replace:
+
+- The **rating** (currently `4.9`) with your actual Google rating
+- The **review count** (currently `00`)
+- **Three real reviews**, copied word for word from your Google profile
+- The **reviewer name and journey type** under each
+
+Do not invent reviews. Fake testimonials breach the Digital Markets, Competition and
+Consumers Act 2024 and the CAP Code. Copy real ones or delete the three cards and keep
+just the rating bar and the "Read all reviews" link.
+
+If you have fewer than three reviews yet, delete the extra cards — one real review beats
+three invented ones.
+
+## Also check
+
+- **"30 minutes"** appears in the hero, the FAQ and the promise strip as your quote
+  response time. Change it everywhere if that isn't realistic — an unmet promise on the
+  page is worse than no promise.
+- **Cancellation table** in `terms.html` is a sensible industry default. Adjust the
+  notice periods and charges to what you actually operate.
+- **ICO registration** — confirm it's live before publishing: https://ico.org.uk/ESDWebPages/Search
+
+## What's on the site
+
+| Page | Contains |
 |---|---|
-| Email | saeed@buxtravel.co.uk |
-| WhatsApp | 447581234042 |
-| Hours | 24/7 |
-| Location | Bolton, Greater Manchester (no postcode shown) |
+| index.html | Hero, services, showcase, **reviews**, fleet, coverage, **FAQ**, process, quote form |
+| terms.html | Quotes, payment, cancellation, waiting time, luggage, conduct, accessibility, liability |
+| privacy.html | UK GDPR privacy policy, ICO details |
 
-To change the WhatsApp number, find and replace `447581234042` in both HTML files.
-
-## Before publishing — one check
-
-The privacy policy states that Bux Travel **is registered with the ICO**.
-Confirm the registration is live before this goes public:
-<https://ico.org.uk/ESDWebPages/Search>
-
-If it isn't yet, register first (£52/yr for most small businesses):
-<https://ico.org.uk/registration/new>
+FAQ answers are marked up with FAQPage structured data, so Google can show them
+directly in search results.
 
 ## Design system
 
@@ -44,6 +55,7 @@ If it isn't yet, register first (£52/yr for most small businesses):
 | Champagne | `#C9B79A` | Accent on dark |
 | Champagne deep | `#8A7346` | Accent on paper |
 
-Type: **Fraunces** (headings) + **Hanken Grotesk** (body). Radius 14px, buttons 999px.
+Type: **Fraunces** (headings) + **Hanken Grotesk** (body).
 
-Credit line links to <https://ysbdesigns.uk/>.
+WhatsApp number appears as `447581234042` — find and replace in all three files if it changes.
+Credit links to https://ysbdesigns.uk/
