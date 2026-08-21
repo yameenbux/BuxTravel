@@ -385,6 +385,8 @@ footer li{ margin-bottom:9px; }
 footer a{ text-decoration:none; font-size:.93rem; }
 footer a:hover{ color:#F5F2EA; }
 footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
+.legal a{ color:var(--champ-bright); text-decoration:none; }
+.legal a:hover{ text-decoration:underline; }
 .legal{
   margin-top:42px; padding-top:22px; border-top:1px solid rgba(245,242,234,.12);
   display:flex; flex-wrap:wrap; gap:10px 30px; justify-content:space-between;
@@ -474,7 +476,7 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
           </span>
           <span class="hero-chip">
             <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v6l4 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
-            <b>Fast</b><span>quotes</span>
+            <b>24/7</b><span>bookings</span>
           </span>
         </div>
       </div>
@@ -498,7 +500,7 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
     <div class="cell"><span class="k">4–18</span><span class="v">Seats per vehicle</span></div>
     <div class="cell"><span class="k">Licensed</span><span class="v">PSV &amp; private hire</span></div>
     <div class="cell"><span class="k">North West</span><span class="v">Plus UK-wide work</span></div>
-    <div class="cell"><span class="k">WhatsApp</span><span class="v">Quotes, fast</span></div>
+    <div class="cell"><span class="k">24/7</span><span class="v">Bookings &amp; quotes</span></div>
   </div>
 </div>
 
@@ -734,7 +736,7 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
           </div>
           <p class="hint">Nothing sends until you press send in WhatsApp.</p>
           <p class="hint" id="fbwrap" style="display:none;">WhatsApp didn't open? <a id="fblink" href="#" style="color:var(--champ-deep);font-weight:600;">Send it by email instead</a>.</p>
-          <p class="hint">We'll only use your details to answer this enquiry. <span class="todo">TODO: link privacy policy</span></p>
+          <p class="hint">We'll only use your details to answer this enquiry. See our <a href="privacy.html" style="color:var(--champ-deep);font-weight:600;">privacy policy</a>.</p>
         </form>
       </div>
 
@@ -748,15 +750,15 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
           </div>
           <div class="cline">
             <dt>Email</dt>
-            <dd><a href="mailto:bookings@buxtravel.co.uk">bookings@buxtravel.co.uk</a><small><span class="todo">TODO: confirm address</span></small></dd>
+            <dd><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></dd>
           </div>
           <div class="cline">
             <dt>Office hours</dt>
-            <dd><span class="todo">TODO: hours</span><small>Bookings by WhatsApp any time.</small></dd>
+            <dd>Open 24/7<small>Message or call any time — including nights, weekends and bank holidays.</small></dd>
           </div>
           <div class="cline">
             <dt>Based in</dt>
-            <dd>Bolton<small>Greater Manchester, BL<span class="todo">TODO</span></small></dd>
+            <dd>Bolton<small>Greater Manchester · covering the North West and nationwide</small></dd>
           </div>
         </dl>
       </aside>
@@ -798,15 +800,16 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
         <h4>Contact</h4>
         <ul>
           <li><a href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">WhatsApp us</a></li>
-          <li><a href="mailto:bookings@buxtravel.co.uk">bookings@buxtravel.co.uk</a></li>
+          <li><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></li>
           <li><a href="#booking">Request a quote</a></li>
+          <li><a href="privacy.html">Privacy policy</a></li>
         </ul>
       </div>
     </div>
     <div class="legal">
       <span>© <span id="yr">2026</span> Bux Travel · Bolton, United Kingdom</span>
-      <span>PSV Operator Licence <span class="todo">TODO</span></span>
-      <span>Private Hire Operator Licence <span class="todo">TODO</span></span>
+      <span><a href="privacy.html">Privacy Policy</a> · Registered with the ICO</span>
+      <span>Site by <a href="https://ysbdesigns.uk/" target="_blank" rel="noopener">YSB Designs</a></span>
     </div>
   </div>
 </footer>
@@ -821,7 +824,8 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
   "url":"https://www.buxtravel.co.uk/",
   "logo":"https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
   "image":"https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
-  "email":"bookings@buxtravel.co.uk",
+  "email":"saeed@buxtravel.co.uk",
+  "openingHours":"Mo-Su 00:00-23:59",
   "address":{"@type":"PostalAddress","addressLocality":"Bolton","addressRegion":"Greater Manchester","addressCountry":"GB"},
   "areaServed":[
     {"@type":"AdministrativeArea","name":"Bolton"},
@@ -887,7 +891,7 @@ form.addEventListener('submit', function (e) {
   fstatus.classList.add('on');
   window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 
-  document.getElementById('fblink').href = 'mailto:bookings@buxtravel.co.uk?subject='
+  document.getElementById('fblink').href = 'mailto:saeed@buxtravel.co.uk?subject='
     + encodeURIComponent('Quote request - ' + v('pickup') + ' to ' + v('dropoff') + ', ' + v('date'))
     + '&body=' + encodeURIComponent(msg);
   document.getElementById('fbwrap').style.display = 'block';

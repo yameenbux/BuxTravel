@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Bux Travel, Bolton</title>
+<meta name="description" content="How Bux Travel collects, uses and protects your personal information. Registered with the Information Commissioner's Office and compliant with UK GDPR.">
+<meta name="theme-color" content="#12171D">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.buxtravel.co.uk/privacy.html">
+
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink-900:#0E1318; --ink-800:#12171D; --ink:#1E262E;
+  --paper:#F5F2EA; --card:#FCFAF4; --line:#E4DDCE;
+  --muted:#5E6A75;
+  --champ:#C9B79A; --champ-bright:#DFCBA8; --champ-deep:#8A7346;
+  --wa:#1FA855; --wa-deep:#25D366;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(14,19,24,.05), 0 8px 24px -16px rgba(14,19,24,.30);
+  --maxw:1140px;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;
+  font-size:17px; line-height:1.72; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; }
+h1,h2,h3{ font-family:"Fraunces",Georgia,serif; font-weight:600; line-height:1.16; letter-spacing:-.012em; margin:0; }
+p{ margin:0 0 1em; } p:last-child{ margin-bottom:0; }
+.container{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+:focus-visible{ outline:3px solid var(--champ-deep); outline-offset:3px; border-radius:6px; }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:.7rem; letter-spacing:.24em; text-transform:uppercase;
+  font-weight:600; color:var(--champ-bright); margin-bottom:16px;
+}
+.eyebrow::before{ content:""; width:20px; height:1px; background:currentColor; opacity:.6; }
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  padding:15px 30px; border-radius:999px; font-weight:600; font-size:.94rem;
+  text-decoration:none; cursor:pointer; border:1px solid transparent; transition:.25s ease;
+}
+.btn svg{ width:18px; height:18px; flex:none; }
+.btn-wa{ background:linear-gradient(180deg,var(--wa-deep),var(--wa)); color:#04231A; }
+.btn-wa:hover{ filter:brightness(1.05); transform:translateY(-1px); }
+.btn-ghost-light{ border-color:var(--line); color:var(--ink-800); background:var(--card); }
+.btn-ghost-light:hover{ border-color:var(--ink-800); }
+
+/* header */
+header.nav{
+  position:sticky; top:0; z-index:60;
+  background:rgba(14,19,24,.92);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(245,242,234,.10);
+}
+.nav .container{ display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px; }
+.logo{ display:flex; align-items:center; gap:11px; text-decoration:none; }
+.logo img{ width:36px; height:36px; border-radius:9px; }
+.logo .wm{ display:flex; flex-direction:column; line-height:1; }
+.logo .wm b{ font-family:"Fraunces",serif; font-weight:700; font-size:19px; color:#F5F2EA; }
+.logo .wm span{ font-size:9px; letter-spacing:.32em; text-transform:uppercase; color:var(--champ); margin-top:4px; font-weight:600; }
+.nav-links{ display:flex; align-items:center; gap:28px; }
+.nav-links a:not(.btn){ text-decoration:none; font-size:.92rem; font-weight:500; color:rgba(245,242,234,.72); }
+.nav-links a:not(.btn):hover{ color:#F5F2EA; }
+.nav-links .btn{ padding:11px 22px; font-size:.86rem; }
+@media (max-width:880px){ .nav-links a:not(.btn){ display:none; } }
+
+/* masthead */
+.masthead{ background:var(--ink-900); color:#F5F2EA; padding:72px 0 64px; }
+.masthead h1{ font-size:clamp(2rem,4.2vw,3rem); color:#F5F2EA; max-width:20ch; }
+.masthead p{ color:rgba(245,242,234,.78); margin-top:16px; max-width:60ch; font-size:1.02rem; }
+.updated{
+  display:inline-block; margin-top:22px;
+  font-size:.76rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--champ-bright); border:1px solid rgba(201,183,154,.3);
+  border-radius:999px; padding:7px 16px;
+}
+
+/* body */
+.doc{ padding:64px 0 88px; }
+.doc-grid{ display:grid; grid-template-columns:250px 1fr; gap:52px; align-items:start; }
+@media (max-width:900px){ .doc-grid{ grid-template-columns:1fr; gap:32px; } }
+
+.toc{ position:sticky; top:96px; }
+@media (max-width:900px){ .toc{ position:static; } }
+.toc h2{ font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--champ-deep); font-family:"Hanken Grotesk",sans-serif; font-weight:700; margin-bottom:14px; }
+.toc ol{ list-style:none; margin:0; padding:0; counter-reset:t; }
+.toc li{ counter-increment:t; margin-bottom:2px; }
+.toc a{
+  display:flex; gap:10px; text-decoration:none; font-size:.9rem;
+  color:var(--muted); padding:6px 0; line-height:1.4;
+}
+.toc a::before{ content:counter(t,decimal-leading-zero); color:var(--champ-deep); font-weight:700; font-size:.76rem; padding-top:2px; }
+.toc a:hover{ color:var(--ink-800); }
+
+.prose{ max-width:68ch; }
+.prose h2{
+  font-size:1.4rem; margin:44px 0 14px;
+  padding-top:20px; border-top:1px solid var(--line);
+}
+.prose h2:first-child{ margin-top:0; border-top:none; padding-top:0; }
+.prose h3{ font-size:1.08rem; margin:26px 0 8px; }
+.prose p, .prose li{ color:var(--muted); }
+.prose strong{ color:var(--ink); font-weight:600; }
+.prose a{ color:var(--champ-deep); font-weight:600; }
+.prose ul{ margin:0 0 1em; padding-left:0; list-style:none; }
+.prose ul li{ position:relative; padding-left:22px; margin-bottom:9px; }
+.prose ul li::before{
+  content:""; position:absolute; left:4px; top:11px;
+  width:6px; height:6px; border-radius:50%; background:var(--champ-deep); opacity:.7;
+}
+.note{
+  background:var(--card); border:1px solid var(--line);
+  border-left:3px solid var(--champ-deep);
+  border-radius:var(--radius); padding:20px 22px; margin:22px 0;
+  box-shadow:var(--shadow);
+}
+.note p{ font-size:.94rem; margin:0; }
+.note strong{ display:block; margin-bottom:6px; color:var(--ink); }
+
+table{ width:100%; border-collapse:collapse; margin:18px 0 22px; font-size:.92rem; }
+th,td{ text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+th{
+  font-family:"Hanken Grotesk",sans-serif; font-size:.68rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--champ-deep); font-weight:700;
+  border-bottom:1px solid var(--champ-deep);
+}
+td{ color:var(--muted); }
+
+.contact-box{
+  background:var(--ink-900); color:#F5F2EA; border-radius:var(--radius);
+  padding:30px 28px; margin-top:40px;
+}
+.contact-box h3{ color:var(--champ-bright); font-size:1.2rem; margin-bottom:14px; }
+.contact-box p{ color:rgba(245,242,234,.8); font-size:.95rem; }
+.contact-box a{ color:var(--champ-bright); }
+
+/* footer */
+footer{ background:var(--ink-900); color:rgba(245,242,234,.72); padding:52px 0 40px; }
+.fgrid{ display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:38px; }
+@media (max-width:760px){ .fgrid{ grid-template-columns:1fr; gap:28px; } }
+footer h4{ font-family:"Hanken Grotesk",sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--champ-bright); margin:0 0 14px; }
+footer ul{ list-style:none; margin:0; padding:0; }
+footer li{ margin-bottom:9px; }
+footer a{ text-decoration:none; font-size:.93rem; }
+footer a:hover{ color:#F5F2EA; }
+footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
+.legal a{ color:var(--champ-bright); text-decoration:none; }
+.legal a:hover{ text-decoration:underline; }
+.legal{
+  margin-top:42px; padding-top:22px; border-top:1px solid rgba(245,242,234,.12);
+  display:flex; flex-wrap:wrap; gap:10px 30px; justify-content:space-between;
+  font-size:.76rem; color:rgba(245,242,234,.5);
+}
+
+.skip{ position:absolute; left:-9999px; background:var(--champ); color:var(--ink-900); padding:12px 18px; font-weight:600; z-index:100; border-radius:8px; }
+.skip:focus{ left:16px; top:16px; }
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ transition-duration:.001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="container">
+    <a class="logo" href="index.html">
+      <img src="assets/bux-travel-mark.png" alt="" width="36" height="36">
+      <span class="wm"><b>Bux</b><span>Travel</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#fleet">Fleet</a>
+      <a href="index.html#booking">Get a quote</a>
+      <a class="btn btn-wa" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
+        WhatsApp
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="masthead">
+  <div class="container">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p>How Bux Travel collects, uses and looks after your personal information — written in plain English, in line with UK GDPR and the Data Protection Act 2018.</p>
+    <span class="updated">Last updated: 21 August 2026</span>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="container">
+    <div class="doc-grid">
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#who">Who we are</a></li>
+          <li><a href="#collect">What we collect</a></li>
+          <li><a href="#why">Why we use it</a></li>
+          <li><a href="#whatsapp">WhatsApp enquiries</a></li>
+          <li><a href="#website">This website</a></li>
+          <li><a href="#share">Who we share it with</a></li>
+          <li><a href="#keep">How long we keep it</a></li>
+          <li><a href="#security">Keeping it secure</a></li>
+          <li><a href="#rights">Your rights</a></li>
+          <li><a href="#children">Children</a></li>
+          <li><a href="#changes">Changes to this policy</a></li>
+          <li><a href="#contact">Contact &amp; complaints</a></li>
+        </ol>
+      </nav>
+
+      <article class="prose">
+
+        <h2 id="who">1. Who we are</h2>
+        <p>Bux Travel is a licensed PSV and private hire transport operator based in Bolton, Greater Manchester, providing minibus hire with a driver across the North West and nationwide.</p>
+        <p>For the purposes of UK data protection law, Bux Travel is the <strong>data controller</strong> for the personal information described in this policy. That means we decide what information is collected and how it is used.</p>
+
+        <div class="note">
+          <p><strong>Registered with the ICO</strong>
+          Bux Travel is registered with the Information Commissioner's Office (ICO), the UK's independent authority for data protection, and we handle personal information in accordance with its guidance and the requirements of UK GDPR and the Data Protection Act 2018.</p>
+        </div>
+
+        <table>
+          <tr><th>Business</th><td>Bux Travel</td></tr>
+          <tr><th>Location</th><td>Bolton, Greater Manchester</td></tr>
+          <tr><th>Email</th><td><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></td></tr>
+          <tr><th>WhatsApp</th><td><a href="https://wa.me/447581234042" target="_blank" rel="noopener">Message us</a></td></tr>
+          <tr><th>Hours</th><td>24 hours a day, 7 days a week</td></tr>
+        </table>
+
+        <h2 id="collect">2. What information we collect</h2>
+        <p>We only ask for what we need to quote for a job and then carry it out. Depending on how you contact us, that may include:</p>
+        <ul>
+          <li><strong>Your name</strong> — so we know who we're dealing with and who to expect at the pick-up.</li>
+          <li><strong>Contact details</strong> — phone number and email address, so we can send you a quote, confirm the booking and reach you on the day.</li>
+          <li><strong>Journey details</strong> — pick-up address or postcode, destination, date, time, number of passengers and journey type.</li>
+          <li><strong>Anything you choose to tell us</strong> — flight numbers, luggage, wheelchair or mobility requirements, multiple pick-up points, or other notes you add to your enquiry.</li>
+          <li><strong>Correspondence</strong> — the messages and emails you exchange with us about your booking.</li>
+        </ul>
+        <p>Where you tell us about a disability, mobility need or medical requirement so that we can accommodate you, this is treated as <strong>special category data</strong>. We use it only to plan and carry out your journey safely, we keep it to a minimum, and we do not use it for any other purpose.</p>
+
+        <h2 id="why">3. Why we use it, and our lawful basis</h2>
+        <p>UK GDPR requires us to have a lawful basis for using your information. Ours are set out below.</p>
+        <table>
+          <tr>
+            <th>What we do</th>
+            <th>Lawful basis</th>
+          </tr>
+          <tr>
+            <td>Prepare and send you a quote</td>
+            <td>Steps taken at your request before entering a contract</td>
+          </tr>
+          <tr>
+            <td>Confirm and carry out your booking</td>
+            <td>Performance of a contract with you</td>
+          </tr>
+          <tr>
+            <td>Contact you about your journey, including on the day</td>
+            <td>Performance of a contract with you</td>
+          </tr>
+          <tr>
+            <td>Accommodate accessibility or medical needs</td>
+            <td>Your explicit consent (special category data)</td>
+          </tr>
+          <tr>
+            <td>Keep records for accounting and tax</td>
+            <td>Legal obligation</td>
+          </tr>
+          <tr>
+            <td>Deal with complaints, disputes or insurance claims</td>
+            <td>Our legitimate interests in running the business and defending claims</td>
+          </tr>
+          <tr>
+            <td>Comply with licensing authority or police requests</td>
+            <td>Legal obligation</td>
+          </tr>
+        </table>
+        <p><strong>We do not send marketing.</strong> We will not add you to a mailing list, and we will not pass your details to anyone for marketing purposes. If that ever changes, we will ask for your consent first and you will be able to withdraw it at any time.</p>
+
+        <h2 id="whatsapp">4. Enquiries sent through WhatsApp</h2>
+        <p>Most enquiries reach us through WhatsApp. It is worth being clear about how that works.</p>
+        <p>The quote form on our website <strong>does not send anything to us or store anything on our website</strong>. It simply arranges the details you have typed into a message and opens WhatsApp on your own device with that message ready. Nothing leaves your device until <em>you</em> press send in WhatsApp.</p>
+        <p>Once you send it, the message travels through WhatsApp, which is operated by Meta Platforms Ireland Limited. WhatsApp messages are end-to-end encrypted in transit, but Meta processes associated information such as your phone number and metadata under its own terms. We have no control over that processing. If you would rather not use WhatsApp, you can email us at <a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a> instead.</p>
+        <p>Once your message reaches us, we hold it in our WhatsApp account and treat it under this policy in the same way as any other enquiry.</p>
+
+        <h2 id="website">5. This website</h2>
+        <p>Our website is deliberately simple.</p>
+        <ul>
+          <li><strong>No cookies are set by us.</strong> We do not use tracking cookies, advertising pixels or analytics that identify you.</li>
+          <li><strong>No accounts, no logins, no payments</strong> are taken on this site.</li>
+          <li><strong>Fonts are loaded from Google Fonts.</strong> To display the site's typefaces, your browser requests them from Google's servers, which means your IP address is transmitted to Google. This happens on a great many websites and is not used by us to identify you, but you should be aware of it. Google's handling of that request is governed by its own <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>.</li>
+          <li><strong>Hosting.</strong> The site is hosted on GitHub Pages. GitHub may log standard technical information, such as IP addresses, as part of serving and protecting the site.</li>
+        </ul>
+
+        <h2 id="share">6. Who we share your information with</h2>
+        <p>We do not sell your personal information, and we do not share it for marketing. We share it only where it is necessary:</p>
+        <ul>
+          <li><strong>Our drivers</strong> — the name, contact number, pick-up point, destination and time needed to carry out your journey, plus any access requirements you have told us about.</li>
+          <li><strong>Another operator</strong> — if we sub-contract your booking, for example when running several vehicles in convoy. We only pass on what that operator needs to complete the job.</li>
+          <li><strong>Our accountant</strong> — booking and payment records, for bookkeeping and tax.</li>
+          <li><strong>Insurers and legal advisers</strong> — in the event of an incident, claim or dispute.</li>
+          <li><strong>Licensing authorities, the DVSA, or the police</strong> — where we are legally required to provide information.</li>
+        </ul>
+        <p>Your information is stored and processed in the UK, other than where a service provider such as WhatsApp or GitHub processes it outside the UK. Where that happens, we rely on those providers' own safeguards for international transfers, such as the UK International Data Transfer Addendum or an adequacy decision.</p>
+
+        <h2 id="keep">7. How long we keep it</h2>
+        <table>
+          <tr><th>Record</th><th>Kept for</th></tr>
+          <tr><td>Enquiries that don't become bookings</td><td>Up to 12 months, then deleted</td></tr>
+          <tr><td>Completed booking records</td><td>6 years, to meet HMRC and accounting requirements</td></tr>
+          <tr><td>Accident, incident or complaint records</td><td>6 years from resolution, for insurance and legal purposes</td></tr>
+          <tr><td>WhatsApp conversations</td><td>Reviewed periodically and deleted once no longer needed</td></tr>
+        </table>
+        <p>When information is no longer needed for the purpose it was collected, we delete it or securely destroy it.</p>
+
+        <h2 id="security">8. Keeping your information secure</h2>
+        <p>We take reasonable and appropriate steps to protect your information, including access controls on the devices and accounts used to run the business, device passcodes and screen locks, keeping software up to date, and limiting access to booking details to the people who actually need them to do the job.</p>
+        <p>No method of transmission or storage is completely secure. If a data breach occurs that is likely to result in a risk to your rights and freedoms, we will report it to the ICO within 72 hours of becoming aware of it, and tell you directly where the law requires us to.</p>
+
+        <h2 id="rights">9. Your rights</h2>
+        <p>Under UK data protection law you have the right to:</p>
+        <ul>
+          <li><strong>Be informed</strong> about how your information is used — which is the purpose of this policy.</li>
+          <li><strong>Access</strong> a copy of the personal information we hold about you.</li>
+          <li><strong>Rectification</strong> — have inaccurate information corrected.</li>
+          <li><strong>Erasure</strong> — ask us to delete your information, where we have no ongoing lawful reason to keep it.</li>
+          <li><strong>Restrict processing</strong> — ask us to pause using your information while a concern is resolved.</li>
+          <li><strong>Object</strong> to processing carried out on the basis of our legitimate interests.</li>
+          <li><strong>Data portability</strong> — receive your information in a portable format.</li>
+          <li><strong>Withdraw consent</strong> at any time, where consent is the basis we rely on.</li>
+        </ul>
+        <p>To exercise any of these, contact us using the details below. We will respond within one month. There is no charge, and we may ask you to confirm your identity before releasing information.</p>
+
+        <h2 id="children">10. Children</h2>
+        <p>Our services are booked by adults, and this website is not directed at children. We do not knowingly collect information directly from children.</p>
+        <p>Where we carry out school or college transport, or where children travel as part of a group booking, we receive passenger details from the school, organisation or responsible adult making the booking. We use that information only to carry out the journey safely, and we keep it for no longer than necessary.</p>
+
+        <h2 id="changes">11. Changes to this policy</h2>
+        <p>We may update this policy from time to time — for example, if we change how we take bookings or start using a new service provider. The date at the top of this page shows when it was last revised. Where changes are significant, we will make that clear on this page.</p>
+
+        <h2 id="contact">12. Contact and complaints</h2>
+        <p>If you have a question about this policy, want to exercise one of your rights, or are unhappy with how we have handled your information, please contact us first — we would rather put things right directly.</p>
+
+        <div class="contact-box">
+          <h3>Contact Bux Travel</h3>
+          <p><strong>Email:</strong> <a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a><br>
+          <strong>WhatsApp:</strong> <a href="https://wa.me/447581234042" target="_blank" rel="noopener">Message us</a><br>
+          <strong>Based in:</strong> Bolton, Greater Manchester<br>
+          <strong>Hours:</strong> 24/7</p>
+        </div>
+
+        <h3>Complaining to the ICO</h3>
+        <p>You also have the right to complain to the Information Commissioner's Office, the UK's independent data protection regulator, at any time. Contacting us first does not affect that right.</p>
+        <table>
+          <tr><th>Website</th><td><a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener">ico.org.uk/make-a-complaint</a></td></tr>
+          <tr><th>Helpline</th><td>0303 123 1113</td></tr>
+          <tr><th>Post</th><td>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF</td></tr>
+        </table>
+
+        <p style="margin-top:34px;"><a href="index.html" class="btn btn-ghost-light">← Back to the website</a></p>
+
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="fgrid">
+      <div>
+        <a class="logo" href="index.html">
+          <img src="assets/bux-travel-mark.png" alt="" width="36" height="36">
+          <span class="wm"><b>Bux</b><span>Travel</span></span>
+        </a>
+        <p class="blurb">Licensed PSV and private hire operator, based in Bolton and working across the North West and the wider UK.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="index.html#services">Airport transfers</a></li>
+          <li><a href="index.html#services">Corporate travel</a></li>
+          <li><a href="index.html#services">School contracts</a></li>
+          <li><a href="index.html#services">Weddings &amp; events</a></li>
+          <li><a href="index.html#services">Days out</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/447581234042" target="_blank" rel="noopener">WhatsApp us</a></li>
+          <li><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></li>
+          <li><a href="index.html#booking">Request a quote</a></li>
+          <li><a href="privacy.html">Privacy policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© <span id="yr">2026</span> Bux Travel · Bolton, United Kingdom</span>
+      <span><a href="privacy.html">Privacy Policy</a> · Registered with the ICO</span>
+      <span>Site by <a href="https://ysbdesigns.uk/" target="_blank" rel="noopener">YSB Designs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>
