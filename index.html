@@ -793,20 +793,20 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       <div class="formwrap">
         <form id="quoteForm" novalidate>
           <div class="row">
-            <div><label for="name">Your name</label><input id="name" type="text" autocomplete="name"></div>
-            <div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel"></div>
+            <div><label for="name">Your name</label><input id="name" type="text" autocomplete="name" required></div>
+            <div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel" required></div>
           </div>
-          <div><label for="email">Email</label><input id="email" type="email" autocomplete="email"></div>
+          <div><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
           <div class="row">
-            <div><label for="pickup">Pick-up from</label><input id="pickup" type="text" placeholder="Postcode or address"></div>
-            <div><label for="dropoff">Going to</label><input id="dropoff" type="text" placeholder="Postcode or venue"></div>
+            <div><label for="pickup">Pick-up from</label><input id="pickup" type="text" placeholder="Postcode or address" required></div>
+            <div><label for="dropoff">Going to</label><input id="dropoff" type="text" placeholder="Postcode or venue" required></div>
           </div>
           <div class="row">
-            <div><label for="date">Date of travel</label><input id="date" type="date"></div>
+            <div><label for="date">Date of travel</label><input id="date" type="date" required></div>
             <div><label for="time">Pick-up time</label><input id="time" type="time"></div>
           </div>
           <div class="row">
-            <div><label for="passengers">Passengers</label><input id="passengers" type="number" min="1" max="60" inputmode="numeric"></div>
+            <div><label for="passengers">Passengers</label><input id="passengers" type="number" min="1" max="60" inputmode="numeric" required></div>
             <div><label for="type">Journey type</label>
               <select id="type">
                 <option>One way</option>
