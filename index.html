@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
 <title>Bux Travel — Minibus &amp; Private Hire, Bolton</title>
 <meta name="description" content="Bux Travel is a licensed PSV and private hire operator in Bolton. Minibuses up to 18 seats for airport transfers, corporate travel, school contracts, weddings and days out across the North West and nationwide.">
 <meta name="theme-color" content="#12171D">
@@ -17,995 +18,1250 @@
 
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
 <style>
-/* =====================================================================
-   BUX TRAVEL
-   Warm paper body, graphite bands, champagne accent. Serif display,
-   grotesk text. Photography carries the page; the accent is rationed.
-   ===================================================================== */
-:root{
-  --ink-900:#0E1318;
-  --ink-800:#12171D;
-  --ink-700:#1A222A;
-  --ink:#1E262E;
+  /* ==================================================================
+     BUX TRAVEL - rebuild, redesign in preserve mode.
 
-  --paper:#F5F2EA;
-  --card:#FCFAF4;
-  --line:#E4DDCE;
+     Brand tokens, typefaces, copy voice, IA anchors and the WhatsApp
+     booking mechanism are carried over from the live site unchanged.
+     What changed is composition, rhythm and motion.
+     ================================================================== */
 
-  --muted:#5E6A75;
-  --champ:#C9B79A;
-  --champ-bright:#DFCBA8;
-  --champ-deep:#8A7346;
+  :root {
+    /* Brand, lifted verbatim from the existing site */
+    --ink:          #1E262E;
+    --paper:        #F5F2EA;
+    --card:         #FCFAF4;
+    --line:         #E4DDCE;
+    --muted:        #5E6A75;
+    --champ:        #C9B79A;
+    --champ-bright: #DFCBA8;
+    --champ-deep:   #8A7346;
+    --wa:           #1FA855;
+    --wa-deep:      #25D366;
 
-  --wa:#1FA855;
-  --wa-deep:#25D366;
+    --band:      #12171D;
+    --band-deep: #0E1318;
+    --on-dark:   #F3EFE6;
+    --on-dark-2: rgba(243, 239, 230, 0.72);
+    --on-dark-3: rgba(243, 239, 230, 0.46);
+    --line-dark: rgba(243, 239, 230, 0.13);
 
-  --radius:14px;
-  --shadow:0 1px 2px rgba(14,19,24,.05), 0 8px 24px -16px rgba(14,19,24,.30);
-  --shadow-lg:0 2px 6px rgba(14,19,24,.06), 0 24px 48px -28px rgba(14,19,24,.40);
-  --maxw:1140px;
-}
-*,*::before,*::after{ box-sizing:border-box; }
-html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
-body{
-  margin:0;
-  background:var(--paper);
-  color:var(--ink);
-  font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;
-  font-size:17px;
-  line-height:1.68;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-img{ max-width:100%; display:block; }
-a{ color:inherit; }
+    --radius: 14px;
+    --radius-lg: 20px;
 
-h1,h2,h3,h4{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  line-height:1.14;
-  letter-spacing:-.012em;
-  margin:0;
-}
-p{ margin:0 0 1em; }
-p:last-child{ margin-bottom:0; }
+    /* Shadows tinted to the ink hue, never flat black */
+    --shadow:    0 1px 2px rgba(14,19,24,.05), 0 8px 24px -16px rgba(14,19,24,.30);
+    --shadow-lg: 0 2px 6px rgba(14,19,24,.06), 0 24px 48px -28px rgba(14,19,24,.40);
 
-.container{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+    --serif: "Fraunces", Georgia, serif;
+    --sans:  "Hanken Grotesk", system-ui, -apple-system, sans-serif;
 
-.eyebrow{
-  display:inline-flex; align-items:center; gap:10px;
-  font-size:.7rem; letter-spacing:.24em; text-transform:uppercase;
-  font-weight:600; color:var(--champ-deep);
-  margin-bottom:16px;
-}
-.eyebrow::before{ content:""; width:20px; height:1px; background:currentColor; opacity:.6; }
-.eyebrow.on-dark{ color:var(--champ-bright); }
+    --ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --maxw: 1140px;
 
-:focus-visible{ outline:3px solid var(--champ-deep); outline-offset:3px; border-radius:6px; }
-
-/* ---------------- buttons ---------------- */
-.btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:9px;
-  padding:15px 30px; border-radius:999px;
-  font-family:"Hanken Grotesk",sans-serif;
-  font-weight:600; font-size:.94rem;
-  text-decoration:none; cursor:pointer;
-  border:1px solid transparent;
-  transition:.25s ease;
-}
-.btn svg{ width:18px; height:18px; flex:none; }
-.btn-champ{ background:linear-gradient(180deg,var(--champ-bright),var(--champ)); color:var(--ink-900); }
-.btn-champ:hover{ filter:brightness(1.05); transform:translateY(-1px); }
-.btn-wa{ background:linear-gradient(180deg,var(--wa-deep),var(--wa)); color:#04231A; }
-.btn-wa:hover{ filter:brightness(1.05); transform:translateY(-1px); }
-.btn-ghost-dark{ border-color:rgba(245,242,234,.35); color:#F5F2EA; }
-.btn-ghost-dark:hover{ background:rgba(255,255,255,.08); border-color:rgba(245,242,234,.6); }
-.btn-ghost-light{ border-color:var(--line); color:var(--ink-800); background:var(--card); }
-.btn-ghost-light:hover{ border-color:var(--ink-800); }
-
-/* ---------------- header ---------------- */
-header.nav{
-  position:fixed; top:0; left:0; right:0; z-index:60;
-  background:rgba(14,19,24,.82);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(245,242,234,.10);
-}
-.nav .container{ display:flex; align-items:center; justify-content:space-between; height:88px; gap:20px; }
-.logo{ display:flex; align-items:center; gap:13px; text-decoration:none; }
-.logo img{ width:52px; height:52px; border-radius:13px; }
-.logo .wm{ display:flex; flex-direction:column; line-height:1; }
-.logo .wm b{ font-family:"Fraunces",serif; font-weight:700; font-size:28px; color:#F5F2EA; letter-spacing:-.005em; }
-.logo .wm span{ font-size:11.5px; letter-spacing:.30em; text-transform:uppercase; color:var(--champ); margin-top:5px; font-weight:600; }
-.nav-links{ display:flex; align-items:center; gap:30px; }
-.nav-links a:not(.btn){ text-decoration:none; font-size:.92rem; font-weight:500; color:rgba(245,242,234,.72); }
-.nav-links a:not(.btn):hover{ color:#F5F2EA; }
-.nav-links .btn{ padding:11px 22px; font-size:.86rem; }
-@media (max-width:880px){ .nav-links a:not(.btn){ display:none; } }
-@media (max-width:760px){ .nav-links .btn{ display:none; } }
-
-/* ---------------- hero ---------------- */
-.hero{
-  position:relative; overflow:hidden;
-  min-height:92svh; display:flex; align-items:center;
-  padding:186px 0 80px;
-  background:var(--ink-900);
-  color:#F5F2EA;
-}
-.hero-bg{
-  position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; object-position:64% 58%;
-  z-index:0;
-}
-.hero-scrim{
-  position:absolute; inset:0; z-index:1;
-  background:linear-gradient(180deg, rgba(14,19,24,.86) 0%, rgba(14,19,24,.80) 42%, rgba(14,19,24,.92) 78%, rgba(14,19,24,.98) 100%);
-}
-.hero .container{ position:relative; z-index:2; }
-.hero-grid{ display:block; }
-.hero h1{ font-size:clamp(2.15rem,4.4vw,3.35rem); color:#F5F2EA; margin-bottom:12px; max-width:17ch; }
-.rot{ display:grid; color:var(--champ-bright); }
-.rot i{
-  grid-area:1/1; font-style:normal;
-  opacity:0; transform:translateY(.14em);
-  transition:opacity .55s ease, transform .55s ease;
-}
-.rot i.on{ opacity:1; transform:none; }
-.hero p.lead{
-  font-size:1.05rem; line-height:1.75;
-  color:rgba(245,242,234,.82); max-width:46ch; margin-bottom:28px;
-}
-.hero-cta{ display:flex; gap:13px; flex-wrap:wrap; align-items:center; margin-bottom:30px; }
-.hero-chips{ display:flex; gap:9px; flex-wrap:wrap; }
-.hero-chip{
-  display:inline-flex; align-items:center; gap:11px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(201,183,154,.30);
-  border-radius:999px; padding:6px 15px 6px 6px; font-size:.82rem;
-}
-.hero-chip .dot{
-  width:26px; height:26px; border-radius:50%;
-  background:rgba(201,183,154,.16);
-  display:flex; align-items:center; justify-content:center;
-  color:var(--champ-bright);
-}
-.hero-chip .dot svg{ width:14px; height:14px; }
-.hero-chip b{ color:var(--champ-bright); font-weight:700; }
-.hero-chip span{ color:rgba(245,242,234,.72); }
-
-.hero-feat{
-  margin-top:0;
-  background:rgba(10,14,18,.82);
-  border:1px solid rgba(201,183,154,.30);
-  border-radius:var(--radius);
-  padding:24px 26px;
-  max-width:380px;
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-}
-.hero-feat .fc-eyebrow{
-  font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--champ-bright); font-weight:700;
-}
-.hero-feat p{ font-size:.87rem; color:rgba(245,242,234,.78); line-height:1.6; margin:8px 0 0; }
-.hero-feat ul{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:11px; }
-.hero-feat li{ display:flex; align-items:flex-start; gap:10px; font-size:.87rem; color:rgba(245,242,234,.94); line-height:1.45; }
-.hero-feat li svg{ width:15px; height:15px; color:var(--champ-bright); flex:none; margin-top:4px; }
-
-@media (min-width:980px){
-  .hero-grid{ display:grid; grid-template-columns:1.22fr .78fr; gap:44px; align-items:center; }
-  .hero-bg{
-    object-position:88% 60%;
-    -webkit-mask-image:linear-gradient(to right, transparent 0%, transparent 30%, rgba(0,0,0,.5) 50%, #000 70%);
-    mask-image:linear-gradient(to right, transparent 0%, transparent 30%, rgba(0,0,0,.5) 50%, #000 70%);
+    --z-nav: 40; --z-skip: 60;
   }
-  .hero-scrim{
+
+  * { box-sizing: border-box; }
+  img { max-width: 100%; display: block; }
+  html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16.5px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 620px) { .container { padding: 0 16px; } }
+
+  /* Grain, fixed and inert, to break digital flatness */
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.035;
+    background-image: radial-gradient(rgba(30,38,46,0.9) 0.5px, transparent 0.5px);
+    background-size: 3px 3px;
+  }
+
+  h1, h2, h3 { margin: 0; font-family: var(--serif); color: var(--ink); text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 5.4vw, 4.05rem); font-weight: 600; line-height: 1.03; letter-spacing: -0.024em; }
+  h2 { font-size: clamp(1.85rem, 3.5vw, 2.7rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
+  h3 { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.012em; }
+  p { margin: 0; text-wrap: pretty; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 11px;
+    font-family: var(--sans); font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--champ-deep);
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 1px; background: currentColor; opacity: 0.7; }
+  .on-dark .eyebrow, .eyebrow.on-dark { color: var(--champ); }
+
+  .lead  { font-size: 1.0625rem; color: var(--muted); max-width: 62ch; }
+  .small { font-size: 0.9375rem; color: var(--muted); max-width: 60ch; }
+  .num   { font-variant-numeric: tabular-nums; }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--champ-deep); outline-offset: 3px; border-radius: 5px;
+  }
+
+  .skip {
+    position: absolute; left: -9999px; z-index: var(--z-skip);
+    background: var(--ink); color: var(--on-dark); padding: 12px 18px;
+    border-radius: 0 0 var(--radius) 0; font-weight: 600;
+  }
+  .skip:focus { left: 0; top: 0; }
+
+  /* ---------------- Nav: translucent material, content passes under ---------------- */
+  .nav {
+    position: sticky; top: 0; z-index: var(--z-nav);
+    background: rgba(18, 23, 29, 0.86);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .nav-in {
+    max-width: var(--maxw); margin: 0 auto; padding: 13px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+  @media (max-width: 620px) { .nav-in { padding: 11px 16px; } }
+  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .brand-mark {
+    width: 40px; height: 40px; border-radius: 11px; flex: none;
+    background: linear-gradient(155deg, var(--champ-bright), var(--champ));
+    display: grid; place-items: center;
+    font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--ink);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .brand-txt b { display: block; font-family: var(--serif); font-size: 1.125rem; font-weight: 600; color: var(--on-dark); line-height: 1.1; }
+  .brand-txt span { display: block; font-size: 0.625rem; letter-spacing: 0.24em; color: var(--champ); text-transform: uppercase; }
+
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    text-decoration: none; color: var(--on-dark-2); font-size: 0.9375rem;
+    padding: 8px 12px; border-radius: 9px;
+    transition: color 200ms var(--ease), background-color 200ms var(--ease);
+  }
+  .nav-links a[aria-current="true"] { color: var(--on-dark); background: rgba(243,239,230,0.09); }
+  @media (max-width: 1000px) { .nav-links { display: none; } }
+
+  /* ---------------- Buttons ---------------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 13px 20px; border-radius: 11px; border: 1px solid transparent;
+    font-family: inherit; font-size: 0.9375rem; font-weight: 600; white-space: nowrap;
+    text-decoration: none; cursor: pointer;
+    transition: transform 160ms var(--ease), background-color 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .btn:active { transform: scale(0.975); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn-wa { background: var(--wa-deep); color: #06231A; }
+  .btn-ink { background: var(--ink); color: var(--on-dark); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-ghost-dark { background: rgba(243,239,230,0.07); color: var(--on-dark); border-color: var(--line-dark); }
+  .btn-sm { padding: 9px 14px; font-size: 0.875rem; }
+  @media (hover: hover) and (pointer: fine) {
+    .nav-links a:hover { color: var(--on-dark); background: rgba(243,239,230,0.07); }
+    .btn-wa:hover { background: var(--wa); }
+    .btn-ink:hover { background: #2A343E; }
+    .btn-ghost:hover { border-color: var(--champ); }
+    .btn-ghost-dark:hover { background: rgba(243,239,230,0.13); }
+  }
+
+  /* ---------------- Sections ---------------- */
+  section { padding: 96px 0 104px; position: relative; z-index: 2; }
+  @media (max-width: 720px) { section { padding: 64px 0 70px; } }
+  .band-dark { background: var(--band); color: var(--on-dark-2); }
+  .band-deep { background: var(--band-deep); color: var(--on-dark-2); }
+  .band-dark h2, .band-deep h2, .band-dark h3, .band-deep h3 { color: var(--on-dark); }
+  .band-dark .lead, .band-deep .lead, .band-dark .small, .band-deep .small { color: var(--on-dark-2); }
+  .sec-head { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; margin-bottom: 46px; max-width: 60ch; }
+
+  /* ================= Hero =================
+     The old hero reserved vertical space for the longest rotating
+     destination, leaving a visible hole under the headline. Here the
+     rotator is inline and the container animates to each phrase's
+     measured width, so the line stays tight at every step. */
+  .hero {
+    position: relative; overflow: hidden; padding: 0;
+    background: var(--band-deep); color: var(--on-dark-2);
+    min-height: calc(100dvh - 66px); display: flex; align-items: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 62% 50%;
+  }
+  .hero-scrim {
+    position: absolute; inset: 0;
     background:
-      linear-gradient(90deg, var(--ink-900) 0%, rgba(14,19,24,.95) 34%, rgba(14,19,24,.62) 52%, rgba(14,19,24,.18) 78%),
-      linear-gradient(180deg, rgba(14,19,24,.55) 0%, rgba(14,19,24,.10) 40%, rgba(14,19,24,.80) 100%);
+      linear-gradient(100deg, rgba(14,19,24,0.95) 0%, rgba(14,19,24,0.86) 38%, rgba(14,19,24,0.38) 72%, rgba(14,19,24,0.55) 100%),
+      linear-gradient(to top, rgba(14,19,24,0.85), transparent 42%);
   }
-}
-@media (max-width:979px){
-  .hero{ min-height:0; padding:142px 0 64px; }
-  .hero-feat{ margin-top:30px; max-width:none; }
-}
-@media (max-width:560px){
-  .hero-cta{ flex-direction:column; align-items:stretch; }
-  .hero-cta .btn{ width:100%; }
-  .hero p.lead{ font-size:1rem; }
-}
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding: 104px 0 92px; }
+  @media (max-width: 900px) { .hero-inner { padding: 84px 0 76px; } .hero { min-height: 0; } }
+  .hero-copy { max-width: 44rem; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .hero h1 { color: var(--on-dark); }
 
-/* ---------------- sections ---------------- */
-section{ position:relative; padding:100px 0; }
-.section-tight{ padding:70px 0; }
-.band-dark{ background:var(--ink-800); color:#F5F2EA; }
-.band-deep{ background:var(--ink-900); color:#F5F2EA; }
-.section-head{ max-width:600px; margin-bottom:44px; }
-.section-head h2{ font-size:clamp(1.85rem,3.9vw,2.7rem); }
-.section-head p{ color:var(--muted); margin-top:14px; font-size:1.02rem; line-height:1.7; }
-.section-head.on-dark h2{ color:#F5F2EA; }
-.section-head.on-dark p{ color:rgba(245,242,234,.75); }
-@media (max-width:760px){ section{ padding:68px 0; } }
+  .rot {
+    display: inline-block; position: relative; vertical-align: bottom;
+    height: 1.03em; overflow: hidden; color: var(--champ);
+    transition: width 320ms var(--ease);
+    will-change: width;
+  }
+  .rot i {
+    position: absolute; left: 0; top: 0; white-space: nowrap; font-style: normal;
+    opacity: 0; transform: translateY(0.5em);
+    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+  }
+  .rot i.on { opacity: 1; transform: none; }
+  .rot i.out { opacity: 0; transform: translateY(-0.5em); }
 
-/* ---------------- trust strip ---------------- */
-.strip{ background:var(--ink-900); border-top:1px solid rgba(245,242,234,.10); }
-.strip .container{ display:grid; grid-template-columns:repeat(4,1fr); }
-.strip .cell{ padding:26px 0 26px 28px; border-left:1px solid rgba(245,242,234,.10); }
-.strip .cell:first-child{ border-left:none; padding-left:0; }
-.strip .k{ font-family:"Fraunces",serif; font-weight:600; font-size:1.35rem; color:#F5F2EA; display:block; line-height:1.1; }
-.strip .v{ font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,242,234,.5); margin-top:8px; display:block; }
-@media (max-width:760px){
-  .strip .container{ grid-template-columns:repeat(2,1fr); }
-  .strip .cell{ padding:20px 0 20px 20px; }
-  .strip .cell:nth-child(3){ border-left:none; padding-left:0; }
-  .strip .cell:nth-child(n+3){ border-top:1px solid rgba(245,242,234,.10); }
-}
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 11px; }
+  .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 13px; border-radius: 10px; font-size: 0.875rem;
+    background: rgba(243,239,230,0.07); border: 1px solid var(--line-dark); color: var(--on-dark-2);
+  }
+  .chip b { color: var(--on-dark); font-weight: 600; }
+  .chip i { width: 5px; height: 5px; border-radius: 999px; background: var(--champ); flex: none; }
 
-/* ---------------- cards ---------------- */
-.grid-3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
-.card{
-  background:var(--card); border:1px solid var(--line);
-  border-radius:var(--radius); padding:28px 26px;
-  box-shadow:var(--shadow);
-  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-}
-.card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:#D6CCB6; }
-.card .ic{
-  width:40px; height:40px; border-radius:11px;
-  background:rgba(138,115,70,.10); color:var(--champ-deep);
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom:16px;
-}
-.card .ic svg{ width:20px; height:20px; }
-.card h3{ font-size:1.15rem; margin-bottom:9px; }
-.card p{ color:var(--muted); font-size:.95rem; line-height:1.7; margin:0; }
+  /* ---- Trust bar ---- */
+  .trust { background: var(--band); border-top: 1px solid var(--line-dark); padding: 0; }
+  .trust-in { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .trust-in > div { padding: 26px 24px; border-left: 1px solid var(--line-dark); }
+  .trust-in > div:first-child { border-left: 0; }
+  .trust b { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--on-dark); line-height: 1.15; }
+  .trust span { font-size: 0.6875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--on-dark-3); }
+  @media (max-width: 760px) {
+    .trust-in { grid-template-columns: 1fr 1fr; }
+    .trust-in > div:nth-child(3) { border-left: 0; }
+    .trust-in > div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+  }
 
-/* ---------------- showcase ---------------- */
-.showcase{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-@media (max-width:860px){ .showcase{ grid-template-columns:1fr; } }
-.shot{
-  position:relative; border-radius:var(--radius); overflow:hidden;
-  aspect-ratio:4/5; border:1px solid rgba(245,242,234,.10);
-}
-.shot img{ width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
-.shot:hover img{ transform:scale(1.04); }
-.shot::after{
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(14,19,24,0) 22%, rgba(14,19,24,.55) 52%, rgba(14,19,24,.94) 88%);
-}
-.shot .cap{ position:absolute; left:22px; right:22px; bottom:20px; z-index:2; color:#F5F2EA; }
-.shot .cap .t{ font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--champ-bright); font-weight:700; }
-.shot .cap h3{ font-size:1.2rem; color:#F5F2EA; margin-top:6px; }
-.shot .cap p{ font-size:.85rem; color:rgba(245,242,234,.78); margin:5px 0 0; line-height:1.55; }
+  /* ================= Services: asymmetric bento =================
+     The original ran two rows of three identical cards. Six equal
+     boxes read as a template, so the grid is uneven now and two
+     cells carry real photography instead of an icon. */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .cell {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 26px; display: flex; flex-direction: column; gap: 9px;
+    box-shadow: var(--shadow);
+    transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), border-color 220ms var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cell:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--champ); }
+  }
+  .cell-wide { grid-column: span 4; }
+  .cell-half { grid-column: span 3; }
+  .cell-third { grid-column: span 2; }
+  .cell-photo { padding: 0; overflow: hidden; position: relative; min-height: 250px; justify-content: flex-end; }
+  .cell-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .cell-photo .veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(14,19,24,0.92) 6%, rgba(14,19,24,0.30) 62%, rgba(14,19,24,0.05));
+  }
+  .cell-photo .on-photo { position: relative; z-index: 2; padding: 24px; display: flex; flex-direction: column; gap: 6px; }
+  .cell-photo h3 { color: var(--on-dark); }
+  .cell-photo .small { color: rgba(243,239,230,0.82); }
+  .cell .ico {
+    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+    background: var(--paper); border: 1px solid var(--line); color: var(--champ-deep); margin-bottom: 4px;
+  }
+  .cell .ico svg { width: 19px; height: 19px; }
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: 1fr; }
+    .cell-wide, .cell-half, .cell-third { grid-column: 1 / -1; }
+  }
 
+  /* ================= Fleet: comparison rail, not three cards ================= */
+  .fleet-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+  @media (max-width: 900px) { .fleet-grid { grid-template-columns: 1fr; gap: 28px; } }
+  .fleet-photo { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-dark); }
+  .fleet-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
+  .sizes { display: flex; flex-direction: column; }
+  .size {
+    display: grid; grid-template-columns: 4.4rem 1fr; gap: 20px; align-items: baseline;
+    padding: 22px 0; border-top: 1px solid var(--line-dark);
+  }
+  .size:last-child { border-bottom: 1px solid var(--line-dark); }
+  .size .n {
+    font-family: var(--serif); font-size: 2.5rem; font-weight: 600; color: var(--champ);
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .size .n span { display: block; font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 5px; }
 
-/* ---------------- fleet + showcase banner ---------------- */
-.fleet-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:18px; }
-@media (max-width:860px){ .fleet-row{ grid-template-columns:1fr; } }
-.veh{
-  background:rgba(255,255,255,.04); border:1px solid rgba(245,242,234,.12);
-  border-radius:var(--radius); padding:18px 22px 22px;
-  display:flex; align-items:center; gap:18px;
-  transition:border-color .22s ease, background .22s ease;
-}
-.veh:hover{ border-color:rgba(201,183,154,.38); background:rgba(201,183,154,.06); }
-.veh .bus{ width:126px; height:auto; flex:none; color:var(--champ-bright); }
-.vinfo{ min-width:0; }
-.veh .num{
-  font-family:"Fraunces",serif; font-weight:700; font-size:1.9rem; line-height:1;
-  color:var(--champ-bright); display:flex; align-items:baseline; gap:7px;
-}
-.veh .num small{
-  font-family:"Hanken Grotesk",sans-serif; font-size:.6rem; font-weight:700;
-  letter-spacing:.2em; text-transform:uppercase; color:rgba(245,242,234,.5);
-}
-.veh h3{ font-size:1rem; color:#F5F2EA; margin:7px 0 5px; }
-.veh p{ color:rgba(245,242,234,.66); font-size:.84rem; line-height:1.55; margin:0; }
-@media (max-width:1000px){ .veh .bus{ width:104px; } .veh{ gap:14px; padding:16px 18px 18px; } }
+  /* ================= Coverage ================= */
+  .cover-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; }
+  @media (max-width: 860px) { .cover-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .areas { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+  .area {
+    font-size: 0.8125rem; padding: 7px 12px; border-radius: 9px;
+    background: rgba(243,239,230,0.06); border: 1px solid var(--line-dark); color: var(--on-dark-2);
+  }
+  .area.key { background: rgba(201,183,154,0.15); border-color: rgba(201,183,154,0.4); color: var(--champ-bright); }
 
-.showcase{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-@media (max-width:860px){ .showcase{ grid-template-columns:1fr; } }
-.shot{
-  position:relative; margin:0; border-radius:var(--radius); overflow:hidden;
-  aspect-ratio:3/2; border:1px solid rgba(245,242,234,.10);
-}
-.shot img{ width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
-.shot:hover img{ transform:scale(1.05); }
-.shot::after{
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(14,19,24,0) 30%, rgba(14,19,24,.55) 60%, rgba(14,19,24,.94) 100%);
-}
-.shot .cap{ position:absolute; left:20px; right:20px; bottom:16px; z-index:2; color:#F5F2EA; }
-.shot .cap .t{ font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--champ-bright); font-weight:700; }
-.shot .cap h3{ font-size:1.08rem; color:#F5F2EA; margin-top:4px; }
+  /* ================= Reviews: one quote, not a three-card row ================= */
+  .rev-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 44px; align-items: center; }
+  @media (max-width: 860px) { .rev-grid { grid-template-columns: 1fr; gap: 28px; } }
+  .rating { display: flex; flex-direction: column; gap: 6px; }
+  .rating .score { font-family: var(--serif); font-size: 3.6rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stars { display: flex; gap: 3px; color: #E8A33D; }
+  .stars svg { width: 17px; height: 17px; }
+  blockquote {
+    margin: 0; font-family: var(--serif); font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    line-height: 1.35; letter-spacing: -0.015em; color: var(--ink);
+  }
+  /* Real reviews vary a lot in length. The type steps down as they run
+     long, so the section keeps its shape whichever one is showing. */
+  blockquote.mid  { font-size: clamp(1.15rem, 1.9vw, 1.42rem); line-height: 1.4; }
+  blockquote.long { font-size: clamp(1.02rem, 1.5vw, 1.2rem);  line-height: 1.5; letter-spacing: -0.008em; }
+  .rev-slot {
+    border-left: 3px solid var(--champ); padding-left: 24px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .rev-empty {
+    font-family: var(--sans); font-size: 0.9375rem; color: var(--muted);
+    background: rgba(201,183,154,0.14); border: 1px dashed var(--champ-deep);
+    border-radius: var(--radius); padding: 16px 18px; line-height: 1.5;
+  }
+  .rev-empty b { color: var(--champ-deep); }
+  .rev-nav { display: flex; gap: 7px; margin-top: 6px; }
+  .rev-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--line); border: 0; padding: 0; cursor: pointer;
+             transition: background-color 200ms var(--ease), width 200ms var(--ease); }
+  .rev-dot.on { background: var(--champ-deep); width: 20px; }
 
+  /* ================= Booking ================= */
+  .book-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 44px; align-items: start; }
+  @media (max-width: 900px) { .book-grid { grid-template-columns: 1fr; gap: 32px; } }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+  @media (max-width: 640px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label { font-size: 0.875rem; font-weight: 600; }
+  .field .hint { font-size: 0.8125rem; color: var(--muted); }
+  .field input, .field select, .field textarea {
+    font-family: inherit; font-size: 0.9375rem; color: var(--ink); padding: 12px 13px; width: 100%;
+    background: var(--card); border: 1px solid var(--line); border-radius: 11px;
+    transition: border-color 180ms var(--ease);
+  }
+  .field textarea { resize: vertical; min-height: 84px; }
+  .field input::placeholder, .field textarea::placeholder { color: #A9A296; }
+  .field .err { font-size: 0.8125rem; color: #A3231F; display: none; }
+  .field.invalid input, .field.invalid select { border-color: #A3231F; background: #FBF0EE; }
+  .field.invalid .err { display: block; }
+  @media (hover: hover) and (pointer: fine) {
+    .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--champ); }
+  }
+  .aside-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
+  }
+  .checklist { display: flex; flex-direction: column; gap: 0; }
+  .checklist div { display: flex; gap: 11px; align-items: baseline; padding: 10px 0; font-size: 0.9375rem; }
+  .checklist div + div { border-top: 1px solid var(--line); }
+  .checklist svg { width: 15px; height: 15px; color: var(--champ-deep); flex: none; transform: translateY(2px); }
 
-/* ---------------- reviews ---------------- */
-#reviews{ padding:76px 0 68px; }
-.rev-top{
-  display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center;
-  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-  padding:18px 24px; margin-bottom:18px; box-shadow:var(--shadow);
-}
-@media (max-width:760px){ .rev-top{ grid-template-columns:1fr; gap:12px; } }
-.rev-score{ display:flex; align-items:baseline; gap:9px; }
-.rev-score b{ font-family:"Fraunces",serif; font-size:2.1rem; line-height:1; color:var(--ink-800); }
-.rev-score .of{ font-size:.78rem; color:var(--muted); }
-.stars{ display:flex; gap:3px; }
-.stars svg{ width:15px; height:15px; color:#E8A33D; flex:none; }
-.rev-top .meta{ font-size:.88rem; color:var(--muted); }
-.rev-top .meta strong{ color:var(--ink); display:block; font-weight:600; margin-bottom:2px; }
+  /* ================= FAQ: two columns, not an accordion stack ================= */
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; }
+  @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } }
+  details { border-top: 1px solid var(--line-dark); }
+  .faq-grid details:last-child { border-bottom: 1px solid var(--line-dark); }
+  summary {
+    list-style: none; cursor: pointer; padding: 17px 0;
+    display: flex; gap: 16px; align-items: baseline; justify-content: space-between;
+    color: var(--on-dark); font-weight: 600; font-size: 0.9875rem;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary i { flex: none; width: 12px; height: 12px; position: relative; margin-top: 5px; }
+  summary i::before, summary i::after {
+    content: ""; position: absolute; background: var(--champ); border-radius: 2px;
+    transition: transform 220ms var(--ease), opacity 220ms var(--ease);
+  }
+  summary i::before { left: 0; top: 5.5px; width: 12px; height: 1.5px; }
+  summary i::after  { left: 5.5px; top: 0; width: 1.5px; height: 12px; }
+  details[open] summary i::after { transform: rotate(90deg); opacity: 0; }
+  .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 240ms var(--ease); }
+  details[open] .ans { grid-template-rows: 1fr; }
+  .ans > div { overflow: hidden; }
+  .ans p { padding-bottom: 18px; font-size: 0.9375rem; color: var(--on-dark-2); }
 
-.marquee{
-  position:relative; overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
-}
-.marquee-track{ display:flex; gap:16px; width:max-content; animation:slide 48s linear infinite; }
-.marquee:hover .marquee-track{ animation-play-state:paused; }
-@keyframes slide{ from{ transform:translateX(0); } to{ transform:translateX(calc(-50% - 8px)); } }
-.rev{
-  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-  padding:20px 22px; box-shadow:var(--shadow);
-  display:flex; flex-direction:column; width:330px; flex:none;
-}
-.rev p{ color:var(--muted); font-size:.9rem; line-height:1.62; flex:1; margin:10px 0 0; }
-.rev .who{ margin-top:14px; padding-top:12px; border-top:1px solid var(--line); font-size:.82rem; }
-.rev .who b{ display:block; color:var(--ink); font-weight:600; }
-.rev .who span{ color:var(--champ-deep); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; }
-.slot{ background:rgba(201,183,154,.20); border:1px dashed var(--champ-deep); border-radius:6px; padding:1px 7px; color:var(--champ-deep); font-weight:600; font-size:.88em; }
+  /* ================= Footer ================= */
+  footer { background: var(--band-deep); color: var(--on-dark-3); padding: 52px 0 40px; position: relative; z-index: 2; }
+  .foot-top { display: flex; flex-wrap: wrap; gap: 24px 40px; justify-content: space-between; align-items: flex-start;
+              padding-bottom: 28px; border-bottom: 1px solid var(--line-dark); }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.9375rem; }
+  .foot-links a { color: var(--on-dark-2); text-decoration: none; transition: color 180ms var(--ease); }
+  .foot-bot { padding-top: 22px; display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; font-size: 0.8125rem; }
+  @media (hover: hover) and (pointer: fine) { .foot-links a:hover { color: var(--champ); } }
 
-/* ---------------- faq ---------------- */
-.faq{ display:grid; gap:10px; max-width:840px; }
-.faq details{
-  background:rgba(255,255,255,.035); border:1px solid rgba(245,242,234,.12);
-  border-radius:var(--radius); padding:0 24px;
-  transition:border-color .2s ease, background .2s ease;
-}
-.faq details:hover{ border-color:rgba(201,183,154,.34); }
-.faq details[open]{ border-color:rgba(201,183,154,.40); background:rgba(201,183,154,.06); }
-.faq summary{
-  list-style:none; cursor:pointer; padding:20px 34px 20px 0; position:relative;
-  font-family:"Fraunces",serif; font-weight:600; font-size:1.04rem; line-height:1.4; color:#F5F2EA;
-}
-.faq summary::-webkit-details-marker{ display:none; }
-.faq summary::after{
-  content:""; position:absolute; right:2px; top:26px; width:10px; height:10px;
-  border-right:2px solid var(--champ-bright); border-bottom:2px solid var(--champ-bright);
-  transform:rotate(45deg); transition:transform .22s ease;
-}
-.faq details[open] summary::after{ transform:rotate(-135deg); top:30px; }
-.faq .a{ padding:0 0 22px; color:rgba(245,242,234,.76); font-size:.95rem; line-height:1.7; }
-.faq .a p{ margin-bottom:.8em; }
-.faq .a strong{ color:#F5F2EA; font-weight:600; }
-.faq .a a{ color:var(--champ-bright); font-weight:600; }
+  /* ================= Motion layer =================
+     Parallax runs on native CSS scroll-driven animation where the
+     browser supports it, so there is no scroll listener and no
+     library on the critical path. GSAP, when it loads, takes over
+     the richer choreography. Everything degrades to visible. */
+  .hero-bg { will-change: transform; }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-bg {
+        animation: heroPar linear both;
+        animation-timeline: view();
+        animation-range: entry 0% exit 100%;
+      }
+      .fleet-photo img {
+        animation: photoPar linear both;
+        animation-timeline: view();
+        animation-range: entry 0% exit 100%;
+      }
+    }
+  }
+  @keyframes heroPar  { from { transform: scale(1.08) translateY(-2%); } to { transform: scale(1.08) translateY(6%); } }
+  @keyframes photoPar { from { transform: scale(1.06) translateY(-3%); } to { transform: scale(1.06) translateY(3%); } }
 
-/* ---------------- promise ---------------- */
-.promise{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px;
-  background:rgba(245,242,234,.12); border:1px solid rgba(245,242,234,.12);
-  border-radius:var(--radius); overflow:hidden;
-}
-.promise div{ background:var(--ink-900); padding:22px 20px; }
-.promise .n{ font-family:"Fraunces",serif; font-size:1.6rem; color:var(--champ-bright); line-height:1.1; }
-.promise .l{ font-size:.84rem; color:rgba(245,242,234,.7); margin-top:8px; line-height:1.5; }
+  /* The three vehicle sizes step forward as the section passes */
+  .size { opacity: 0.34; transition: opacity 340ms var(--ease); }
+  .size.lit { opacity: 1; }
+  .size .n em { font-style: normal; font-variant-numeric: tabular-nums; }
 
-/* ---------------- coverage ---------------- */
-.cover{ display:grid; grid-template-columns:1.1fr .9fr; gap:18px; }
-@media (max-width:860px){ .cover{ grid-template-columns:1fr; } }
-.panel-dark{
-  background:rgba(255,255,255,.04); border:1px solid rgba(245,242,234,.12);
-  border-radius:var(--radius); padding:30px 28px;
-}
-.panel-dark.accent{ border-color:rgba(201,183,154,.32); background:rgba(201,183,154,.06); }
-.panel-dark h3{ font-size:1.2rem; color:#F5F2EA; margin-bottom:10px; }
-.panel-dark.accent h3{ color:var(--champ-bright); }
-.panel-dark > p{ color:rgba(245,242,234,.76); font-size:.95rem; }
-.towns{ list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
-.towns li{
-  font-size:.85rem; color:rgba(245,242,234,.82);
-  border:1px solid rgba(245,242,234,.16); border-radius:999px; padding:6px 15px;
-}
+  /* Area chips arrive in sequence, not all at once */
+  .area { opacity: 0; transform: translateY(8px) scale(0.96); }
+  .area.pop {
+    opacity: 1; transform: none;
+    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+  }
 
-/* ---------------- steps ---------------- */
-.steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; counter-reset:s; }
-.step{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow); }
-.step .n{
-  counter-increment:s;
-  font-family:"Fraunces",serif; font-weight:700; font-size:.9rem;
-  width:34px; height:34px; border-radius:50%;
-  background:var(--ink-900); color:var(--champ-bright);
-  display:flex; align-items:center; justify-content:center; margin-bottom:16px;
-}
-.step .n::before{ content:counter(s,decimal-leading-zero); }
-.step h3{ font-size:1.08rem; margin-bottom:8px; }
-.step p{ color:var(--muted); font-size:.92rem; margin:0; }
+  /* Bento cells lift in with a touch of blur, masking the crossfade */
+  .cell { will-change: transform; }
+  .bento .rev-in { transform: translateY(20px) scale(0.985); filter: blur(4px); }
+  .bento .rev-in.shown {
+    transform: none; filter: blur(0);
+    transition: opacity 320ms var(--ease), transform 320ms var(--ease), filter 320ms var(--ease);
+  }
 
-/* ---------------- quote ---------------- */
-.quote{ display:grid; grid-template-columns:1.3fr .7fr; gap:18px; align-items:start; }
-@media (max-width:900px){ .quote{ grid-template-columns:1fr; } }
-.formwrap{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:30px 28px 32px; box-shadow:var(--shadow); }
-form{ display:grid; gap:16px; }
-.row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-@media (max-width:560px){ .row{ grid-template-columns:1fr; } }
-label{ display:block; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--champ-deep); margin-bottom:8px; }
-input,select,textarea{
-  width:100%; font-family:"Hanken Grotesk",sans-serif; font-size:1rem;
-  padding:13px 15px; background:#fff;
-  border:1px solid var(--line); border-radius:10px; color:var(--ink);
-  transition:border-color .18s ease, box-shadow .18s ease;
-}
-input::placeholder,textarea::placeholder{ color:#A9A296; }
-input:focus,select:focus,textarea:focus{ outline:none; border-color:var(--champ-deep); box-shadow:0 0 0 3px rgba(138,115,70,.12); }
-textarea{ min-height:110px; resize:vertical; }
-select{
-  appearance:none;
-  background-image:linear-gradient(45deg,transparent 50%,var(--champ-deep) 50%),linear-gradient(135deg,var(--champ-deep) 50%,transparent 50%);
-  background-position:calc(100% - 20px) 22px,calc(100% - 14px) 22px;
-  background-size:6px 6px,6px 6px; background-repeat:no-repeat;
-}
-.hint{ font-size:.82rem; color:var(--muted); margin:0; }
-.fstatus{ display:none; padding:13px 16px; border-radius:10px; background:rgba(138,115,70,.10); border:1px solid rgba(138,115,70,.28); color:var(--champ-deep); font-size:.93rem; font-weight:500; }
-.fstatus.on{ display:block; }
+  @media (prefers-reduced-motion: reduce) {
+    .size { opacity: 1; }
+    .area { opacity: 1; transform: none; }
+    .bento .rev-in, .bento .rev-in.shown { transform: none; filter: none; }
+    .hero-bg, .fleet-photo img { animation: none; }
+  }
 
-.contact{ background:var(--ink-900); border-radius:var(--radius); padding:30px 28px 32px; color:#F5F2EA; box-shadow:var(--shadow); }
-.contact h3{ font-size:1.2rem; color:var(--champ-bright); margin-bottom:20px; }
-.cline{ padding:17px 0; border-top:1px solid rgba(245,242,234,.12); }
-.cline:first-of-type{ border-top:none; padding-top:0; }
-.cline dt{ font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(245,242,234,.5); margin-bottom:6px; }
-.cline dd{ margin:0; font-size:1rem; font-weight:600; }
-.cline dd a{ color:var(--champ-bright); text-decoration:none; }
-.cline dd a:hover{ text-decoration:underline; }
-.cline dd small{ display:block; font-size:.85rem; font-weight:400; color:rgba(245,242,234,.68); margin-top:5px; line-height:1.55; }
-
-/* ---------------- footer ---------------- */
-footer{ background:var(--ink-900); color:rgba(245,242,234,.72); padding:56px 0 40px; }
-.fgrid{ display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:38px; }
-@media (max-width:760px){ .fgrid{ grid-template-columns:1fr; gap:28px; } }
-footer h4{ font-family:"Hanken Grotesk",sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--champ-bright); margin:0 0 14px; }
-footer ul{ list-style:none; margin:0; padding:0; }
-footer li{ margin-bottom:9px; }
-footer a{ text-decoration:none; font-size:.93rem; }
-footer a:hover{ color:#F5F2EA; }
-footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
-.legal a{ color:var(--champ-bright); text-decoration:none; }
-.legal a:hover{ text-decoration:underline; }
-.legal{
-  margin-top:42px; padding-top:22px; border-top:1px solid rgba(245,242,234,.12);
-  display:flex; flex-wrap:wrap; gap:10px 30px; justify-content:space-between;
-  font-size:.76rem; color:rgba(245,242,234,.5); letter-spacing:.02em;
-}
-
-/* mobile bar */
-.mbar{
-  display:none; position:fixed; left:0; right:0; bottom:0; z-index:70;
-  gap:10px; padding:11px 16px calc(11px + env(safe-area-inset-bottom));
-  background:rgba(14,19,24,.95); backdrop-filter:blur(14px);
-  border-top:1px solid rgba(245,242,234,.12);
-}
-.mbar .btn{ flex:1; padding:14px 10px; font-size:.88rem; }
-@media (max-width:760px){ .mbar{ display:flex; } body{ padding-bottom:88px; } }
-
-.todo{ background:var(--champ); color:var(--ink-900); padding:1px 7px; border-radius:5px; font-weight:700; font-size:.85em; }
-.skip{ position:absolute; left:-9999px; background:var(--champ); color:var(--ink-900); padding:12px 18px; font-weight:600; z-index:100; border-radius:8px; }
-.skip:focus{ left:16px; top:16px; }
-
-@media (prefers-reduced-motion:reduce){
-  html{ scroll-behavior:auto; }
-  *,*::before,*::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
-  .btn:hover,.card:hover,.veh:hover{ transform:none; }
-  .shot:hover img{ transform:none; }
-  .marquee-track{ animation:none; flex-wrap:wrap; width:auto; }
-  .marquee{ -webkit-mask-image:none; mask-image:none; }
-  .marquee-track{ animation:none; flex-wrap:wrap; width:auto; }
-  .marquee{ -webkit-mask-image:none; mask-image:none; }
-}
+  /* ---------------- Scroll entry ---------------- */
+  .rev-in { opacity: 0; transform: translateY(16px); }
+  .rev-in.shown {
+    opacity: 1; transform: none;
+    transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rev-in, .rev-in.shown { opacity: 1; transform: none; transition: none; }
+    .rot i { transition: none; }
+    .rot { transition: none; }
+    * { transition-duration: 1ms !important; }
+  }
 </style>
 </head>
 <body>
-
 <a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
 
 <header class="nav">
-  <div class="container">
-    <a class="logo" href="#top">
-      <img src="assets/bux-travel-mark.png" alt="" width="36" height="36">
-      <span class="wm"><b>Bux</b><span>Travel</span></span>
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Bux Travel, home">
+      <span class="brand-mark" aria-hidden="true">B</span>
+      <span class="brand-txt"><b>Bux</b><span>Travel</span></span>
     </a>
-    <nav class="nav-links" aria-label="Main">
+    <nav class="nav-links" id="navlinks">
       <a href="#services">Services</a>
-      <a href="#coverage">Where we go</a>
       <a href="#fleet">Fleet</a>
+      <a href="#coverage">Where we go</a>
       <a href="#reviews">Reviews</a>
       <a href="#booking">Get a quote</a>
       <a href="#faq">FAQs</a>
-      <a class="btn btn-wa" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
-        WhatsApp
-      </a>
     </nav>
+    <a class="btn btn-wa btn-sm" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
+      WhatsApp
+    </a>
   </div>
 </header>
 
 <main id="main">
 
-<!-- ===================== HERO ===================== -->
-<section class="hero" id="top">
-  <img class="hero-bg" src="assets/hero-minibus.jpg" alt="" fetchpriority="high" decoding="async">
-  <div class="hero-scrim"></div>
-  <div class="container">
-    <div class="hero-grid">
-      <div>
-        <span class="eyebrow on-dark">Bolton · PSV &amp; private hire</span>
-        <h1>Group travel from Bolton to
-          <span class="rot" id="rot" aria-label="Manchester Airport, Liverpool, the Lake District, London and the South, or anywhere in the UK">
-            <i class="on">Manchester Airport</i>
-            <i>Liverpool</i>
-            <i>the Lake District</i>
-            <i>London &amp; the South</i>
-            <i>anywhere in the UK</i>
-          </span>
-        </h1>
-        <p class="lead">Licensed minibuses from 4 to 18 seats with an experienced driver. Airport transfers, corporate shuttles, school contracts, weddings and days out — across the North West and the length of the country.</p>
-        <div class="hero-cta">
-          <a class="btn btn-wa" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
-            Message us on WhatsApp
-          </a>
-          <a class="btn btn-ghost-dark" href="#booking">Request a quote</a>
-        </div>
-        <div class="hero-chips">
-          <span class="hero-chip">
-            <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17h16M6 17V9a2 2 0 012-2h8a2 2 0 012 2v8M8 7V5h8v2"/></svg></span>
-            <b>4–18</b><span>seats</span>
-          </span>
-          <span class="hero-chip">
-            <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6l7-3z"/></svg></span>
-            <b>Licensed</b><span>operator</span>
-          </span>
-          <span class="hero-chip">
-            <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v6l4 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
-            <b>30 min</b><span>typical reply</span>
-          </span>
-        </div>
-      </div>
-
-      <aside class="hero-feat">
-        <span class="fc-eyebrow">Why book with us</span>
-        <p>One vehicle, one driver, one price agreed before you travel.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Quotes back within 30 minutes, day or night</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Fixed price quoted up front — no meter</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Driver's details sent before the day</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Same driver kept on contract work</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Local to Bolton, minutes from the M61</li>
-        </ul>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<div class="strip">
-  <div class="container">
-    <div class="cell"><span class="k">4–18</span><span class="v">Seats per vehicle</span></div>
-    <div class="cell"><span class="k">Licensed</span><span class="v">PSV &amp; private hire</span></div>
-    <div class="cell"><span class="k">North West</span><span class="v">Plus UK-wide work</span></div>
-    <div class="cell"><span class="k">24/7</span><span class="v">Bookings &amp; quotes</span></div>
-  </div>
-</div>
-
-<!-- ===================== SERVICES ===================== -->
-<section id="services">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">What we run</span>
-      <h2>Work we take on.</h2>
-      <p>Anything from a single airport run to a standing weekly contract. If you're not sure it fits, ask — most of our work starts with an odd request.</p>
-    </div>
-    <div class="grid-3">
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.8 19.2L16 11l3.5-3.5a2.1 2.1 0 000-3 2.1 2.1 0 00-3 0L13 8 4.8 6.2a.5.5 0 00-.5.8l3.2 4-2.4 2.4-1.6-.4a.5.5 0 00-.5.8L5 16l1.2 2a.5.5 0 00.8-.5l-.4-1.6L9 13.5l4 3.2a.5.5 0 00.8-.5z"/></svg></span>
-        <h3>Airport transfers</h3>
-        <p>Manchester, Liverpool John Lennon, Leeds Bradford and Birmingham, plus the cruise terminals. We watch the flight and wait when it slips.</p>
-      </article>
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1M9 13h1m4 0h1M9 17h1m4 0h1"/></svg></span>
-        <h3>Corporate &amp; staff shuttles</h3>
-        <p>Site-to-site runs, shift transport, conference and exhibition travel. Account billing available for regular work.</p>
-      </article>
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
-        <h3>School &amp; college transport</h3>
-        <p>Home-to-school routes, trips and sports fixtures, run to a fixed timetable with the same driver wherever possible.</p>
-      </article>
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.9-9.3-9.2A5.1 5.1 0 0112 5.6a5.1 5.1 0 019.3 6.2C19.5 16.1 12 21 12 21z"/></svg></span>
-        <h3>Weddings &amp; celebrations</h3>
-        <p>Guest shuttles between ceremony, reception and hotels, so nobody has to nominate a driver or count taxis at midnight.</p>
-      </article>
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 20l6-14 4 8 3-5 5 11H3z"/></svg></span>
-        <h3>Days out &amp; sports travel</h3>
-        <p>Race days, away matches, festivals, the Lakes, the Dales, North Wales. Door to door, and back whenever you're finished.</p>
-      </article>
-      <article class="card">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 20v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9.5 10a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM22 20v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/></svg></span>
-        <h3>Groups &amp; clubs</h3>
-        <p>Churches, care and community groups, societies and teams. Tell us about access needs when you book and we'll plan around them.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== FLEET + SHOWCASE ===================== -->
-<section class="band-dark" id="fleet">
-  <div class="container">
-    <div class="section-head on-dark">
-      <span class="eyebrow on-dark">The fleet &amp; where it goes</span>
-      <h2>Pick the size. We&rsquo;ll do the rest.</h2>
-      <p>Four to eighteen seats, maintained on a scheduled inspection programme and driven by a licensed, vetted driver. Over 18, we run vehicles in convoy so the group arrives together.</p>
-    </div>
-
-    <div class="fleet-row">
-      <article class="veh">
-        <svg class="bus" viewBox="0 0 250 96" role="img" aria-label="8 seat minibus"><path d="M16 66 L16 32 Q16 26 22 26 L140 26 Q150 26 156 35 L162 48 Q166 52 166 58 L166 66 Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><rect x="24.0" y="33" width="30.0" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="58.0" y="33" width="30.0" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="92.0" y="33" width="30.0" height="15" rx="2.5" fill="currentColor" opacity=".28"/><path d="M144 33 L158 33 Q162 34 166 40 L170 48 L144 48 Z" fill="currentColor" opacity=".28"/><line x1="16" y1="66" x2="166" y2="66" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="52.0" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="52.0" cy="66" r="3" fill="currentColor"/><circle cx="136.4" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="136.4" cy="66" r="3" fill="currentColor"/><line x1="4" y1="80" x2="246" y2="80" stroke="currentColor" stroke-width="2" opacity=".25" stroke-linecap="round"/></svg>
-        <div class="vinfo"><span class="num">8<small>Seats</small></span>
-          <h3>Small group</h3>
-          <p>Families, small teams and airport runs where a taxi is too tight.</p>
-        </div>
-      </article>
-      <article class="veh">
-        <svg class="bus" viewBox="0 0 250 96" role="img" aria-label="16 seat minibus"><path d="M16 66 L16 32 Q16 26 22 26 L186 26 Q196 26 202 35 L208 48 Q212 52 212 58 L212 66 Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><rect x="24.0" y="33" width="25.6" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="53.6" y="33" width="25.6" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="83.2" y="33" width="25.6" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="112.8" y="33" width="25.6" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="142.4" y="33" width="25.6" height="15" rx="2.5" fill="currentColor" opacity=".28"/><path d="M190 33 L204 33 Q208 34 212 40 L216 48 L190 48 Z" fill="currentColor" opacity=".28"/><line x1="16" y1="66" x2="212" y2="66" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="63.0" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="63.0" cy="66" r="3" fill="currentColor"/><circle cx="182.4" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="182.4" cy="66" r="3" fill="currentColor"/><line x1="4" y1="80" x2="246" y2="80" stroke="currentColor" stroke-width="2" opacity=".25" stroke-linecap="round"/></svg>
-        <div class="vinfo"><span class="num">16<small>Seats</small></span>
-          <h3>Standard minibus</h3>
-          <p>The workhorse. Corporate shuttles, school runs, weddings and day trips.</p>
-        </div>
-      </article>
-      <article class="veh">
-        <svg class="bus" viewBox="0 0 250 96" role="img" aria-label="18 seat minibus"><path d="M16 66 L16 32 Q16 26 22 26 L208 26 Q218 26 224 35 L230 48 Q234 52 234 58 L234 66 Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><rect x="24.0" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="52.3" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="80.7" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="109.0" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="137.3" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><rect x="165.7" y="33" width="24.3" height="15" rx="2.5" fill="currentColor" opacity=".28"/><path d="M212 33 L226 33 Q230 34 234 40 L238 48 L212 48 Z" fill="currentColor" opacity=".28"/><line x1="16" y1="66" x2="234" y2="66" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="68.3" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="68.3" cy="66" r="3" fill="currentColor"/><circle cx="204.4" cy="66" r="10.5" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="204.4" cy="66" r="3" fill="currentColor"/><line x1="4" y1="80" x2="246" y2="80" stroke="currentColor" stroke-width="2" opacity=".25" stroke-linecap="round"/></svg>
-        <div class="vinfo"><span class="num">18<small>Seats</small></span>
-          <h3>Large minibus</h3>
-          <p>Our biggest. Keeps a large party together in one vehicle, not two.</p>
-        </div>
-      </article>
-    </div>
-
-    <div class="showcase">
-      <figure class="shot">
-        <img src="assets/showcase-airport.jpg" alt="Aircraft departing at sunset" loading="lazy" decoding="async">
-        <figcaption class="cap"><span class="t">Airports</span><h3>Terminal runs</h3></figcaption>
-      </figure>
-      <figure class="shot">
-        <img src="assets/showcase-stadium.jpg" alt="Old Trafford stadium" loading="lazy" decoding="async">
-        <figcaption class="cap"><span class="t">Matchdays</span><h3>Football &amp; sport</h3></figcaption>
-      </figure>
-      <figure class="shot">
-        <img src="assets/showcase-festival.jpg" alt="Festival crowd with hands raised" loading="lazy" decoding="async">
-        <figcaption class="cap"><span class="t">Events</span><h3>Festivals &amp; days out</h3></figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== COVERAGE ===================== -->
-<section class="band-deep" id="coverage">
-  <div class="container">
-    <div class="section-head on-dark">
-      <span class="eyebrow on-dark">Where we go</span>
-      <h2>Bolton is home. The map is bigger.</h2>
-      <p>We're minutes from the M61, which puts most of the North West inside an hour and the rest of the country on one clear run.</p>
-    </div>
-    <div class="cover">
-      <div class="panel-dark">
-        <h3>Across the North West</h3>
-        <p>Regular pick-ups and drop-offs throughout Greater Manchester, Lancashire and Merseyside.</p>
-        <ul class="towns">
-          <li>Bolton</li><li>Bury</li><li>Wigan</li><li>Salford</li><li>Manchester</li>
-          <li>Rochdale</li><li>Oldham</li><li>Stockport</li><li>Warrington</li><li>Preston</li>
-          <li>Chorley</li><li>Blackburn</li><li>Liverpool</li><li>St Helens</li><li>Leigh</li><li>Radcliffe</li>
-        </ul>
-      </div>
-      <div class="panel-dark accent">
-        <h3>Nationwide work</h3>
-        <p>Long-distance runs are part of what we do, not an exception. London, the Midlands, Scotland, Wales and the South Coast — including multi-day trips where the vehicle and driver stay with your group throughout.</p>
-        <p style="margin-top:14px;">Tell us the route and we'll price it properly, including driver hours and overnight costs where they apply.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ===================== REVIEWS ===================== -->
-<section id="reviews">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">What customers say</span>
-      <h2>Judged on the day, not the sales pitch.</h2>
-      <p>Every review below is a real one, left on our Google profile by someone who actually travelled with us.</p>
-    </div>
-
-    <div class="rev-top">
-      <div class="rev-score">
-        <b><span class="slot">4.9</span></b>
-        <span class="of">out of 5</span>
-      </div>
-      <div class="meta">
-        <strong>Rated on Google</strong>
-        Based on <span class="slot">00</span> reviews from Bux Travel customers
-      </div>
-      <a class="btn btn-ghost-light" href="https://maps.app.goo.gl/h7SHcaFFChDUfCqA8" target="_blank" rel="noopener">Read all reviews</a>
-    </div>
-
-    <div class="marquee">
-      <div class="marquee-track">
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 1 — copy the text of a real Google review here, word for word.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 2 — pick one that mentions the driver by name if you have it.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 3 — a corporate or school booking works well here.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-        <div aria-hidden="true" style="display:contents">
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 1 — copy the text of a real Google review here, word for word.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 2 — pick one that mentions the driver by name if you have it.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-      <article class="rev">
-        <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3 6 20.6l1.3-6.8-5-4.7 6.8-.8z"/></svg></div>
-        <p style="margin-top:12px;"><span class="slot">PASTE REVIEW 3 — a corporate or school booking works well here.</span></p>
-        <div class="who"><b><span class="slot">Customer name</span></b><span><span class="slot">Journey type</span></span></div>
-      </article>
-        </div>
-      </div>
-    </div>
-
-    <p class="hint" style="margin-top:20px;">Travelled with us? <a href="https://maps.app.goo.gl/h7SHcaFFChDUfCqA8" target="_blank" rel="noopener" style="color:var(--champ-deep);font-weight:600;">Leave a review on Google</a> — it takes a minute and it genuinely helps.</p>
-  </div>
-</section>
-
-<!-- ===================== QUOTE ===================== -->
-<section id="booking" style="padding-top:0;">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Get a quote</span>
-      <h2>Tell us where you're going.</h2>
-      <p>Fill this in and it opens WhatsApp with the details ready to send. If you'd rather just type it yourself, message us directly.</p>
-    </div>
-    <div class="quote">
-      <div class="formwrap">
-        <form id="quoteForm" novalidate>
-          <div class="row">
-            <div><label for="name">Your name</label><input id="name" type="text" autocomplete="name" required></div>
-            <div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel" required></div>
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <img class="hero-bg" src="assets/hero-minibus.jpg" alt="" fetchpriority="high" decoding="async">
+    <div class="hero-scrim"></div>
+    <div class="hero-inner">
+      <div class="container">
+        <div class="hero-copy">
+          <span class="eyebrow on-dark rev-in">Bolton, PSV and private hire</span>
+          <h1 class="rev-in">Group travel from Bolton to
+            <span class="rot" id="rot" aria-label="Manchester Airport, Liverpool, the Lake District, London and the South, or anywhere in the UK">
+              <i class="on">Manchester Airport</i>
+              <i>Liverpool</i>
+              <i>the Lake District</i>
+              <i>London and the South</i>
+              <i>anywhere in the UK</i>
+            </span>
+          </h1>
+          <p class="lead rev-in" style="color:var(--on-dark-2); font-size:1.125rem;">
+            Licensed minibuses from 4 to 18 seats with an experienced driver. Airport transfers,
+            corporate shuttles, school contracts, weddings and days out, across the North West and
+            the length of the country.
+          </p>
+          <div class="hero-cta rev-in">
+            <a class="btn btn-wa" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
+              Message us on WhatsApp
+            </a>
+            <a class="btn btn-ghost-dark" href="#booking">Request a quote</a>
           </div>
-          <div><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
-          <div class="row">
-            <div><label for="pickup">Pick-up from</label><input id="pickup" type="text" placeholder="Postcode or address" required></div>
-            <div><label for="dropoff">Going to</label><input id="dropoff" type="text" placeholder="Postcode or venue" required></div>
+          <div class="hero-chips rev-in">
+            <span class="chip"><i></i><b>4 to 18</b> seats</span>
+            <span class="chip"><i></i><b>Licensed</b> operator</span>
+            <span class="chip"><i></i><b>30 min</b> typical reply</span>
           </div>
-          <div class="row">
-            <div><label for="date">Date of travel</label><input id="date" type="date" required></div>
-            <div><label for="time">Pick-up time</label><input id="time" type="time"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust">
+    <div class="container" style="padding:0;">
+      <div class="trust-in" style="max-width:var(--maxw); margin:0 auto;">
+        <div><b class="num">4&ndash;18</b><span>Seats per vehicle</span></div>
+        <div><b>Licensed</b><span>PSV &amp; private hire</span></div>
+        <div><b>North West</b><span>Plus UK-wide work</span></div>
+        <div><b class="num">24/7</b><span>Bookings &amp; quotes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Services ===== -->
+  <section id="services">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow rev-in">What we do</span>
+        <h2 class="rev-in">Work we take on.</h2>
+        <p class="lead rev-in">
+          One vehicle, one driver, one price agreed before you travel. Everything below is
+          regular work for us, not a list of things we might try.
+        </p>
+      </div>
+
+      <div class="bento">
+        <article class="cell cell-photo cell-wide rev-in">
+          <img src="assets/airport-transfer.jpg" alt="A Bux Travel minibus on an airport transfer run">
+          <span class="veil"></span>
+          <div class="on-photo">
+            <h3>Airport transfers</h3>
+            <p class="small">
+              Manchester, Liverpool, Leeds Bradford and the London airports. We track the flight
+              and wait when it slips, and the price does not move with it.
+            </p>
           </div>
-          <div class="row">
-            <div><label for="passengers">Passengers</label><input id="passengers" type="number" min="1" max="60" inputmode="numeric" required></div>
-            <div><label for="type">Journey type</label>
-              <select id="type">
-                <option>One way</option>
-                <option>Return</option>
-                <option>Return, with waiting time</option>
-                <option>Multi-day</option>
-                <option>Regular contract</option>
-              </select>
+        </article>
+
+        <article class="cell cell-third rev-in">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="7" width="18" height="12" rx="2"/><path d="M8 7V5h8v2M7 19v2M17 19v2"/>
+            </svg>
+          </span>
+          <h3>Corporate &amp; staff shuttles</h3>
+          <p class="small">Site visits, conferences and shift runs. Invoiced monthly if that suits your finance team better.</p>
+        </article>
+
+        <article class="cell cell-half rev-in">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11v5c0 1 2 2.5 5 2.5s5-1.5 5-2.5v-5"/>
+            </svg>
+          </span>
+          <h3>School &amp; college transport</h3>
+          <p class="small">Trips, fixtures and regular contracts, with the same vetted driver kept on the run.</p>
+        </article>
+
+        <article class="cell cell-half rev-in">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z"/>
+            </svg>
+          </span>
+          <h3>Weddings &amp; celebrations</h3>
+          <p class="small">Guest shuttles between ceremony, reception and hotels, so nobody has to nominate a driver.</p>
+        </article>
+
+        <article class="cell cell-photo cell-half rev-in">
+          <img src="assets/sports-travel.jpg" alt="Supporters travelling to an away fixture by minibus">
+          <span class="veil"></span>
+          <div class="on-photo">
+            <h3>Days out &amp; sports travel</h3>
+            <p class="small">Race days, away matches, festivals, the Lakes, the Dales and North Wales. Door to door, back whenever you are finished.</p>
+          </div>
+        </article>
+
+        <article class="cell cell-photo cell-half rev-in">
+          <img src="assets/days-out-leisure.jpg" alt="A group boarding a minibus for a day trip">
+          <span class="veil"></span>
+          <div class="on-photo">
+            <h3>Groups &amp; clubs</h3>
+            <p class="small">Churches, care and community groups, societies and teams. Tell us about access needs when you book and we will plan around them.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Fleet ===== -->
+  <section class="band-dark" id="fleet">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow on-dark rev-in">The fleet</span>
+        <h2 class="rev-in">Pick the size. We&rsquo;ll do the rest.</h2>
+        <p class="lead rev-in">
+          Four to eighteen seats, maintained on a scheduled inspection programme and driven by a
+          licensed, vetted driver. Over 18, we run vehicles in convoy so the group arrives together.
+        </p>
+      </div>
+
+      <div class="fleet-grid">
+        <div class="sizes rev-in">
+          <div class="size">
+            <span class="n"><em data-count="8">0</em><span>Seats</span></span>
+            <div>
+              <h3>Small group</h3>
+              <p class="small">Families, small teams and airport runs where a taxi is too tight.</p>
             </div>
           </div>
-          <div><label for="notes">Anything else we should know</label>
-            <textarea id="notes" placeholder="Luggage, wheelchair access, flight number, multiple pick-ups…"></textarea>
+          <div class="size">
+            <span class="n"><em data-count="16">0</em><span>Seats</span></span>
+            <div>
+              <h3>Standard minibus</h3>
+              <p class="small">The workhorse. Corporate shuttles, school runs, weddings and day trips.</p>
+            </div>
           </div>
-          <div class="fstatus" id="fstatus" role="status" aria-live="polite"></div>
-          <div>
-            <button class="btn btn-wa" type="submit">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
-              Send on WhatsApp
-            </button>
+          <div class="size">
+            <span class="n"><em data-count="18">0</em><span>Seats</span></span>
+            <div>
+              <h3>Large minibus</h3>
+              <p class="small">Our biggest. Keeps a large party together in one vehicle, not two.</p>
+            </div>
           </div>
-          <p class="hint">Nothing sends until you press send in WhatsApp.</p>
-          <p class="hint" id="fbwrap" style="display:none;">WhatsApp didn't open? <a id="fblink" href="#" style="color:var(--champ-deep);font-weight:600;">Send it by email instead</a>.</p>
-          <p class="hint">We'll only use your details to answer this enquiry. See our <a href="privacy.html" style="color:var(--champ-deep);font-weight:600;">privacy policy</a>.</p>
-        </form>
+        </div>
+
+        <figure class="fleet-photo rev-in" style="margin:0;">
+          <img src="assets/minibus-fleet.jpg" alt="Bux Travel minibuses parked and ready for the day">
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Coverage ===== -->
+  <section class="band-deep" id="coverage">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow on-dark rev-in">Where we go</span>
+        <h2 class="rev-in">Bolton is home. The map is bigger.</h2>
+        <p class="lead rev-in">
+          We&rsquo;re minutes from the M61, which puts most of the North West inside an hour and the
+          rest of the country on one clear run.
+        </p>
       </div>
 
-      <aside class="contact">
-        <h3>Talk to us</h3>
-        <dl style="margin:0;">
-          <div class="cline">
-            <dt>WhatsApp</dt>
-            <dd><a href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">Start a chat</a>
-            <small>Fastest way to reach us. Send the date, route and passenger count.</small></dd>
+      <div class="cover-grid">
+        <div class="rev-in">
+          <h3>Across the North West</h3>
+          <p class="small" style="margin-top:8px;">
+            Regular pick-ups and drop-offs throughout Greater Manchester, Lancashire and Merseyside.
+          </p>
+          <div class="areas">
+            <span class="area key">Bolton</span><span class="area">Bury</span><span class="area">Wigan</span>
+            <span class="area">Salford</span><span class="area">Manchester</span><span class="area">Rochdale</span>
+            <span class="area">Oldham</span><span class="area">Stockport</span><span class="area">Warrington</span>
+            <span class="area">Preston</span><span class="area">Chorley</span><span class="area">Blackburn</span>
+            <span class="area">Liverpool</span><span class="area">St Helens</span><span class="area">Leigh</span>
+            <span class="area">Radcliffe</span>
           </div>
-          <div class="cline">
-            <dt>Email</dt>
-            <dd><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></dd>
+        </div>
+
+        <div class="rev-in">
+          <h3>Nationwide work</h3>
+          <p class="small" style="margin-top:8px;">
+            Long-distance runs are part of what we do, not an exception. London, the Midlands,
+            Scotland, Wales and the South Coast, including multi-day trips where the vehicle and
+            driver stay with your group throughout.
+          </p>
+          <p class="small" style="margin-top:14px;">
+            Tell us the route and we&rsquo;ll price it properly, including driver hours and overnight
+            costs where they apply.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Reviews ===== -->
+  <section id="reviews">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow rev-in">What customers say</span>
+        <h2 class="rev-in">Judged on the day, not the sales pitch.</h2>
+        <p class="lead rev-in">
+          Every review below is a real one, left on our Google profile by someone who actually
+          travelled with us.
+        </p>
+      </div>
+
+      <div class="rev-grid">
+        <div class="rating rev-in">
+          <span class="score num" id="score">&mdash;</span>
+          <div class="stars" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
           </div>
-          <div class="cline">
-            <dt>Office hours</dt>
-            <dd>Open 24/7<small>Message or call any time — including nights, weekends and bank holidays.</small></dd>
+          <p class="small" style="margin-top:4px;">Rated on Google, based on <span class="num" id="revCount">9</span> reviews from Bux Travel customers.</p>
+          <a class="btn btn-ghost btn-sm" style="align-self:flex-start; margin-top:8px;" href="#">Read all reviews</a>
+        </div>
+
+        <div class="rev-slot rev-in" id="revSlot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Booking ===== -->
+  <section class="band-dark" id="booking">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow on-dark rev-in">Bookings &amp; quotes</span>
+        <h2 class="rev-in">Tell us where you&rsquo;re going.</h2>
+        <p class="lead rev-in">
+          Fill this in and it opens WhatsApp with the details ready to send. If you&rsquo;d rather
+          just type it yourself, message us directly.
+        </p>
+      </div>
+
+      <div class="book-grid">
+        <form id="quote" class="rev-in" novalidate>
+          <div class="row2">
+            <div class="field" data-f="name">
+              <label for="q-name" style="color:var(--on-dark);">Your name</label>
+              <input id="q-name" type="text" autocomplete="name" placeholder="First and last name">
+              <span class="err">Please tell us your name.</span>
+            </div>
+            <div class="field" data-f="phone">
+              <label for="q-phone" style="color:var(--on-dark);">Phone</label>
+              <input id="q-phone" type="tel" autocomplete="tel" placeholder="07700 900318">
+              <span class="err">Enter a number we can reach you on.</span>
+            </div>
           </div>
-          <div class="cline">
-            <dt>Based in</dt>
-            <dd>Bolton<small>Greater Manchester · covering the North West and nationwide</small></dd>
+
+          <div class="row2">
+            <div class="field" data-f="pickup">
+              <label for="q-pickup" style="color:var(--on-dark);">Pick-up from</label>
+              <input id="q-pickup" type="text" placeholder="Address or postcode">
+              <span class="err">Where should the driver collect you?</span>
+            </div>
+            <div class="field" data-f="dropoff">
+              <label for="q-dropoff" style="color:var(--on-dark);">Going to</label>
+              <input id="q-dropoff" type="text" placeholder="Airport, venue or postcode">
+              <span class="err">Where are you heading?</span>
+            </div>
           </div>
-        </dl>
-      </aside>
-    </div>
-  </div>
-</section>
 
-<!-- ===================== FAQ ===================== -->
-<section class="band-dark" id="faq">
-  <div class="container">
-    <div class="section-head on-dark">
-      <span class="eyebrow on-dark">Good to know</span>
-      <h2>The questions we get asked most.</h2>
-      <p>The practical detail, up front — so you know exactly what you're booking before you commit to anything.</p>
-    </div>
+          <div class="row3">
+            <div class="field" data-f="date">
+              <label for="q-date" style="color:var(--on-dark);">Date of travel</label>
+              <input id="q-date" type="date">
+              <span class="err">Choose a date.</span>
+            </div>
+            <div class="field" data-f="time">
+              <label for="q-time" style="color:var(--on-dark);">Pick-up time</label>
+              <input id="q-time" type="time">
+              <span class="err">Choose a time.</span>
+            </div>
+            <div class="field" data-f="pax">
+              <label for="q-pax" style="color:var(--on-dark);">Passengers</label>
+              <input id="q-pax" type="number" min="1" max="60" placeholder="e.g. 12">
+              <span class="err">How many travelling?</span>
+            </div>
+          </div>
 
-    <div class="promise" style="margin-bottom:34px;">
-      <div><div class="n">30 minutes</div><div class="l">Typical time to come back with a price</div></div>
-      <div><div class="n">24/7</div><div class="l">Including weekends and bank holidays</div></div>
-      <div><div class="n">Fixed price</div><div class="l">Agreed in writing before you travel</div></div>
-      <div><div class="n">Named driver</div><div class="l">Details sent to you before the day</div></div>
-    </div>
+          <div class="field" data-f="type">
+            <label for="q-type" style="color:var(--on-dark);">Journey type</label>
+            <select id="q-type">
+              <option value="">Choose one</option>
+              <option>One way</option>
+              <option>Return</option>
+              <option>Return, with waiting time</option>
+              <option>Multi-day</option>
+              <option>Regular contract</option>
+            </select>
+            <span class="err">Pick the closest option so we price it correctly.</span>
+          </div>
 
-    <div class="faq">
-      <details open>
-        <summary>How quickly will I get a quote?</summary>
-        <div class="a"><p>Most enquiries are answered <strong>within 30 minutes</strong>, day or night. Send us the date, pick-up point, destination and how many of you there are, and we'll come back with a fixed price. Complicated multi-day or multi-vehicle jobs can take a little longer because we price them properly rather than guessing.</p></div>
-      </details>
-      <details>
-        <summary>How is the price worked out?</summary>
-        <div class="a"><p>We quote a <strong>fixed price for the whole job</strong>, not a meter rate. It accounts for the vehicle size, total mileage, driver hours, waiting time and any tolls or parking. Long-distance and overnight work includes the driver's legally required rest, which is why a 300-mile round trip isn't simply double a 150-mile one.</p><p>The price we quote is the price you pay. If <em>you</em> change the job — extra stops, a later finish, more passengers — we'll tell you what that changes before we do it.</p></div>
-      </details>
-      <details>
-        <summary>How do I pay, and when?</summary>
-        <div class="a"><p>Payment terms are confirmed with your quote. For regular business, school and corporate work we can set up an <strong>account with invoicing</strong> rather than paying trip by trip — ask when you enquire.</p></div>
-      </details>
-      <details>
-        <summary>What if I need to cancel or change the booking?</summary>
-        <div class="a"><p>Tell us as early as you can and we'll do what we can. Cancellation terms depend on how close to travel you are and whether we've turned other work away to hold the vehicle — they're set out in full in our <a href="terms.html">booking terms</a> and confirmed with your quote.</p><p>Changes to timings, pick-up points or passenger numbers are usually fine with reasonable notice.</p></div>
-      </details>
-      <details>
-        <summary>Do you track flights on airport pick-ups?</summary>
-        <div class="a"><p>Yes. Give us your <strong>flight number</strong> when you book and we'll check the arrival time on the day. If the flight is early or delayed, the driver's timing moves with it — you're not left waiting, and a delay outside your control doesn't change the agreed price.</p><p>We can also arrange a <strong>meet and greet</strong> in arrivals with a name board, which is worth it for larger groups or anyone who hasn't used the terminal before.</p></div>
-      </details>
-      <details>
-        <summary>How much waiting time is included?</summary>
-        <div class="a"><p>A reasonable allowance is built into every quote, and for airport pick-ups it runs from the actual landing time rather than the scheduled one. If you know in advance you'll need us to wait — a wedding, a match, a day out — tell us and we'll price the waiting in properly so there's no dispute at the end.</p></div>
-      </details>
-      <details>
-        <summary>How much luggage can we bring?</summary>
-        <div class="a"><p>It depends on the vehicle and how full it is — luggage space and passenger seats compete for the same room. A 16-seater carrying 16 people and 16 suitcases is a different job from one carrying 10 people and hand luggage.</p><p><strong>Tell us what you're carrying when you enquire</strong> — cases, golf clubs, instruments, sports kit — and we'll put you in the right vehicle. It's the single most common cause of problems on the day and it's completely avoidable.</p></div>
-      </details>
-      <details>
-        <summary>Can you take wheelchair users or passengers with mobility needs?</summary>
-        <div class="a"><p>Tell us what's needed when you enquire and we'll be straight with you about what we can and can't accommodate, rather than promising and hoping. That includes step height, folding wheelchairs, assistance getting aboard, and where the vehicle can realistically pull up at each end.</p></div>
-      </details>
-      <details>
-        <summary>Are you licensed and insured?</summary>
-        <div class="a"><p>Yes. Bux Travel is a licensed PSV and private hire operator, all drivers hold the appropriate licences, and vehicles are maintained on a scheduled inspection programme and fully insured for passenger carrying. Schools, colleges and corporate clients who need to see documentation before booking can request it — just ask.</p></div>
-      </details>
-      <details>
-        <summary>Do you do regular contracts as well as one-off trips?</summary>
-        <div class="a"><p>Yes, and it's a good part of what we do — school and college runs, staff shuttles and standing weekly bookings. On contract work we keep the <strong>same driver on the route</strong> wherever we can, which matters more than most people expect: they learn the route, the pick-up points and the passengers.</p></div>
-      </details>
-      <details>
-        <summary>What size groups can you take?</summary>
-        <div class="a"><p>Anything from 4 to 18 in a single vehicle. Over 18, we run more than one minibus in convoy and keep them together so your group arrives at the same time rather than trickling in.</p></div>
-      </details>
-      <details>
-        <summary>How far will you travel?</summary>
-        <div class="a"><p>Anywhere in the UK. We're Bolton based and minutes from the M61, so the North West is our day-to-day, but London, the Midlands, Scotland and Wales are routine work rather than exceptions — including multi-day trips where the vehicle and driver stay with your group throughout.</p></div>
-      </details>
-    </div>
-  </div>
-</section>
+          <div class="field" data-f="notes">
+            <label for="q-notes" style="color:var(--on-dark);">Anything else we should know</label>
+            <textarea id="q-notes" placeholder="Flight number, luggage, wheelchair access, stops along the way"></textarea>
+            <span class="hint" style="color:var(--on-dark-3);">Optional, but it usually means a firmer price first time.</span>
+          </div>
 
+          <button class="btn btn-wa" type="submit" style="align-self:flex-start;">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
+            Open WhatsApp with these details
+          </button>
+          <p class="small" id="quoteStatus" role="status" aria-live="polite" style="color:var(--on-dark-2); display:none;"></p>
+        </form>
+
+        <aside class="aside-card rev-in">
+          <h3>What happens next</h3>
+          <div class="checklist">
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>A price back within 30 minutes, day or night.</span></div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Fixed and confirmed in writing. No meter.</span></div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Driver name and vehicle sent before the day.</span></div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Same driver kept on contract work.</span></div>
+          </div>
+          <p class="small">Prefer to talk it through? Message us and we will come back to you.</p>
+          <a class="btn btn-ink" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">Message us directly</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="band-deep" id="faq">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow on-dark rev-in">Before you book</span>
+        <h2 class="rev-in">The questions we get asked most.</h2>
+      </div>
+
+      <div class="faq-grid rev-in">
+        <details>
+          <summary>How quickly will I get a quote? <i></i></summary>
+          <div class="ans"><div><p>Usually within 30 minutes, day or night. If the route is complicated we will say so and come back with a firm figure rather than a guess.</p></div></div>
+        </details>
+        <details>
+          <summary>How is the price worked out? <i></i></summary>
+          <div class="ans"><div><p>Distance, driver hours, the vehicle size you need and any waiting time. It is quoted as one fixed figure before you commit, and it does not move afterwards.</p></div></div>
+        </details>
+        <details>
+          <summary>How do I pay, and when? <i></i></summary>
+          <div class="ans"><div><p>Bank transfer or card. One-off trips are settled before or on the day. Regular contract work can be invoiced monthly instead of paying trip by trip.</p></div></div>
+        </details>
+        <details>
+          <summary>What if I need to cancel or change? <i></i></summary>
+          <div class="ans"><div><p>Tell us as early as you can and we will move it. Cancellation terms are set out with your quote so there is nothing to argue about later.</p></div></div>
+        </details>
+        <details>
+          <summary>Do you track flights on airport pick-ups? <i></i></summary>
+          <div class="ans"><div><p>Yes. Give us the flight number when you book and we check the arrival on the day. If the flight is early or delayed the driver moves with it, and a delay outside your control does not change the agreed price.</p></div></div>
+        </details>
+        <details>
+          <summary>How much waiting time is included? <i></i></summary>
+          <div class="ans"><div><p>A reasonable allowance is built into every quote, and airport pick-ups run from the actual landing time rather than the scheduled one. If you know you will need us to wait, tell us and we will price it in properly.</p></div></div>
+        </details>
+        <details>
+          <summary>How much luggage can we bring? <i></i></summary>
+          <div class="ans"><div><p>Tell us the number of cases when you book. If the group is close to the seat limit with full luggage we will recommend the next size up rather than squeeze it in.</p></div></div>
+        </details>
+        <details>
+          <summary>Can you take passengers with mobility needs? <i></i></summary>
+          <div class="ans"><div><p>Tell us about access needs when you book and we will plan around them, including step access and where the vehicle can pull up.</p></div></div>
+        </details>
+        <details>
+          <summary>Are you licensed and insured? <i></i></summary>
+          <div class="ans"><div><p>Yes, as a licensed PSV and private hire operator, with vetted drivers and vehicles on a scheduled inspection programme.</p></div></div>
+        </details>
+        <details>
+          <summary>Do you do regular contracts? <i></i></summary>
+          <div class="ans"><div><p>Yes, alongside one-off trips. School runs, staff shuttles and standing weekly bookings, with the same driver kept on the run wherever possible.</p></div></div>
+        </details>
+      </div>
+    </div>
+  </section>
 </main>
-
-<div class="mbar" role="group" aria-label="Quick contact">
-  <a class="btn btn-wa" href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.93.95-3.48-.22-.36a9.38 9.38 0 0 1-1.44-5.02c0-5.18 4.23-9.4 9.44-9.4a9.35 9.35 0 0 1 6.66 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.19-4.23 9.41-9.43 9.41zM20.13 3.86A11.34 11.34 0 0 0 12.05.5C5.8.5.72 5.57.72 11.8c0 2 .52 3.95 1.52 5.66L.62 23.5l6.18-1.61a11.36 11.36 0 0 0 5.25 1.33h.01c6.25 0 11.33-5.07 11.33-11.3 0-3.02-1.18-5.86-3.26-8.06z"/></svg>
-    WhatsApp
-  </a>
-  <a class="btn btn-champ" href="#booking">Get a quote</a>
-</div>
 
 <footer>
   <div class="container">
-    <div class="fgrid">
-      <div>
-        <a class="logo" href="#top">
-          <img src="assets/bux-travel-mark.png" alt="" width="36" height="36">
-          <span class="wm"><b>Bux</b><span>Travel</span></span>
-        </a>
-        <p class="blurb">Licensed PSV and private hire operator, based in Bolton and working across the North West and the wider UK.</p>
-      </div>
-      <div>
-        <h4>Services</h4>
-        <ul>
-          <li><a href="#services">Airport transfers</a></li>
-          <li><a href="#services">Corporate travel</a></li>
-          <li><a href="#services">School contracts</a></li>
-          <li><a href="#services">Weddings &amp; events</a></li>
-          <li><a href="#services">Days out</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="https://wa.me/447581234042?text=Hi%20Bux%20Travel%2C%20I%27d%20like%20a%20quote%20for%20a%20minibus." target="_blank" rel="noopener">WhatsApp us</a></li>
-          <li><a href="mailto:saeed@buxtravel.co.uk">saeed@buxtravel.co.uk</a></li>
-          <li><a href="#booking">Request a quote</a></li>
-          <li><a href="#faq">FAQs</a></li>
-          <li><a href="terms.html">Booking terms</a></li>
-          <li><a href="privacy.html">Privacy policy</a></li>
-        </ul>
-      </div>
+    <div class="foot-top">
+      <a class="brand" href="#top" aria-label="Bux Travel, home">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span class="brand-txt"><b>Bux</b><span>Travel</span></span>
+      </a>
+      <nav class="foot-links">
+        <a href="#services">Services</a><a href="#fleet">Fleet</a><a href="#coverage">Where we go</a>
+        <a href="#reviews">Reviews</a><a href="#booking">Get a quote</a><a href="#faq">FAQs</a>
+        <a href="/privacy.html">Privacy</a><a href="/terms.html">Booking terms</a>
+      </nav>
     </div>
-    <div class="legal">
-      <span>© <span id="yr">2026</span> Bux Travel · Bolton, United Kingdom</span>
-      <span><a href="terms.html">Booking Terms</a> · <a href="privacy.html">Privacy Policy</a> · Registered with the ICO</span>
-      <span>Site by <a href="https://ysbdesigns.uk/" target="_blank" rel="noopener">YSB Designs</a></span>
+    <div class="foot-bot">
+      <p>Bux Travel, Bolton. Licensed PSV and private hire operator.</p>
+      <p>www.buxtravel.co.uk</p>
     </div>
   </div>
 </footer>
 
+<script>
+/* =====================================================================
+   REVIEWS. Paste the nine reviews from the Google profile here, word
+   for word. Nothing else needs editing: the section renders itself,
+   counts what it finds, and keeps the placeholder state until a
+   review actually has text.
+
+   Set RATING to the score Google shows. It is intentionally blank
+   rather than guessed.
+   ===================================================================== */
+var RATING = 5.0;                  // all nine reviews are 5 stars
+/* Nine Google reviews. Seven carry written text and are reproduced
+   verbatim. Two are a star rating with no written review, so they
+   count toward the total but there is nothing to quote.
+
+   The only change to any wording is Peter Barkow's paragraph break,
+   joined into one line so it sets as a single quote. */
+var REVIEWS = [
+  { text: "We used Bux Travel to pick the bridal party up from a wedding and take us back to the hotel. We needed someone reliable so that we could guarantee we wouldn't be stranded in a field! Communication was excellent and when the bus arrived, they were happy to include some additional guests who hadn't been able to get a taxi. Great service. Thank you.",
+    name: "Tiffany Brett", journey: "Wedding", stars: 5 },
+
+  { text: "Bux travel are life savers. Stuck in the rain with a friend who was in a wheel chair, taxi companies kept sending the wrong type of taxis and couldn't accept the ride. The driver was so helpful and polite. Got out and helped us in. Got the heater on for us as we were freezing. Cannot rate them higher. Top service and had a nice chat on the drive",
+    name: "Aaron L", journey: "Wheelchair access", stars: 5 },
+
+  { text: "Fantastic service from start to finish! Everything was well organised, stress free and exceeded my expectations - highly recommend!",
+    name: "chelsea young", journey: "", stars: 5 },
+
+  { text: "Great service from start to finish. The driver was on time, the car was clean, and the ride was smooth. Super friendly and professional. I'll definitely use this company again",
+    name: "Kelsey McNally", journey: "", stars: 5 },
+
+  { text: "Mr Bux was an amazing driver, even provided me with a bottle of cold water when I needed to take my tablet. Picked me up on time and even offered to pick me up after the party. Just give him a quick ring",
+    name: "davidkay181284", journey: "", stars: 5 },
+
+  { text: "Bux Travel have always been there when needed, professional, reliable and always on time. Quotes are always reasonable also. Would highly recommend \uD83D\uDC4D",
+    name: "Peter Barkow", journey: "", stars: 5 },
+
+  { text: "Mr Bux was amazing driver very safe and got me to where i needed to be. Well organised and on time. Would recommend",
+    name: "Ethan Wood", journey: "", stars: 5 },
+
+  /* Star rating only, no written review. Counted, not quoted. */
+  { text: "", name: "Zebunnisha Bux", journey: "", stars: 5 },
+  { text: "", name: "Insar iqbal Gondal bibi", journey: "", stars: 5 }
+];
+
+(function renderReviews() {
+  var slot = document.getElementById('revSlot');
+  if (!slot) return;
+  var filled = REVIEWS.filter(function (r) { return r.text && r.text.trim(); });
+
+  var score = document.getElementById('score');
+  if (score) score.textContent = RATING == null ? '\u2014' : Number(RATING).toFixed(1);
+  var count = document.getElementById('revCount');
+  if (count) count.textContent = REVIEWS.length;
+
+  if (!filled.length) {
+    slot.innerHTML =
+      '<div class="rev-empty"><b>' + REVIEWS.length + ' review slots, none filled yet.</b> ' +
+      'Paste each review verbatim into the REVIEWS array at the top of the script, ' +
+      'with the reviewer name and journey type. Left empty on purpose rather than ' +
+      'filled with invented copy.</div>';
+    return;
+  }
+
+  var at = 0;
+  var quote = document.createElement('blockquote');
+  var who = document.createElement('p');
+  who.className = 'small';
+  var nav = document.createElement('div');
+  nav.className = 'rev-nav';
+
+  function paint() {
+    var r = filled[at];
+    var body = r.text.trim();
+    quote.className = body.length > 260 ? 'long' : (body.length > 155 ? 'mid' : '');
+    quote.textContent = '\u201C' + body + '\u201D';
+    who.textContent = [r.name, r.journey].filter(Boolean).join(' \u00B7 ');
+    Array.prototype.forEach.call(nav.children, function (d, i) {
+      d.classList.toggle('on', i === at);
+    });
+  }
+
+  filled.forEach(function (r, i) {
+    var b = document.createElement('button');
+    b.className = 'rev-dot';
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Review ' + (i + 1) + ' of ' + filled.length);
+    b.addEventListener('click', function () { at = i; paint(); });
+    nav.appendChild(b);
+  });
+
+  slot.appendChild(quote);
+  slot.appendChild(who);
+  if (filled.length > 1) slot.appendChild(nav);
+  paint();
+})();
+
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Scroll entry ----
+     IntersectionObserver only. A scroll listener is a hard ban: it
+     fires every frame, cannot be batched, and wrecks mobile. Native
+     scroll-driven CSS handles the parallax, so no library is on the
+     critical path at all. */
+  function showAll() {
+    document.querySelectorAll('.rev-in').forEach(function (el) { el.classList.add('shown'); });
+    document.querySelectorAll('.area').forEach(function (el) { el.classList.add('pop'); });
+    document.querySelectorAll('.size').forEach(function (el) { el.classList.add('lit'); });
+    document.querySelectorAll('.size .n em').forEach(function (el) { el.textContent = el.dataset.count; });
+  }
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    /* Hero runs on load rather than on scroll, since it is already
+       in view. Short stagger, nothing held back behind a long delay. */
+    var heroBits = document.querySelectorAll('.hero .rev-in');
+    heroBits.forEach(function (el, i) {
+      setTimeout(function () { el.classList.add('shown'); }, 120 + i * 70);
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var bits = e.target.querySelectorAll('.rev-in:not(.shown)');
+        bits.forEach(function (el, i) {
+          setTimeout(function () { el.classList.add('shown'); }, i * 70);
+        });
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    document.querySelectorAll('section:not(.hero), footer').forEach(function (g) { io.observe(g); });
+
+    /* Seat counts tick up. The numbers are the point of the section,
+       so counting them is explanation, not decoration. */
+    var counters = document.querySelectorAll('.size .n em');
+    var countIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target, to = parseInt(el.dataset.count, 10), t0 = null;
+        (function tick(now) {
+          if (t0 === null) t0 = now;
+          var p = Math.min(1, (now - t0) / 900);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(to * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        })(performance.now());
+        countIO.unobserve(el);
+      });
+    }, { threshold: 1 });
+    counters.forEach(function (c) { countIO.observe(c); });
+
+    /* Each vehicle size lights as it reaches the middle of the screen,
+       so scrolling walks you up through the sizes. */
+    var sizeIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle('lit', e.isIntersecting); });
+    }, { rootMargin: '-38% 0px -38% 0px' });
+    document.querySelectorAll('.size').forEach(function (el) { sizeIO.observe(el); });
+
+    /* Coverage chips arrive in sequence. Capped so the tail of a long
+       list is never left waiting on a visibly slow cascade. */
+    var areaIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var chips = e.target.querySelectorAll('.area');
+        chips.forEach(function (c, i) {
+          setTimeout(function () { c.classList.add('pop'); }, Math.min(i * 34, 520));
+        });
+        areaIO.unobserve(e.target);
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.areas').forEach(function (a) { areaIO.observe(a); });
+  }
+
+  /* ---- Hero rotator ----
+     Measured per phrase so the line stays tight instead of reserving
+     height for the longest option, which was leaving a visible gap
+     under the headline on the original build. */
+  var rot = document.getElementById('rot');
+  if (rot) {
+    var words = Array.prototype.slice.call(rot.querySelectorAll('i'));
+    var at = 0;
+    function fit() { rot.style.width = words[at].getBoundingClientRect().width + 'px'; }
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); } else { fit(); }
+    fit();
+    window.addEventListener('resize', fit);
+
+    if (!reduce) {
+      setInterval(function () {
+        var prev = words[at];
+        prev.classList.remove('on'); prev.classList.add('out');
+        at = (at + 1) % words.length;
+        var next = words[at];
+        next.classList.remove('out');
+        rot.style.width = next.getBoundingClientRect().width + 'px';
+        requestAnimationFrame(function () { next.classList.add('on'); });
+        setTimeout(function () { prev.classList.remove('out'); }, 300);
+      }, 2900);
+    }
+  }
+
+  /* ---- Active nav link ---- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window && targets.length) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) {
+          a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false');
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    targets.forEach(function (t) { spy.observe(t); });
+  }
+
+  /* ---- Quote form: builds the WhatsApp message, same as the live site ---- */
+  var form = document.getElementById('quote');
+  if (!form) return;
+  var status = document.getElementById('quoteStatus');
+  var WA = '447581234042';
+
+  function val(id) { return (document.getElementById(id).value || '').trim(); }
+  function mark(f, bad) {
+    f.classList.toggle('invalid', bad);
+    var input = f.querySelector('input, select, textarea');
+    if (input) input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var required = ['name', 'phone', 'pickup', 'dropoff', 'date', 'time', 'pax', 'type'];
+    var firstBad = null;
+
+    form.querySelectorAll('.field').forEach(function (f) {
+      var key = f.dataset.f;
+      if (required.indexOf(key) === -1) return;
+      var input = f.querySelector('input, select');
+      var bad = !(input.value || '').trim();
+      if (!bad && key === 'pax') bad = !(parseInt(input.value, 10) > 0);
+      mark(f, bad);
+      if (bad && !firstBad) firstBad = input;
+    });
+
+    if (firstBad) {
+      status.style.display = 'block';
+      status.textContent = 'Check the highlighted fields, then send again.';
+      firstBad.focus();
+      return;
+    }
+
+    var lines = [
+      'Hi Bux Travel, I would like a quote.',
+      '',
+      'Name: ' + val('q-name'),
+      'Phone: ' + val('q-phone'),
+      'From: ' + val('q-pickup'),
+      'To: ' + val('q-dropoff'),
+      'Date: ' + val('q-date') + ' at ' + val('q-time'),
+      'Passengers: ' + val('q-pax'),
+      'Journey: ' + val('q-type')
+    ];
+    if (val('q-notes')) lines.push('Notes: ' + val('q-notes'));
+
+    status.style.display = 'block';
+    status.textContent = 'Opening WhatsApp with your details. If nothing happens, message us directly.';
+    window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+  });
+
+  form.addEventListener('input', function (ev) {
+    var f = ev.target.closest('.field');
+    if (f && f.classList.contains('invalid')) mark(f, false);
+  });
+})();
+</script>
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "additionalType":"https://schema.org/TaxiService",
-  "name":"Bux Travel",
-  "description":"PSV and private hire operator in Bolton providing minibus hire with driver for up to 18 passengers across the North West and nationwide.",
-  "url":"https://www.buxtravel.co.uk/",
-  "logo":"https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
-  "image":"https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
-  "email":"saeed@buxtravel.co.uk",
-  "openingHours":"Mo-Su 00:00-23:59",
-  "address":{"@type":"PostalAddress","addressLocality":"Bolton","addressRegion":"Greater Manchester","addressCountry":"GB"},
-  "areaServed":[
-    {"@type":"AdministrativeArea","name":"Bolton"},
-    {"@type":"AdministrativeArea","name":"Greater Manchester"},
-    {"@type":"AdministrativeArea","name":"North West England"},
-    {"@type":"Country","name":"United Kingdom"}
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "additionalType": "https://schema.org/TaxiService",
+  "name": "Bux Travel",
+  "description": "PSV and private hire operator in Bolton providing minibus hire with driver for up to 18 passengers across the North West and nationwide.",
+  "url": "https://www.buxtravel.co.uk/",
+  "logo": "https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
+  "image": "https://www.buxtravel.co.uk/assets/bux-travel-logo-dark.jpg",
+  "email": "saeed@buxtravel.co.uk",
+  "openingHours": "Mo-Su 00:00-23:59",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bolton",
+    "addressRegion": "Greater Manchester",
+    "addressCountry": "GB"
+  },
+  "areaServed": [
+    {
+      "@type": "AdministrativeArea",
+      "name": "Bolton"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Greater Manchester"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "North West England"
+    },
+    {
+      "@type": "Country",
+      "name": "United Kingdom"
+    }
   ],
-  "makesOffer":[
-    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Airport transfers"}},
-    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Corporate minibus hire"}},
-    {"@type":"Offer","itemOffered":{"@type":"Service","name":"School and college transport"}},
-    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Wedding and event transport"}}
-  ]
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Airport transfers"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Corporate minibus hire"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "School and college transport"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Wedding and event transport"
+      }
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": "9",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "telephone": "+447581234042"
 }
 </script>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1016,7 +1272,7 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       "name": "How quickly will I get a quote?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Most enquiries are answered within 30 minutes, day or night. Send the date, pick-up point, destination and passenger numbers and we come back with a fixed price."
+        "text": "Usually within 30 minutes, day or night. If the route is complicated we will say so and come back with a firm figure rather than a guess."
       }
     },
     {
@@ -1024,7 +1280,23 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       "name": "How is the price worked out?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "We quote a fixed price for the whole job, not a meter rate. It accounts for vehicle size, total mileage, driver hours, waiting time and any tolls or parking. The price quoted is the price you pay."
+        "text": "Distance, driver hours, the vehicle size you need and any waiting time. It is quoted as one fixed figure before you commit, and it does not move afterwards."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I pay, and when?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bank transfer or card. One-off trips are settled before or on the day. Regular contract work can be invoiced monthly instead of paying trip by trip."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I need to cancel or change?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tell us as early as you can and we will move it. Cancellation terms are set out with your quote so there is nothing to argue about later."
       }
     },
     {
@@ -1032,7 +1304,15 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       "name": "Do you track flights on airport pick-ups?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Provide your flight number when booking and we check the arrival on the day. If the flight is early or delayed the driver's timing moves with it, and a delay outside your control does not change the agreed price. Meet and greet in arrivals with a name board can also be arranged."
+        "text": "Yes. Give us the flight number when you book and we check the arrival on the day. If the flight is early or delayed the driver moves with it, and a delay outside your control does not change the agreed price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much waiting time is included?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A reasonable allowance is built into every quote, and airport pick-ups run from the actual landing time rather than the scheduled one. If you know you will need us to wait, tell us and we will price it in properly."
       }
     },
     {
@@ -1040,15 +1320,15 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       "name": "How much luggage can we bring?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It depends on the vehicle and how full it is, because luggage space and passenger seats compete for the same room. Tell us what you are carrying when you enquire and we will put you in the right vehicle."
+        "text": "Tell us the number of cases when you book. If the group is close to the seat limit with full luggage we will recommend the next size up rather than squeeze it in."
       }
     },
     {
       "@type": "Question",
-      "name": "Can you take wheelchair users or passengers with mobility needs?",
+      "name": "Can you take passengers with mobility needs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Tell us what is needed when you enquire and we will be straight about what we can and cannot accommodate, including step height, folding wheelchairs, assistance boarding, and where the vehicle can pull up at each end."
+        "text": "Tell us about access needs when you book and we will plan around them, including step access and where the vehicle can pull up."
       }
     },
     {
@@ -1056,83 +1336,19 @@ footer .blurb{ margin-top:16px; font-size:.93rem; max-width:34ch; }
       "name": "Are you licensed and insured?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Bux Travel is a licensed PSV and private hire operator. All drivers hold the appropriate licences and vehicles are maintained on a scheduled inspection programme and fully insured for passenger carrying."
+        "text": "Yes, as a licensed PSV and private hire operator, with vetted drivers and vehicles on a scheduled inspection programme."
       }
     },
     {
       "@type": "Question",
-      "name": "What size groups can you take?",
+      "name": "Do you do regular contracts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Anything from 4 to 18 passengers in a single vehicle. Over 18 we run more than one minibus in convoy so the group arrives together."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How far will you travel?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Anywhere in the UK. We are Bolton based and minutes from the M61, covering the North West day to day, with regular long-distance work to London, the Midlands, Scotland and Wales, including multi-day trips."
+        "text": "Yes, alongside one-off trips. School runs, staff shuttles and standing weekly bookings, with the same driver kept on the run wherever possible."
       }
     }
   ]
 }
-</script>
-
-<script>
-document.getElementById('yr').textContent = new Date().getFullYear();
-
-/* ---- destination rotator ---- */
-(function () {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var items = document.querySelectorAll('#rot i');
-  if (items.length < 2) return;
-  var i = 0;
-  setInterval(function () {
-    items[i].classList.remove('on');
-    i = (i + 1) % items.length;
-    items[i].classList.add('on');
-  }, 3200);
-})();
-
-/* ---------------------------------------------------------------
-   QUOTE FORM -> WHATSAPP
-   GitHub Pages is static, so there is no server to POST to. This
-   builds a pre-filled WhatsApp message and hands off to wa.me.
-   --------------------------------------------------------------- */
-var WA_NUMBER = '447581234042';
-var form = document.getElementById('quoteForm');
-var fstatus = document.getElementById('fstatus');
-function v(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
-
-form.addEventListener('submit', function (e) {
-  e.preventDefault();
-  var labels = { name:'name', phone:'phone number', email:'email', pickup:'pick-up point',
-                 dropoff:'destination', date:'date of travel', passengers:'passenger count' };
-  var missing = Object.keys(labels).filter(function (id) { return !v(id); });
-  if (missing.length) {
-    fstatus.textContent = 'Add your ' + missing.map(function (k) { return labels[k]; }).join(', ') + ' so we can price the job.';
-    fstatus.classList.add('on');
-    document.getElementById(missing[0]).focus();
-    return;
-  }
-  var lines = ['Quote request - Bux Travel','',
-    'Name: ' + v('name'), 'Phone: ' + v('phone'), 'Email: ' + v('email'), '',
-    'Pick-up: ' + v('pickup'), 'Destination: ' + v('dropoff'),
-    'Date: ' + v('date'), 'Time: ' + (v('time') || 'flexible'),
-    'Passengers: ' + v('passengers'), 'Journey type: ' + v('type')];
-  if (v('notes')) lines.push('', 'Notes: ' + v('notes'));
-  var msg = lines.join('\n');
-
-  fstatus.textContent = 'Opening WhatsApp with your details filled in. Press send and we\u2019ll come back with a price.';
-  fstatus.classList.add('on');
-  window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
-
-  document.getElementById('fblink').href = 'mailto:saeed@buxtravel.co.uk?subject='
-    + encodeURIComponent('Quote request - ' + v('pickup') + ' to ' + v('dropoff') + ', ' + v('date'))
-    + '&body=' + encodeURIComponent(msg);
-  document.getElementById('fbwrap').style.display = 'block';
-});
 </script>
 </body>
 </html>
