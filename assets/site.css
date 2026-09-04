@@ -558,3 +558,96 @@
   @media (hover: hover) and (pointer: fine) {
     .qcard:hover { border-color: var(--champ); transform: translateY(-2px); }
   }
+
+  /* ====================================================================
+     Date picker
+     Layered over the native date input rather than replacing it, so
+     typing, mobile keyboards and the existing form validation all keep
+     working. The popover is the enhancement, not the mechanism.
+     ==================================================================== */
+  .dp-wrap { position: relative; }
+  .dp-wrap input[type="date"] { padding-right: 42px; }
+  /* The native indicator would sit under our own button. */
+  .dp-wrap input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+  .dp-wrap input[type="date"]::-webkit-inner-spin-button { display: none; }
+
+  .dp-open {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center; width: 30px; height: 30px;
+    border: 0; background: transparent; border-radius: 8px; cursor: pointer;
+    color: var(--muted); transition: color 160ms var(--ease), background-color 160ms var(--ease);
+  }
+  .dp-open svg { width: 17px; height: 17px; }
+  @media (hover: hover) and (pointer: fine) {
+    .dp-open:hover { color: var(--ink); background: var(--paper); }
+  }
+  .dp-open[aria-expanded="true"] { color: var(--ink); background: var(--paper); }
+
+  .dp {
+    /* Sized to the calendar, not to the field: the field sits in a narrow
+       grid column and the popover must not collapse to it. */
+    position: absolute; z-index: 60; top: calc(100% + 8px); left: 0;
+    width: 20.5rem; max-width: calc(100vw - 2rem);
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); padding: 14px; color: var(--ink);
+    opacity: 0; transform: translateY(-6px) scale(.985); pointer-events: none;
+    transition: opacity 160ms var(--ease), transform 160ms var(--ease);
+  }
+  .dp[data-open="true"] { opacity: 1; transform: none; pointer-events: auto; }
+  .dp[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .dp { transition: none; } }
+
+  @media (max-width: 30rem) { .dp { left: auto; right: 0; } }
+
+  .dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .dp-title { font-family: var(--serif); font-size: 1.0625rem; font-weight: 600;
+              letter-spacing: -.01em; white-space: nowrap; }
+  .dp-nav { display: flex; gap: 4px; }
+  .dp-nav button {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
+    transition: border-color 160ms var(--ease);
+  }
+  .dp-nav button svg { width: 15px; height: 15px; }
+  .dp-nav button:disabled { opacity: .38; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) {
+    .dp-nav button:not(:disabled):hover { border-color: var(--champ); }
+  }
+
+  .dp-dow, .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .dp-dow span {
+    text-align: center; font-size: .6875rem; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted); padding-bottom: 6px;
+  }
+  .dp-day {
+    aspect-ratio: 1; display: grid; place-items: center; border: 0; background: transparent;
+    border-radius: 9px; font-family: inherit; font-size: .875rem; font-variant-numeric: tabular-nums;
+    color: var(--ink); cursor: pointer; position: relative;
+    transition: background-color 140ms var(--ease), color 140ms var(--ease);
+  }
+  .dp-day[data-blank] { cursor: default; }
+  .dp-day:disabled { color: #B9B1A2; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) {
+    .dp-day:not(:disabled):not([aria-selected="true"]):hover { background: var(--paper); }
+  }
+  .dp-day[aria-selected="true"] {
+    background: var(--band); color: var(--on-dark); font-weight: 600;
+  }
+  /* Today gets a mark, not a fill, so it never competes with the selection. */
+  .dp-day[data-today]::after {
+    content: ""; position: absolute; bottom: 5px; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--champ-deep);
+  }
+  .dp-day[aria-selected="true"][data-today]::after { background: var(--champ-bright); }
+  .dp-day:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+  .dp-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+             margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .dp-foot button {
+    font-family: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer;
+    border: 0; background: transparent; color: var(--champ-deep); padding: 4px 2px; border-radius: 6px;
+  }
+  @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { text-decoration: underline; } }
+  .dp-hint { font-size: .75rem; color: var(--muted); }
+
+  .field.invalid .dp-open { color: #A3231F; }
