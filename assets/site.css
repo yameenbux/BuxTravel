@@ -8,33 +8,36 @@
 
   :root {
     /* Brand, lifted verbatim from the existing site */
-    --ink:          #1E262E;
-    --paper:        #F5F2EA;
-    --card:         #FCFAF4;
-    --line:         #E4DDCE;
-    --muted:        #5E6A75;
+    --ink:          #101418;
+    --paper:        #FFFFFF;
+    --card:         #F6F6F4;
+    --line:         #E2E2DE;
+    --muted:        #5A6068;
     --champ:        #C9B79A;
     --champ-bright: #DFCBA8;
     --champ-deep:   #8A7346;
     --wa:           #1FA855;
     --wa-deep:      #25D366;
 
-    --band:      #12171D;
-    --band-deep: #0E1318;
-    --on-dark:   #F3EFE6;
-    --on-dark-2: rgba(243, 239, 230, 0.72);
-    --on-dark-3: rgba(243, 239, 230, 0.46);
-    --line-dark: rgba(243, 239, 230, 0.13);
+    --band:      #101418;
+    --band-deep: #080B0E;
+    --on-dark:   #F4F4F2;
+    --on-dark-2: rgba(244, 244, 242, 0.74);
+    --on-dark-3: rgba(244, 244, 242, 0.50);
+    --line-dark: rgba(244, 244, 242, 0.14);
 
-    --radius: 14px;
-    --radius-lg: 20px;
+    --radius: 6px;
+    --radius-lg: 10px;
 
     /* Shadows tinted to the ink hue, never flat black */
-    --shadow:    0 1px 2px rgba(14,19,24,.05), 0 8px 24px -16px rgba(14,19,24,.30);
-    --shadow-lg: 0 2px 6px rgba(14,19,24,.06), 0 24px 48px -28px rgba(14,19,24,.40);
+    --shadow:    0 1px 2px rgba(16,20,24,.06), 0 6px 18px -14px rgba(16,20,24,.28);
+    --shadow-lg: 0 2px 5px rgba(16,20,24,.07), 0 20px 40px -26px rgba(16,20,24,.38);
 
-    --serif: "Fraunces", Georgia, serif;
-    --sans:  "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+    /* Archivo carries the headings: a grotesque with real weight at the
+       top end, which is what a licensed operator should look like.
+       Barlow sets the text. No serif is defined anywhere on purpose. */
+    --display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --sans:    "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
 
     --ease: cubic-bezier(0.23, 1, 0.32, 1);
     --maxw: 1140px;
@@ -47,7 +50,7 @@
   html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   body {
     margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--sans); font-size: 16.5px; line-height: 1.6;
+    font-family: var(--sans); font-size: 17px; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -57,24 +60,33 @@
 
   /* Grain, fixed and inert, to break digital flatness */
   .grain {
-    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.035;
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0;
     background-image: radial-gradient(rgba(30,38,46,0.9) 0.5px, transparent 0.5px);
     background-size: 3px 3px;
   }
 
-  h1, h2, h3 { margin: 0; font-family: var(--serif); color: var(--ink); text-wrap: balance; }
-  h1 { font-size: clamp(2.5rem, 5.4vw, 4.05rem); font-weight: 600; line-height: 1.03; letter-spacing: -0.024em; }
-  h2 { font-size: clamp(1.85rem, 3.5vw, 2.7rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
-  h3 { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.012em; }
+  h1, h2, h3 { margin: 0; font-family: var(--display); color: var(--ink); text-wrap: balance; }
+  h1 { font-size: clamp(2.6rem, 6.2vw, 4.6rem); font-weight: 800; line-height: 0.98;
+       letter-spacing: -0.035em; text-transform: uppercase; }
+  h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.02;
+       letter-spacing: -0.03em; text-transform: uppercase; }
+  h3 { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; }
   p { margin: 0; text-wrap: pretty; }
 
   .eyebrow {
     display: inline-flex; align-items: center; gap: 11px;
-    font-family: var(--sans); font-size: 0.75rem; font-weight: 600;
-    letter-spacing: 0.15em; text-transform: uppercase; color: var(--champ-deep);
+    font-family: var(--display); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink);
   }
-  .eyebrow::before { content: ""; width: 22px; height: 1px; background: currentColor; opacity: 0.7; }
-  .on-dark .eyebrow, .eyebrow.on-dark { color: var(--champ); }
+  .eyebrow::before { content: ""; width: 26px; height: 3px; background: var(--champ-deep); }
+  /* The eyebrow is ink now, so anywhere it sits on a dark band it has to be
+     told otherwise. Scoped to the containers rather than to a class, because
+     the legal pages never carried the class and went invisible. */
+  .on-dark .eyebrow, .eyebrow.on-dark,
+  .hero .eyebrow, .page-head .eyebrow, .hero-404 .eyebrow,
+  .band-dark .eyebrow, .band-deep .eyebrow { color: var(--champ); }
+  .hero .eyebrow::before, .page-head .eyebrow::before, .hero-404 .eyebrow::before,
+  .band-dark .eyebrow::before, .band-deep .eyebrow::before { background: var(--champ); }
 
   .lead  { font-size: 1.0625rem; color: var(--muted); max-width: 62ch; }
   .small { font-size: 0.9375rem; color: var(--muted); max-width: 60ch; }
@@ -111,10 +123,10 @@
     width: 40px; height: 40px; border-radius: 11px; flex: none;
     background: linear-gradient(155deg, var(--champ-bright), var(--champ));
     display: grid; place-items: center;
-    font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--ink);
+    font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--ink);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
   }
-  .brand-txt b { display: block; font-family: var(--serif); font-size: 1.125rem; font-weight: 600; color: var(--on-dark); line-height: 1.1; }
+  .brand-txt b { display: block; font-family: var(--display); font-size: 1.125rem; font-weight: 600; color: var(--on-dark); line-height: 1.1; }
   .brand-txt span { display: block; font-size: 0.625rem; letter-spacing: 0.24em; color: var(--champ); text-transform: uppercase; }
 
   .nav-links { display: flex; gap: 4px; }
@@ -212,7 +224,7 @@
   .trust-in { display: grid; grid-template-columns: repeat(4, 1fr); }
   .trust-in > div { padding: 26px 24px; border-left: 1px solid var(--line-dark); }
   .trust-in > div:first-child { border-left: 0; }
-  .trust b { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--on-dark); line-height: 1.15; }
+  .trust b { display: block; font-family: var(--display); font-size: 1.5rem; font-weight: 600; color: var(--on-dark); line-height: 1.15; }
   .trust span { font-size: 0.6875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--on-dark-3); }
   @media (max-width: 760px) {
     .trust-in { grid-template-columns: 1fr 1fr; }
@@ -268,7 +280,7 @@
   }
   .size:last-child { border-bottom: 1px solid var(--line-dark); }
   .size .n {
-    font-family: var(--serif); font-size: 2.5rem; font-weight: 600; color: var(--champ);
+    font-family: var(--display); font-size: 2.5rem; font-weight: 600; color: var(--champ);
     line-height: 1; font-variant-numeric: tabular-nums;
   }
   .size .n span { display: block; font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 5px; }
@@ -287,11 +299,11 @@
   .rev-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 44px; align-items: center; }
   @media (max-width: 860px) { .rev-grid { grid-template-columns: 1fr; gap: 28px; } }
   .rating { display: flex; flex-direction: column; gap: 6px; }
-  .rating .score { font-family: var(--serif); font-size: 3.6rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .rating .score { font-family: var(--display); font-size: 3.6rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
   .stars { display: flex; gap: 3px; color: #E8A33D; }
   .stars svg { width: 17px; height: 17px; }
   blockquote {
-    margin: 0; font-family: var(--serif); font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    margin: 0; font-family: var(--display); font-size: clamp(1.3rem, 2.4vw, 1.75rem);
     line-height: 1.35; letter-spacing: -0.015em; color: var(--ink);
   }
   /* Real reviews vary a lot in length. The type steps down as they run
@@ -454,7 +466,7 @@
   }
   .page-head .container { padding-top: clamp(2.5rem, 7vw, 4.5rem); padding-bottom: clamp(2.25rem, 6vw, 3.75rem); }
   .page-head h1 {
-    font-family: var(--serif); font-weight: 600; line-height: 1.06;
+    font-family: var(--display); font-weight: 600; line-height: 1.06;
     font-size: clamp(2rem, 5.2vw, 3.35rem); letter-spacing: -0.02em;
     margin: .5rem 0 0; text-wrap: balance; max-width: 24ch;
     /* h1 defaults to --ink, which is 1.18:1 on this band. Must be set. */
@@ -472,13 +484,13 @@
                border-radius: var(--radius); overflow: hidden;
                grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
   .proof-row > div { background: var(--card); padding: 1.15rem 1.25rem; }
-  .proof-row dt { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--ink); }
+  .proof-row dt { font-family: var(--display); font-size: 1.35rem; font-weight: 600; color: var(--ink); }
   .proof-row dd { margin: .3rem 0 0; font-size: .875rem; color: var(--muted); }
 
   /* Plain prose blocks, for the answer-the-question sections. */
   .prose { max-width: 68ch; }
   .prose p { margin: 0 0 1rem; }
-  .prose h3 { font-family: var(--serif); font-weight: 600; font-size: 1.25rem; margin: 1.75rem 0 .5rem; }
+  .prose h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; margin: 1.75rem 0 .5rem; }
   .prose ul { margin: 0 0 1rem; padding-left: 1.1rem; }
   .prose li { margin: 0 0 .45rem; }
 
@@ -522,7 +534,7 @@
 
   .contact-box { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card);
                  padding: 1.25rem 1.4rem; margin-top: 2rem; }
-  .contact-box h3 { font-family: var(--serif); font-size: 1.125rem; margin: 0 0 .4rem; }
+  .contact-box h3 { font-family: var(--display); font-size: 1.125rem; margin: 0 0 .4rem; }
   .contact-box p { margin: 0 0 .3rem; font-size: .9375rem; color: var(--muted); }
   .contact-box a { color: var(--champ-deep); }
 
@@ -553,7 +565,7 @@
   .qcard { display: block; text-decoration: none; border: 1px solid var(--line);
            border-radius: var(--radius); background: var(--card); padding: 1.15rem 1.25rem;
            transition: border-color .18s cubic-bezier(.23,1,.32,1), transform .18s cubic-bezier(.23,1,.32,1); }
-  .qcard h2 { font-family: var(--serif); font-size: 1.0625rem; margin: 0 0 .25rem; }
+  .qcard h2 { font-family: var(--display); font-size: 1.0625rem; margin: 0 0 .25rem; }
   .qcard .t { display: block; font-size: .875rem; color: var(--muted); }
   @media (hover: hover) and (pointer: fine) {
     .qcard:hover { border-color: var(--champ); transform: translateY(-2px); }
@@ -600,7 +612,7 @@
   @media (max-width: 30rem) { .dp { left: auto; right: 0; } }
 
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-  .dp-title { font-family: var(--serif); font-size: 1.0625rem; font-weight: 600;
+  .dp-title { font-family: var(--display); font-size: 1.0625rem; font-weight: 600;
               letter-spacing: -.01em; white-space: nowrap; }
   .dp-nav { display: flex; gap: 4px; }
   .dp-nav button {
@@ -651,3 +663,157 @@
   .dp-hint { font-size: .75rem; color: var(--muted); }
 
   .field.invalid .dp-open { color: #A3231F; }
+
+
+  /* ====================================================================
+     Fleet reveal
+     A minibus silhouette that opens as you scroll, until the vehicle
+     shape has grown past the edges of the screen and you are simply
+     looking at the photograph.
+
+     Native CSS scroll-driven animation, no library. Where the browser
+     does not support it the mask is never applied at all, so the panel
+     shows the photograph full-bleed instead of an empty box. That is the
+     whole fallback: worse, but never broken.
+     ==================================================================== */
+  .reveal { position: relative; min-height: 215vh; background: var(--band); }
+  .reveal__pin {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .reveal__shot, .reveal__full { position: absolute; inset: 0; }
+  .reveal__shot img, .reveal__full img { width: 100%; height: 100%; object-fit: cover; }
+  /* Unmasked copy underneath. The silhouette has wheels at the bottom, so its
+     full-width band never reaches the bottom of the screen at any sane size.
+     Rather than overshoot the mask to absurdity, the plain photograph fades up
+     underneath as the shape opens out. */
+  .reveal__full { opacity: 0; }
+
+  /* Sits above the photo, and is what the mask cuts through. */
+  .reveal__cap {
+    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+    text-align: center; padding: 0 24px; pointer-events: none; isolation: isolate;
+  }
+  /* The photograph is bright in the middle, which is exactly where the words
+     sit. A text-shadow alone does not hold it; this does. */
+  .reveal__cap::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(60% 45% at 50% 50%,
+                rgba(8,11,14,.74) 0%, rgba(8,11,14,.58) 45%, rgba(8,11,14,0) 78%);
+  }
+  .reveal__cap p {
+    font-family: var(--display); font-weight: 800; text-transform: uppercase;
+    font-size: clamp(1.5rem, 4.4vw, 3.2rem); line-height: 1; letter-spacing: -0.03em;
+    color: var(--on-dark); max-width: 16ch; text-shadow: 0 1px 2px rgba(0,0,0,.55);
+  }
+  .reveal__cap span { display: block; font-family: var(--sans); font-weight: 500;
+    text-transform: none; font-size: 1rem; letter-spacing: 0; margin-top: 14px;
+    color: var(--on-dark); opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.55); }
+
+  @supports (animation-timeline: view()) {
+    .reveal { view-timeline-name: --busline; view-timeline-axis: block; }
+    .reveal__shot {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+      -webkit-mask-repeat: no-repeat;     mask-repeat: no-repeat;
+      -webkit-mask-position: 50% 50%;     mask-position: 50% 50%;
+      -webkit-mask-size: 34vmin;          mask-size: 34vmin;
+      animation: reveal-open linear both;
+      animation-timeline: --busline;
+      /* contain, for an element taller than the screen, resolves to exactly
+         the window where it fully covers the scrollport, which is exactly
+         the window where the panel is pinned. entry/exit leaves a dead third
+         at the start; cover begins before the pin does. */
+      animation-range: contain 0% contain 100%;
+    }
+    @keyframes reveal-open {
+      from { -webkit-mask-size: 34vmin; mask-size: 34vmin; }
+      to   { -webkit-mask-size: 260vmin; mask-size: 260vmin; }
+    }
+    /* The words arrive once there is enough picture behind them to sit on. */
+    .reveal__full {
+      animation: reveal-settle linear both;
+      animation-timeline: --busline; animation-range: contain 0% contain 100%;
+    }
+    @keyframes reveal-settle { from { opacity: 0; } 62% { opacity: 0; } to { opacity: 1; } }
+
+    .reveal__cap { animation: reveal-fade linear both;
+                   animation-timeline: --busline; animation-range: contain 0% contain 100%; }
+    @keyframes reveal-fade { from { opacity: 0; } 45% { opacity: 0; } 70% { opacity: 1; } to { opacity: 1; } }
+  }
+
+  /* A long pinned panel is a poor trade on a phone, and worse with
+     reduced motion: collapse it to an ordinary picture. */
+  @media (max-width: 46rem), (prefers-reduced-motion: reduce) {
+    .reveal { min-height: 0; }
+    .reveal__pin { position: static; height: auto; aspect-ratio: 4 / 3; }
+    .reveal__shot { -webkit-mask-image: none !important; mask-image: none !important;
+                    animation: none !important; }
+    .reveal__cap { animation: none !important; opacity: 1 !important; }
+  }
+
+  /* ====================================================================
+     Reviews: a stack, not a single card
+     The depth is the message. One quote on its own says nothing about
+     how many there are; three edges behind it do. Every review sits in
+     the DOM and is readable to a screen reader and to a crawler.
+     ==================================================================== */
+  .rev-stack {
+    position: relative; min-height: var(--rev-h, 210px);
+    padding-top: 46px; transition: min-height 320ms var(--ease);
+  }
+  .rev-stack:focus-visible { outline: 2px solid var(--champ); outline-offset: 10px; border-radius: 4px; }
+
+  .rev-card {
+    position: absolute; inset: 0 0 auto 0; margin: 0;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 24px; transform-origin: 50% 0%;
+    transition: transform 380ms var(--ease), opacity 260ms var(--ease), visibility 0s linear 260ms;
+    opacity: 0; visibility: hidden;
+  }
+  /* The current card and the three behind it are the only ones drawn. */
+  .rev-card[data-depth="0"], .rev-card[data-depth="1"],
+  .rev-card[data-depth="2"], .rev-card[data-depth="3"] {
+    opacity: 1; visibility: visible; transition-delay: 0s;
+  }
+  .rev-card[data-depth="1"] { opacity: .55; }
+  .rev-card[data-depth="2"] { opacity: .3; }
+  .rev-card[data-depth="3"] { opacity: .14; }
+  /* Cards already read slide out of the way entirely. */
+  .rev-card[data-depth="-1"] { opacity: 0; visibility: hidden; }
+  .rev-card:not(.is-active) { pointer-events: none; }
+  .rev-card.is-active { box-shadow: var(--shadow-lg); }
+
+  .rev-card blockquote {
+    margin: 0; font-size: 1.0625rem; line-height: 1.55; color: var(--ink); text-wrap: pretty;
+  }
+  .rev-card blockquote.mid  { font-size: 1rem; }
+  .rev-card blockquote.long { font-size: 0.9375rem; line-height: 1.6; }
+  .rev-card figcaption {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-family: var(--display); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  }
+
+  .rev-nav { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
+  .rev-arrow {
+    display: grid; place-items: center; width: 34px; height: 34px; flex: none;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    border-radius: 999px; cursor: pointer;
+    transition: border-color 160ms var(--ease), background-color 160ms var(--ease);
+  }
+  .rev-arrow svg { width: 15px; height: 15px; }
+  .rev-arrow:disabled { opacity: .3; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) {
+    .rev-arrow:not(:disabled):hover { border-color: var(--champ); background: var(--card); }
+  }
+  .rev-dots { display: flex; align-items: center; gap: 7px; }
+  .rev-dot {
+    width: 7px; height: 7px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
+    background: #C6C6C1;
+    transition: width 220ms var(--ease), background-color 220ms var(--ease);
+  }
+  .rev-dot.on { width: 26px; background: var(--champ-deep); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rev-stack, .rev-card, .rev-dot { transition: none; }
+  }

@@ -20,7 +20,7 @@
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
@@ -181,6 +181,20 @@
   </section>
 
   <!-- ===== Fleet ===== -->
+  <section class="reveal" aria-labelledby="reveal-h">
+    <div class="reveal__pin">
+      <div class="reveal__full" aria-hidden="true">
+        <img src="assets/minibus-fleet.jpg" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="reveal__shot">
+        <img src="assets/minibus-fleet.jpg" alt="Bux Travel minibuses" loading="lazy" decoding="async">
+      </div>
+      <div class="reveal__cap">
+        <p id="reveal-h">Four to eighteen seats<span>One vehicle, one driver, one price agreed before you travel.</span></p>
+      </div>
+    </div>
+  </section>
+
   <section class="band-dark" id="fleet">
     <div class="container">
       <div class="sec-head">
@@ -523,7 +537,7 @@ var REVIEWS = [
   var filled = REVIEWS.filter(function (r) { return r.text && r.text.trim(); });
 
   var score = document.getElementById('score');
-  if (score) score.textContent = RATING == null ? '\u2014' : Number(RATING).toFixed(1);
+  if (score) score.textContent = RATING == null ? '—' : Number(RATING).toFixed(1);
   var count = document.getElementById('revCount');
   if (count) count.textContent = REVIEWS.length;
 
@@ -536,37 +550,97 @@ var REVIEWS = [
     return;
   }
 
-  var at = 0;
-  var quote = document.createElement('blockquote');
-  var who = document.createElement('p');
-  who.className = 'small';
-  var nav = document.createElement('div');
-  nav.className = 'rev-nav';
+  /* A stack rather than a single quote: the depth says there are more
+     behind this one, which a lone card cannot. Every review is in the
+     DOM and readable; only the transform is decorative. */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var at = 0, N = filled.length;
 
-  function paint() {
-    var r = filled[at];
+  var stack = document.createElement('div');
+  stack.className = 'rev-stack';
+  stack.setAttribute('role', 'group');
+  stack.setAttribute('aria-roledescription', 'carousel');
+  stack.setAttribute('aria-label', 'Customer reviews');
+  stack.tabIndex = 0;
+
+  var cards = filled.map(function (r, i) {
+    var fig = document.createElement('figure');
+    fig.className = 'rev-card';
+    fig.setAttribute('role', 'group');
+    fig.setAttribute('aria-roledescription', 'slide');
+    fig.setAttribute('aria-label', (i + 1) + ' of ' + N);
     var body = r.text.trim();
-    quote.className = body.length > 260 ? 'long' : (body.length > 155 ? 'mid' : '');
-    quote.textContent = '\u201C' + body + '\u201D';
-    who.textContent = [r.name, r.journey].filter(Boolean).join(' \u00B7 ');
-    Array.prototype.forEach.call(nav.children, function (d, i) {
-      d.classList.toggle('on', i === at);
-    });
-  }
-
-  filled.forEach(function (r, i) {
-    var b = document.createElement('button');
-    b.className = 'rev-dot';
-    b.type = 'button';
-    b.setAttribute('aria-label', 'Review ' + (i + 1) + ' of ' + filled.length);
-    b.addEventListener('click', function () { at = i; paint(); });
-    nav.appendChild(b);
+    var q = document.createElement('blockquote');
+    q.className = body.length > 260 ? 'long' : (body.length > 155 ? 'mid' : '');
+    q.textContent = '“' + body + '”';
+    var cap = document.createElement('figcaption');
+    cap.textContent = [r.name, r.journey].filter(Boolean).join(' · ');
+    fig.appendChild(q); fig.appendChild(cap);
+    stack.appendChild(fig);
+    return fig;
   });
 
-  slot.appendChild(quote);
-  slot.appendChild(who);
-  if (filled.length > 1) slot.appendChild(nav);
+  var nav = document.createElement('div');
+  nav.className = 'rev-nav';
+  function arrow(dir, label) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'rev-arrow'; b.setAttribute('aria-label', label);
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="' +
+      (dir < 0 ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7') + '"/></svg>';
+    b.addEventListener('click', function () { go(at + dir); });
+    return b;
+  }
+  var prev = arrow(-1, 'Previous review');
+  var dots = document.createElement('div');
+  dots.className = 'rev-dots';
+  var dotEls = filled.map(function (r, i) {
+    var d = document.createElement('button');
+    d.type = 'button'; d.className = 'rev-dot';
+    d.setAttribute('aria-label', 'Review ' + (i + 1) + ' of ' + N);
+    d.addEventListener('click', function () { go(i); });
+    dots.appendChild(d);
+    return d;
+  });
+  var next = arrow(1, 'Next review');
+  nav.appendChild(prev); nav.appendChild(dots); nav.appendChild(next);
+
+  function paint() {
+    cards.forEach(function (el, i) {
+      var off = i - at;
+      el.classList.toggle('is-active', i === at);
+      /* Behind the current card, three deep, then nothing. */
+      var depth = off < 0 ? -1 : Math.min(off, 3);
+      el.dataset.depth = depth;
+      el.style.zIndex = String(N - i);
+      el.setAttribute('aria-hidden', i === at ? 'false' : 'true');
+      el.style.transform = reduce || off < 0 ? '' :
+        'translateY(' + (depth * -14) + 'px) scale(' + (1 - depth * 0.045) + ')';
+    });
+    dotEls.forEach(function (d, i) {
+      d.classList.toggle('on', i === at);
+      d.setAttribute('aria-current', i === at ? 'true' : 'false');
+    });
+    prev.disabled = at === 0;
+    next.disabled = at === N - 1;
+    stack.style.setProperty('--rev-h', cards[at].scrollHeight + 'px');
+  }
+
+  function go(i) {
+    at = Math.max(0, Math.min(N - 1, i));
+    paint();
+  }
+
+  /* Scoped to the carousel. Binding arrow keys to window would hijack
+     them for the whole page, which breaks ordinary scrolling. */
+  stack.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(at - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(at + 1); }
+  });
+
+  slot.appendChild(stack);
+  if (N > 1) slot.appendChild(nav);
   paint();
+  window.addEventListener('resize', paint);
 })();
 
 (function () {
