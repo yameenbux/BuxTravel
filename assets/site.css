@@ -676,10 +676,10 @@
      shows the photograph full-bleed instead of an empty box. That is the
      whole fallback: worse, but never broken.
      ==================================================================== */
-  .reveal { position: relative; min-height: 215vh; background: var(--band); }
+  .reveal { position: relative; background: var(--band); }
   .reveal__pin {
-    position: sticky; top: 0; height: 100vh; overflow: hidden;
-    display: grid; place-items: center;
+    position: relative; overflow: hidden; display: grid; place-items: center;
+    aspect-ratio: 16 / 9;
   }
   .reveal__shot, .reveal__full { position: absolute; inset: 0; }
   .reveal__shot img, .reveal__full img { width: 100%; height: 100%; object-fit: cover; }
@@ -710,7 +710,14 @@
     text-transform: none; font-size: 1rem; letter-spacing: 0; margin-top: 14px;
     color: var(--on-dark); opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.55); }
 
+  /* Only a browser that can run the reveal gets the tall pinned panel. Without
+     this guard Safari and Firefox were handed 215vh of sticky section and no
+     animation to justify it: two screens of scrolling past a static photo. */
   @supports (animation-timeline: view()) {
+    @media (min-width: 46rem) and (prefers-reduced-motion: no-preference) {
+      .reveal { min-height: 215vh; }
+      .reveal__pin { position: sticky; top: 0; height: 100vh; aspect-ratio: auto; }
+    }
     .reveal { view-timeline-name: --busline; view-timeline-axis: block; }
     .reveal__shot {
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
@@ -741,13 +748,13 @@
     @keyframes reveal-fade { from { opacity: 0; } 45% { opacity: 0; } 70% { opacity: 1; } to { opacity: 1; } }
   }
 
-  /* A long pinned panel is a poor trade on a phone, and worse with
-     reduced motion: collapse it to an ordinary picture. */
+  /* On a phone, and under reduced motion, the panel stays the plain picture
+     the default already gives, and nothing animates. */
   @media (max-width: 46rem), (prefers-reduced-motion: reduce) {
-    .reveal { min-height: 0; }
-    .reveal__pin { position: static; height: auto; aspect-ratio: 4 / 3; }
+    .reveal__pin { aspect-ratio: 4 / 3; }
     .reveal__shot { -webkit-mask-image: none !important; mask-image: none !important;
                     animation: none !important; }
+    .reveal__full { opacity: 1 !important; animation: none !important; }
     .reveal__cap { animation: none !important; opacity: 1 !important; }
   }
 
