@@ -895,6 +895,9 @@
      every colour is a brand token.
      ==================================================================== */
   .dp-wrap { position: relative; }
+  /* Hugs the input alone, so the trigger button centres on the field the
+     user actually sees rather than on the whole label/input/error group. */
+  .dp-box { position: relative; display: block; }
   .dp-wrap input[type="date"] { padding-right: 42px; }
   /* The native indicator would sit under our own button. */
   .dp-wrap input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
