@@ -360,41 +360,129 @@
     .trust-in > div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
   }
 
-  /* ================= Services: asymmetric bento =================
-     The original ran two rows of three identical cards. Six equal
-     boxes read as a template, so the grid is uneven now and two
-     cells carry real photography instead of an icon. */
-  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
-  .cell {
+  /* ================= Services: the card fan =================
+     Grid first, fan second. These rules lay the six services out as an
+     ordinary readable grid; assets/fan.js adds .fan-on to switch to the
+     fan only where it makes sense (wide viewport, motion allowed). So no
+     JS, a narrow screen, or prefers-reduced-motion all land on the grid
+     rather than on a broken pile of rotated cards.
+
+     The reference component fanned image-only cards and left every
+     off-centre one rotated up to 21 degrees. These cards carry a
+     heading, a paragraph and a link, and rotated body copy cannot be
+     read — so the open card sits upright at full size with its copy
+     showing, and pointing at or tabbing to any card opens it. */
+
+  #services .sec-head { align-items: center; text-align: center; max-width: 62ch; margin-inline: auto; }
+  @media (max-width: 900px) { #services .sec-head { align-items: flex-start; text-align: left; margin-inline: 0; } }
+
+  .fan { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .fan { grid-template-columns: 1fr; gap: 14px; } }
+
+  .fan-card {
+    position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 300px; padding: 24px; overflow: hidden;
     background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
-    padding: 26px; display: flex; flex-direction: column; gap: 9px;
     box-shadow: var(--shadow);
-    transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), border-color 220ms var(--ease);
+    transition: transform 220ms var(--ease), box-shadow 220ms var(--ease),
+                border-color 220ms var(--ease);
   }
-  @media (hover: hover) and (pointer: fine) {
-    .cell:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--champ); }
+  .fan-card img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   }
-  .cell-wide { grid-column: span 4; }
-  .cell-half { grid-column: span 3; }
-  .cell-third { grid-column: span 2; }
-  .cell-photo { padding: 0; overflow: hidden; position: relative; min-height: 250px; justify-content: flex-end; }
-  .cell-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .cell-photo .veil {
+  .fan-card .veil {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(14,19,24,0.92) 6%, rgba(14,19,24,0.30) 62%, rgba(14,19,24,0.05));
+    background: linear-gradient(to top, rgba(14,19,24,0.94) 8%, rgba(14,19,24,0.34) 64%, rgba(14,19,24,0.06));
   }
-  .cell-photo .on-photo { position: relative; z-index: 2; padding: 24px; display: flex; flex-direction: column; gap: 6px; }
-  .cell-photo h3 { color: var(--on-dark); }
-  .cell-photo .small { color: rgba(243,239,230,0.82); }
-  .cell .ico {
-    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
-    background: var(--paper); border: 1px solid var(--line); color: var(--champ-deep); margin-bottom: 4px;
+  .fan-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
+  .fan-card h3 { font-size: 1.125rem; }
+  .fan-card .small { margin: 0; }
+
+  /* Photo cards are dark-on-image; icon cards are ink slabs. Alternating
+     the two is what the bento did, and it keeps the fan from reading as
+     six identical rectangles. */
+  .fan-card--photo { padding: 0; }
+  .fan-card--photo .fan-body { padding: 24px; }
+  .fan-card--photo h3 { color: var(--on-dark); }
+  .fan-card--photo .small { color: rgba(243,239,230,0.84); }
+  .fan-card--photo .cell-link { color: var(--champ-bright); }
+
+  .fan-card--ink { background: var(--band); border-color: rgba(244,244,242,0.14); }
+  .fan-card--ink h3 { color: var(--on-dark); }
+  .fan-card--ink .small { color: var(--on-dark-2); }
+  .fan-card--ink .cell-link { color: var(--champ); }
+  .fan-card .ico {
+    position: relative; z-index: 2; align-self: flex-start;
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+    background: rgba(201,183,154,0.14); border: 1px solid rgba(201,183,154,0.34);
+    color: var(--champ); margin-bottom: auto;
   }
-  .cell .ico svg { width: 19px; height: 19px; }
-  @media (max-width: 900px) {
-    .bento { grid-template-columns: 1fr; }
-    .cell-wide, .cell-half, .cell-third { grid-column: 1 / -1; }
+  .fan-card .ico svg { width: 20px; height: 20px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .fan:not(.fan-on) .fan-card:hover {
+      transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--champ);
+    }
   }
+
+  /* ---- Fanned ---- */
+  /* Every fan dimension derives from --cw, so the whole arrangement
+     scales as one. Card height was fixed before, which left the rotation
+     swing — proportional to height — unscaled, and the fan overflowed the
+     viewport by up to 200px between 900 and 1200px wide. */
+  .fan.fan-on {
+    --cw: clamp(12rem, 19vw, 16rem);
+    display: block; position: relative;
+    height: calc(var(--cw) * 2); margin-top: 8px;
+  }
+  .fan.fan-on .fan-card {
+    position: absolute; left: 50%; top: 0;
+    width: var(--cw); height: calc(var(--cw) * 1.56); min-height: 0;
+    margin-left: calc(var(--cw) / -2);
+    transform-origin: 50% 118%;
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+    z-index: var(--z, 1);
+    /* A spring, expressed as an easing curve rather than as 70KB of
+       animation library. */
+    transition: transform 520ms linear(
+      0, 0.2 3.2%, 0.68 8.2%, 1.02 13%, 1.11 16.4%, 1.13 19.6%, 1.06 25.6%,
+      0.99 31.4%, 0.976 37.2%, 0.998 49%, 1.005 61%, 1);
+    transition-property: transform, box-shadow, border-color, filter;
+    will-change: transform;
+  }
+  /* Cards behind the open one are dimmed rather than blurred: a blur on
+     six large images costs a repaint on every hover. */
+  .fan.fan-on .fan-card:not(.is-centre) { box-shadow: 0 18px 40px -22px rgba(16,20,24,.55); }
+  .fan.fan-on .fan-card:not(.is-centre)::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: rgba(16,20,24,0.17); border-radius: inherit;
+    transition: opacity 380ms var(--ease);
+  }
+  .fan.fan-on .fan-card.is-centre {
+    box-shadow: 0 34px 70px -28px rgba(16,20,24,.62), 0 0 0 1px rgba(201,183,154,0.5);
+  }
+
+  /* Only the open card shows its paragraph and its link. The text stays
+     in the DOM either way — this is opacity and height, not display, so
+     a crawler and a screen reader still get all six in full. */
+  .fan.fan-on .fan-card .small,
+  .fan.fan-on .fan-card .cell-link {
+    opacity: 0; max-height: 0; overflow: hidden;
+    transition: opacity 260ms var(--ease), max-height 380ms var(--ease);
+  }
+  .fan.fan-on .fan-card.is-centre .small,
+  .fan.fan-on .fan-card.is-centre .cell-link {
+    opacity: 1; max-height: 14rem;
+  }
+  .fan.fan-on .fan-card .ico { margin-bottom: 0; }
+
+  /* Every service stays named. The heading is held inside the strip the
+     neighbouring card leaves uncovered, so it is never half-hidden. */
+  .fan.fan-on .fan-card:not(.is-centre) h3 { font-size: 0.9375rem; max-width: 56%; }
+  .fan.fan-on .fan-card[data-side="r"] .fan-body { align-items: flex-end; text-align: right; }
+  .fan.fan-on .fan-card[data-side="r"] .ico { align-self: flex-end; }
+
+  .fan-card:focus-within { outline: 2px solid var(--champ); outline-offset: 3px; }
 
   /* ================= Fleet: comparison rail, not three cards ================= */
   .fleet-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
@@ -650,9 +738,8 @@
   }
 
   /* Bento cells lift in with a touch of blur, masking the crossfade */
-  .cell { will-change: transform; }
-  .bento .rev-in { transform: translateY(20px) scale(0.985); filter: blur(4px); }
-  .bento .rev-in.shown {
+  .fan.rev-in { transform: translateY(20px) scale(0.985); filter: blur(4px); }
+  .fan.rev-in.shown {
     transform: none; filter: blur(0);
     transition: opacity 320ms var(--ease), transform 320ms var(--ease), filter 320ms var(--ease);
   }
@@ -660,7 +747,7 @@
   @media (prefers-reduced-motion: reduce) {
     .size { opacity: 1; }
     .area { opacity: 1; transform: none; }
-    .bento .rev-in, .bento .rev-in.shown { transform: none; filter: none; }
+    .fan.rev-in, .fan.rev-in.shown { transform: none; filter: none; }
     .hero-bg, .fleet-photo img { animation: none; }
   }
 
@@ -831,7 +918,7 @@
     /* Sized to the calendar, not to the field: the field sits in a narrow
        grid column and the popover must not collapse to it. */
     position: absolute; z-index: 60; top: calc(100% + 10px); left: 0;
-    width: 21.5rem; max-width: calc(100vw - 2rem);
+    width: 22.5rem; max-width: calc(100vw - 2rem);
     padding: 16px; color: var(--ink);
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -868,10 +955,35 @@
   /* render() rewrites the popover's innerHTML on every month change, so
      these entrance animations replay on navigation with no JS hook. */
   .dp-title {
-    font-family: var(--display); font-size: 1.375rem; font-weight: 700;
-    letter-spacing: -.025em; white-space: nowrap;
+    display: flex; align-items: center; gap: 2px; flex: 0 1 auto; min-width: 0;
     animation: dp-in 320ms var(--ease) both;
   }
+  /* Month and year as real <select>s: the platform already gives them a
+     scrollable list, keyboard handling and a native picker on mobile, so
+     there is no custom listbox here to get the accessibility wrong. */
+  /* Scoped to .dp on purpose. The popover is appended inside the .field
+     wrapper, so `.field select` (0,1,1) outranks a bare `.dp-sel` (0,1,0)
+     and was handing these the form control's width:100% and 12px padding.
+     `.dp .dp-sel` (0,2,0) takes it back. */
+  .dp .dp-sel {
+    appearance: none; -webkit-appearance: none;
+    flex: none; width: 9.5rem;
+    font-family: var(--display); font-size: 1rem; font-weight: 700;
+    letter-spacing: -.02em; color: var(--ink);
+    border: 1px solid transparent; border-radius: 9px;
+    background: transparent; padding: 4px 18px 4px 7px; cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: right 9px center, right 4px center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease);
+  }
+  .dp .dp-sel[data-jump="year"] { width: 5.5rem; }
+  .dp .dp-sel:hover { background-color: rgba(201,183,154,0.22); border-color: rgba(201,183,154,0.42); }
+  .dp .dp-sel:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+  /* The panel is translucent; the dropdown list is not part of it. */
+  .dp .dp-sel option { background: var(--card); color: var(--ink); font-size: 0.9375rem; }
   .dp-grid { animation: dp-in 300ms var(--ease) 40ms both; }
   @keyframes dp-in { from { opacity: 0; transform: translateY(-6px); } }
 

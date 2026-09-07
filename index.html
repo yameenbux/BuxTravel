@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=b3a3ed69">
+<link rel="stylesheet" href="/assets/site.css?v=361a7ebb">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -112,70 +112,66 @@
         </p>
       </div>
 
-      <div class="bento">
-        <article class="cell cell-photo cell-wide rev-in">
-          <img src="assets/airport-transfer.jpg" alt="A Bux Travel minibus on an airport transfer run">
+      <!-- Fan order is left to right. The card marked data-fan-home is the
+           one the fan opens on and returns to. -->
+      <div class="fan rev-in">
+
+        <article class="fan-card fan-card--photo">
+          <img src="assets/minibus-fleet.jpg" alt="A Bux Travel minibus on a Bolton street" loading="lazy" decoding="async">
           <span class="veil"></span>
-          <div class="on-photo">
+          <div class="fan-body">
+            <h3>Corporate &amp; staff shuttles</h3>
+            <p class="small">Site visits, conferences and shift runs. Invoiced monthly if that suits your finance team better.</p>
+          </div>
+        </article>
+
+        <article class="fan-card fan-card--ink">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11v5c0 1 2 2.5 5 2.5s5-1.5 5-2.5v-5"/></svg></span>
+          <div class="fan-body">
+            <h3>School &amp; college transport</h3>
+            <p class="small">Trips, fixtures and regular contracts, with the same DBS checked driver kept on the run.</p>
+            <a class="cell-link" href="/school-college-transport.html">School and college transport</a>
+          </div>
+        </article>
+
+        <article class="fan-card fan-card--photo" data-fan-home>
+          <img src="assets/airport-transfer.jpg" alt="A Bux Travel minibus on an airport transfer run" loading="lazy" decoding="async">
+          <span class="veil"></span>
+          <div class="fan-body">
             <h3>Airport transfers</h3>
-            <p class="small">
-              Manchester, Liverpool, Leeds Bradford and the London airports. We track the flight
-              and wait when it slips, and the price does not move with it.
-            </p>
+            <p class="small">Manchester, Liverpool, Leeds Bradford and the London airports. We track the flight and wait when it slips, and the price does not move with it.</p>
             <a class="cell-link" href="/airport-transfers.html">Airport transfers</a>
           </div>
         </article>
 
-        <article class="cell cell-third rev-in">
-          <span class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="7" width="18" height="12" rx="2"/><path d="M8 7V5h8v2M7 19v2M17 19v2"/>
-            </svg>
-          </span>
-          <h3>Corporate &amp; staff shuttles</h3>
-          <p class="small">Site visits, conferences and shift runs. Invoiced monthly if that suits your finance team better.</p>
-        </article>
-
-        <article class="cell cell-half rev-in">
-          <span class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11v5c0 1 2 2.5 5 2.5s5-1.5 5-2.5v-5"/>
-            </svg>
-          </span>
-          <h3>School &amp; college transport</h3>
-          <p class="small">Trips, fixtures and regular contracts, with the same DBS checked driver kept on the run.</p>
-            <a class="cell-link" href="/school-college-transport.html">School and college transport</a>
-        </article>
-
-        <article class="cell cell-half rev-in">
-          <span class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z"/>
-            </svg>
-          </span>
-          <h3>Weddings &amp; celebrations</h3>
-          <p class="small">Guest shuttles between ceremony, reception and hotels, so nobody has to nominate a driver.</p>
+        <article class="fan-card fan-card--ink">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z"/></svg></span>
+          <div class="fan-body">
+            <h3>Weddings &amp; celebrations</h3>
+            <p class="small">Guest shuttles between ceremony, reception and hotels, so nobody has to nominate a driver.</p>
             <a class="cell-link" href="/weddings.html">Wedding transport</a>
+          </div>
         </article>
 
-        <article class="cell cell-photo cell-half rev-in">
-          <img src="assets/sports-travel.jpg" alt="Supporters travelling to an away fixture by minibus">
+        <article class="fan-card fan-card--photo">
+          <img src="assets/showcase-stadium.jpg" alt="An empty football stadium before an away fixture" loading="lazy" decoding="async">
           <span class="veil"></span>
-          <div class="on-photo">
+          <div class="fan-body">
             <h3>Days out &amp; sports travel</h3>
             <p class="small">Race days, away matches, festivals, the Lakes, the Dales and North Wales. Door to door, back whenever you are finished.</p>
             <a class="cell-link" href="/days-out-sports.html">Days out and sports travel</a>
           </div>
         </article>
 
-        <article class="cell cell-photo cell-half rev-in">
-          <img src="assets/days-out-leisure.jpg" alt="A group boarding a minibus for a day trip">
+        <article class="fan-card fan-card--photo">
+          <img src="assets/showcase-festival.jpg" alt="A festival crowd with their hands in the air" loading="lazy" decoding="async">
           <span class="veil"></span>
-          <div class="on-photo">
+          <div class="fan-body">
             <h3>Groups &amp; clubs</h3>
             <p class="small">Churches, care and community groups, societies and teams. We run wheelchair accessible vehicles, so tell us about access needs when you book and we will plan around them.</p>
           </div>
         </article>
+
       </div>
     </div>
   </section>
@@ -853,7 +849,7 @@ var REVIEWS = [
   });
 })();
 </script>
-<script src="/assets/datepicker.js?v=dfd34710" defer></script>
+<script src="/assets/datepicker.js?v=e911754b" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1024,5 +1020,6 @@ var REVIEWS = [
 }
 </script>
 <script src="/assets/navtype.js?v=b74d729d" defer></script>
+<script src="/assets/fan.js?v=9a31bfca" defer></script>
 </body>
 </html>
