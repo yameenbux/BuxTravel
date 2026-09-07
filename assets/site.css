@@ -83,6 +83,15 @@
     --ls-wide:    0.09em; /* small caps                    */
     --ls-wider:   0.18em; /* micro uppercase labels        */
 
+
+    /* ---- Spacing ----
+       A 4px-based scale, replacing thirty-nine ad-hoc gap values. Only the
+       vertical rhythm is moved onto it here; column gaps are layout, not
+       rhythm, and are left alone. */
+    --sp-1:  4px;    --sp-2:  8px;    --sp-3:  12px;
+    --sp-4:  16px;   --sp-5:  24px;   --sp-6:  32px;
+    --sp-7:  48px;   --sp-8:  72px;
+
     --z-nav: 40; --z-skip: 60;
   }
 
@@ -342,7 +351,11 @@
   .band-deep { background: var(--band-deep); color: var(--on-dark-2); }
   .band-dark h2, .band-deep h2, .band-dark h3, .band-deep h3 { color: var(--on-dark); }
   .band-dark .lead, .band-deep .lead, .band-dark .small, .band-deep .small { color: var(--on-dark-2); }
-  .sec-head { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; margin-bottom: 46px; max-width: 60ch; }
+  /* 15px sat under a 46px heading — under a third of its own size. The
+     label above the heading stays close because it belongs to it; the lead
+     below gets the full step. */
+  .sec-head { display: flex; flex-direction: column; gap: var(--sp-3); align-items: flex-start; margin-bottom: var(--sp-8); max-width: 60ch; }
+  .sec-head .lead { margin-top: var(--sp-3); }
 
   /* ================= Hero =================
      The old hero reserved vertical space for the longest rotating
@@ -366,7 +379,7 @@
   }
   .hero-inner { position: relative; z-index: 2; width: 100%; padding: 104px 0 92px; }
   @media (max-width: 900px) { .hero-inner { padding: 84px 0 76px; } .hero { min-height: 0; } }
-  .hero-copy { max-width: 44rem; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .hero-copy { max-width: 44rem; display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-5); }
   .hero h1 { color: var(--on-dark); }
 
   .rot {
@@ -453,7 +466,7 @@
     position: absolute; inset: 0;
     background: linear-gradient(to top, rgba(14,19,24,0.94) 8%, rgba(14,19,24,0.34) 64%, rgba(14,19,24,0.06));
   }
-  .fan-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
+  .fan-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: var(--sp-3); }
   .fan-card h3 { font-size: var(--t-lg); }
   .fan-card .small { margin: 0; }
 
@@ -746,11 +759,11 @@
      inside a 343px column, which is where the page's 1px of horizontal
      scroll came from. */
   .book-grid > * { min-width: 0; }
-  form { display: flex; flex-direction: column; gap: 16px; }
+  form { display: flex; flex-direction: column; gap: var(--sp-5); }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
   @media (max-width: 640px) { .row2, .row3 { grid-template-columns: 1fr; } }
-  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
   .field label { font-size: var(--t-sm); font-weight: 600; }
   .field .hint { font-size: var(--t-xs); color: var(--muted); }
   .field input, .field select, .field textarea {
@@ -778,7 +791,7 @@
   .band-dark .aside-card h3, .band-deep .aside-card h3 { color: var(--ink); }
   .band-dark .aside-card .small, .band-deep .aside-card .small { color: var(--muted); }
   .checklist { display: flex; flex-direction: column; gap: 0; }
-  .checklist div { display: flex; gap: 11px; align-items: baseline; padding: 10px 0; font-size: var(--t-sm); }
+  .checklist div { display: flex; gap: 11px; align-items: baseline; padding: var(--sp-4) 0; font-size: var(--t-sm); }
   .checklist div + div { border-top: 1px solid var(--line); }
   .checklist svg { width: 15px; height: 15px; color: var(--champ-deep); flex: none; transform: translateY(2px); }
 
@@ -788,7 +801,7 @@
   details { border-top: 1px solid var(--line-dark); }
   .faq-grid details:last-child { border-bottom: 1px solid var(--line-dark); }
   summary {
-    list-style: none; cursor: pointer; padding: 17px 0;
+    list-style: none; cursor: pointer; padding: var(--sp-5) 0;
     display: flex; gap: 16px; align-items: baseline; justify-content: space-between;
     color: var(--on-dark); font-weight: 600; font-size: var(--t-md);
   }
@@ -869,7 +882,7 @@
     font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wider);
     text-transform: uppercase; color: var(--champ);
   }
-  .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
   .foot-col a {
     position: relative; display: inline-block;
     color: var(--on-dark-2); text-decoration: none; font-size: var(--t-sm);
