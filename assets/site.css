@@ -42,6 +42,47 @@
     --ease: cubic-bezier(0.23, 1, 0.32, 1);
     --maxw: 1140px;
 
+
+    /* ---- Type scale ----
+       Eight steps, replacing twenty-four ad-hoc sizes. Each step has a
+       role; nothing is set outside them. The three display sizes stay
+       fluid clamps because they have to survive 375px and 1920px.
+
+         12px  micro uppercase labels        --t-2xs
+         13px  fine print, meta, captions    --t-xs
+         15px  UI text: buttons, inputs      --t-sm
+         17px  running body copy, h3         --t-md
+         20px  leads, large sub-heads        --t-lg
+         24px  sub-display                   --t-xl
+         44px  stat numerals                 --t-2xl
+         56px  the rating score              --t-3xl                    */
+    --t-2xs:  0.75rem;
+    --t-xs:   0.8125rem;
+    --t-sm:   0.9375rem;
+    --t-md:   1.0625rem;
+    --t-lg:   1.25rem;
+    --t-xl:   1.5rem;
+    --t-2xl:  2.75rem;
+    --t-3xl:  3.5rem;
+
+    /* ---- Line height ----
+       Five steps, replacing fourteen. Tighter as the type gets larger,
+       which is the whole rule. */
+    --lh-tight:   1;      /* numerals set solid            */
+    --lh-display: 1.03;   /* h1, h2, page-head             */
+    --lh-snug:    1.3;    /* sub-heads, cites              */
+    --lh-ui:      1.5;    /* interface text                */
+    --lh-body:    1.65;   /* running prose                 */
+
+    /* ---- Letter spacing ----
+       Five steps, replacing twenty-seven. Negative at display sizes where
+       the default gaps look loose, open at small caps where they do not. */
+    --ls-tight:  -0.03em; /* display headings              */
+    --ls-snug:   -0.01em; /* sub-heads                     */
+    --ls-normal:  0;      /* body and UI                   */
+    --ls-wide:    0.09em; /* small caps                    */
+    --ls-wider:   0.18em; /* micro uppercase labels        */
+
     --z-nav: 40; --z-skip: 60;
   }
 
@@ -50,7 +91,7 @@
   html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   body {
     margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--sans); font-size: 17px; line-height: 1.55;
+    font-family: var(--sans); font-size: var(--t-md); line-height: var(--lh-ui);
     -webkit-font-smoothing: antialiased;
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -66,17 +107,19 @@
   }
 
   h1, h2, h3 { margin: 0; font-family: var(--display); color: var(--ink); text-wrap: balance; }
-  h1 { font-size: clamp(2.05rem, 8.4vw, 4.6rem); font-weight: 800; line-height: 0.98;
-       letter-spacing: -0.035em; text-transform: uppercase; }
-  h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.02;
-       letter-spacing: -0.03em; text-transform: uppercase; }
-  h3 { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; }
-  p { margin: 0; text-wrap: pretty; }
+  h1 { font-size: clamp(2.05rem, 8.4vw, 4.6rem); font-weight: 800; line-height: var(--lh-display);
+       letter-spacing: var(--ls-tight); text-transform: uppercase; }
+  h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: var(--lh-display);
+       letter-spacing: var(--ls-tight); text-transform: uppercase; }
+  h3 { font-size: var(--t-md); font-weight: 700; letter-spacing: var(--ls-snug); }
+  /* body carries the UI line-height so buttons, chips and labels stay
+     compact; running prose opts up to the body measure. */
+  p { margin: 0; text-wrap: pretty; line-height: var(--lh-body); }
 
   .eyebrow {
     display: inline-flex; align-items: center; gap: 11px;
-    font-family: var(--display); font-size: 0.6875rem; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink);
+    font-family: var(--display); font-size: var(--t-2xs); font-weight: 700;
+    letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--ink);
   }
   .eyebrow::before { content: ""; width: 26px; height: 3px; background: var(--champ-deep); }
   /* The eyebrow is ink now, so anywhere it sits on a dark band it has to be
@@ -88,8 +131,11 @@
   .hero .eyebrow::before, .page-head .eyebrow::before, .hero-404 .eyebrow::before,
   .band-dark .eyebrow::before, .band-deep .eyebrow::before { background: var(--champ); }
 
-  .lead  { font-size: 1.0625rem; color: var(--muted); max-width: 62ch; }
-  .small { font-size: 0.9375rem; color: var(--muted); max-width: 60ch; }
+  .lead  { font-size: var(--t-md); color: var(--muted); max-width: 62ch; }
+  /* The hero lead was the one size set outside this stylesheet — an inline
+     1.125rem on the element, which is not a step on the scale. */
+  .lead-hero { font-size: var(--t-lg); }
+  .small { font-size: var(--t-sm); color: var(--muted); max-width: 60ch; }
   .num   { font-variant-numeric: tabular-nums; }
 
   a { color: inherit; }
@@ -123,17 +169,17 @@
     width: 40px; height: 40px; border-radius: 11px; flex: none;
     background: linear-gradient(155deg, var(--champ-bright), var(--champ));
     display: grid; place-items: center;
-    font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--ink);
+    font-family: var(--display); font-weight: 700; font-size: var(--t-lg); color: var(--ink);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
   }
-  .brand-txt b { display: block; font-family: var(--display); font-size: 1.125rem; font-weight: 600; color: var(--on-dark); line-height: 1.1; }
-  .brand-txt span { display: block; font-size: 0.625rem; letter-spacing: 0.24em; color: var(--champ); text-transform: uppercase; }
+  .brand-txt b { display: block; font-family: var(--display); font-size: var(--t-lg); font-weight: 600; color: var(--on-dark); line-height: var(--lh-snug); }
+  .brand-txt span { display: block; font-size: var(--t-2xs); letter-spacing: var(--ls-wider); color: var(--champ); text-transform: uppercase; }
 
   .nav-links { display: flex; gap: 2px; }
   .nav-links a {
     position: relative; text-decoration: none; color: var(--on-dark-2);
-    font-family: var(--display); font-size: 0.8125rem; font-weight: 500;
-    letter-spacing: 0.055em; text-transform: uppercase;
+    font-family: var(--display); font-size: var(--t-xs); font-weight: 500;
+    letter-spacing: var(--ls-wide); text-transform: uppercase;
     padding: 9px 13px; border-radius: 9px;
     transition: color 220ms var(--ease);
   }
@@ -195,8 +241,8 @@
     position: relative; isolation: isolate; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: 9px;
     padding: 13px 20px; border-radius: 11px; border: 1px solid transparent;
-    font-family: inherit; font-size: 0.9375rem; font-weight: 600; white-space: nowrap;
-    letter-spacing: -0.004em;
+    font-family: inherit; font-size: var(--t-sm); font-weight: 600; white-space: nowrap;
+    letter-spacing: var(--ls-normal);
     text-decoration: none; cursor: pointer;
     background: var(--btn-bg);
     transition: transform 200ms var(--ease), --btn-bg 220ms var(--ease),
@@ -231,7 +277,7 @@
   .btn-ink        { --btn-bg: var(--ink);     --shine: var(--champ-bright); color: var(--on-dark); }
   .btn-ghost      { --btn-bg: transparent;    --shine: var(--champ); color: var(--ink); border-color: var(--line); }
   .btn-ghost-dark { --btn-bg: rgba(243,239,230,0.07); --shine: var(--champ); color: var(--on-dark); border-color: var(--line-dark); }
-  .btn-sm         { padding: 9px 14px; font-size: 0.875rem; border-radius: 9px; }
+  .btn-sm         { padding: 9px 14px; font-size: var(--t-xs); border-radius: 9px; }
 
   /* Conic border sweep. The reference component hardcoded black and a
      literal `blue`; here the ring is the brand accent and the bright stop
@@ -354,7 +400,7 @@
   .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 13px; border-radius: 10px; font-size: 0.875rem;
+    padding: 8px 13px; border-radius: 10px; font-size: var(--t-xs);
     background: rgba(243,239,230,0.07); border: 1px solid var(--line-dark); color: var(--on-dark-2);
   }
   .chip b { color: var(--on-dark); font-weight: 600; }
@@ -365,8 +411,8 @@
   .trust-in { display: grid; grid-template-columns: repeat(4, 1fr); }
   .trust-in > div { padding: 26px 24px; border-left: 1px solid var(--line-dark); }
   .trust-in > div:first-child { border-left: 0; }
-  .trust b { display: block; font-family: var(--display); font-size: 1.5rem; font-weight: 600; color: var(--on-dark); line-height: 1.15; }
-  .trust span { font-size: 0.6875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--on-dark-3); }
+  .trust b { display: block; font-family: var(--display); font-size: var(--t-xl); font-weight: 600; color: var(--on-dark); line-height: var(--lh-snug); }
+  .trust span { font-size: var(--t-2xs); letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--on-dark-3); }
   @media (max-width: 760px) {
     .trust-in { grid-template-columns: 1fr 1fr; }
     .trust-in > div:nth-child(3) { border-left: 0; }
@@ -408,7 +454,7 @@
     background: linear-gradient(to top, rgba(14,19,24,0.94) 8%, rgba(14,19,24,0.34) 64%, rgba(14,19,24,0.06));
   }
   .fan-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
-  .fan-card h3 { font-size: 1.125rem; }
+  .fan-card h3 { font-size: var(--t-lg); }
   .fan-card .small { margin: 0; }
 
   /* Photo cards are dark-on-image; icon cards are ink slabs. Alternating
@@ -491,7 +537,7 @@
 
   /* Every service stays named. The heading is held inside the strip the
      neighbouring card leaves uncovered, so it is never half-hidden. */
-  .fan.fan-on .fan-card:not(.is-centre) h3 { font-size: 0.9375rem; max-width: 56%; }
+  .fan.fan-on .fan-card:not(.is-centre) h3 { font-size: var(--t-sm); max-width: 56%; }
   .fan.fan-on .fan-card[data-side="r"] .fan-body { align-items: flex-end; text-align: right; }
   .fan.fan-on .fan-card[data-side="r"] .ico { align-self: flex-end; }
 
@@ -540,13 +586,13 @@
   .size-art .w { fill: var(--band-deep); stroke: var(--champ); stroke-width: 2.5; }
 
   .size .n {
-    font-family: var(--display); font-size: 2.75rem; font-weight: 700;
-    letter-spacing: -.03em; color: var(--champ-bright);
-    line-height: 1; font-variant-numeric: tabular-nums;
+    font-family: var(--display); font-size: var(--t-2xl); font-weight: 700;
+    letter-spacing: var(--ls-tight); color: var(--champ-bright);
+    line-height: var(--lh-tight); font-variant-numeric: tabular-nums;
   }
   .size .n span {
-    display: block; font-family: var(--display); font-size: 0.625rem; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 7px;
+    display: block; font-family: var(--display); font-size: var(--t-2xs); font-weight: 700;
+    letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--on-dark-3); margin-top: 7px;
   }
   .size-copy { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
   .size-copy h3 { color: var(--on-dark); margin-bottom: 5px; }
@@ -614,13 +660,13 @@
   .map-cap { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
   .map-home {
     display: inline-flex; align-items: center; gap: 7px;
-    font-family: var(--display); font-size: .6875rem; font-weight: 700;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--champ);
+    font-family: var(--display); font-size: var(--t-2xs); font-weight: 700;
+    letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--champ);
   }
   .map-home i { width: 7px; height: 7px; border-radius: 999px; background: var(--champ-bright); flex: none; }
   .dest-h {
     margin: 20px 0 10px; font-family: var(--display);
-    font-size: .6875rem; font-weight: 700; letter-spacing: .18em;
+    font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wider);
     text-transform: uppercase; color: var(--champ);
   }
   /* Thirty pills is a lot of chrome for a supporting list, and cost about
@@ -628,7 +674,7 @@
      thirty names, same per-name reveal, a third of the height. */
   .map-legend {
     list-style: none; margin: 0; padding: 0;
-    font-size: .8125rem; line-height: 1.75; color: var(--on-dark-2);
+    font-size: var(--t-xs); line-height: var(--lh-body); color: var(--on-dark-2);
   }
   .map-legend li { display: inline; opacity: 0; }
   .map-legend li + li::before {
@@ -654,7 +700,7 @@
   }
   .areas { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
   .area {
-    font-size: 0.8125rem; padding: 7px 12px; border-radius: 9px;
+    font-size: var(--t-xs); padding: 7px 12px; border-radius: 9px;
     background: rgba(243,239,230,0.06); border: 1px solid var(--line-dark); color: var(--on-dark-2);
   }
   .area.key { background: rgba(201,183,154,0.15); border-color: rgba(201,183,154,0.4); color: var(--champ-bright); }
@@ -678,17 +724,17 @@
   }
   .rating { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; }
   .rating .score {
-    font-family: var(--display); font-size: 3.2rem; font-weight: 700; line-height: 1;
-    letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+    font-family: var(--display); font-size: var(--t-3xl); font-weight: 700; line-height: var(--lh-tight);
+    letter-spacing: var(--ls-tight); font-variant-numeric: tabular-nums;
   }
   .rating .small { margin: 0; max-width: 30ch; }
   .stars { display: flex; gap: 3px; color: #E8A33D; }
   .stars svg { width: 17px; height: 17px; }
 
   .rev-empty {
-    font-family: var(--sans); font-size: 0.9375rem; color: var(--muted);
+    font-family: var(--sans); font-size: var(--t-sm); color: var(--muted);
     background: rgba(201,183,154,0.14); border: 1px dashed var(--champ-deep);
-    border-radius: var(--radius); padding: 16px 18px; line-height: 1.5;
+    border-radius: var(--radius); padding: 16px 18px; line-height: var(--lh-ui);
   }
   .rev-empty b { color: var(--champ-deep); }
 
@@ -705,16 +751,16 @@
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
   @media (max-width: 640px) { .row2, .row3 { grid-template-columns: 1fr; } }
   .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  .field label { font-size: 0.875rem; font-weight: 600; }
-  .field .hint { font-size: 0.8125rem; color: var(--muted); }
+  .field label { font-size: var(--t-sm); font-weight: 600; }
+  .field .hint { font-size: var(--t-xs); color: var(--muted); }
   .field input, .field select, .field textarea {
-    font-family: inherit; font-size: 0.9375rem; color: var(--ink); padding: 12px 13px; width: 100%;
+    font-family: inherit; font-size: var(--t-sm); color: var(--ink); padding: 12px 13px; width: 100%;
     background: var(--card); border: 1px solid var(--line); border-radius: 11px;
     transition: border-color 180ms var(--ease);
   }
   .field textarea { resize: vertical; min-height: 84px; }
   .field input::placeholder, .field textarea::placeholder { color: #A9A296; }
-  .field .err { font-size: 0.8125rem; color: #A3231F; display: none; }
+  .field .err { font-size: var(--t-xs); color: #A3231F; display: none; }
   .field.invalid input, .field.invalid select { border-color: #A3231F; background: #FBF0EE; }
   .field.invalid .err { display: block; }
   @media (hover: hover) and (pointer: fine) {
@@ -732,7 +778,7 @@
   .band-dark .aside-card h3, .band-deep .aside-card h3 { color: var(--ink); }
   .band-dark .aside-card .small, .band-deep .aside-card .small { color: var(--muted); }
   .checklist { display: flex; flex-direction: column; gap: 0; }
-  .checklist div { display: flex; gap: 11px; align-items: baseline; padding: 10px 0; font-size: 0.9375rem; }
+  .checklist div { display: flex; gap: 11px; align-items: baseline; padding: 10px 0; font-size: var(--t-sm); }
   .checklist div + div { border-top: 1px solid var(--line); }
   .checklist svg { width: 15px; height: 15px; color: var(--champ-deep); flex: none; transform: translateY(2px); }
 
@@ -744,7 +790,7 @@
   summary {
     list-style: none; cursor: pointer; padding: 17px 0;
     display: flex; gap: 16px; align-items: baseline; justify-content: space-between;
-    color: var(--on-dark); font-weight: 600; font-size: 0.9875rem;
+    color: var(--on-dark); font-weight: 600; font-size: var(--t-md);
   }
   summary::-webkit-details-marker { display: none; }
   summary i { flex: none; width: 12px; height: 12px; position: relative; margin-top: 5px; }
@@ -758,7 +804,7 @@
   .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 240ms var(--ease); }
   details[open] .ans { grid-template-rows: 1fr; }
   .ans > div { overflow: hidden; }
-  .ans p { padding-bottom: 18px; font-size: 0.9375rem; color: var(--on-dark-2); }
+  .ans p { padding-bottom: 18px; font-size: var(--t-sm); color: var(--on-dark-2); }
 
   /* ================= Footer =================
      The reference footer was a single centred row of links over six
@@ -802,7 +848,7 @@
   .foot-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
   @media (max-width: 900px) { .foot-brand { grid-column: 1 / -1; } }
   .foot-blurb {
-    font-size: 0.9375rem; line-height: 1.6; color: var(--on-dark-2); max-width: 38ch;
+    font-size: var(--t-sm); line-height: var(--lh-body); color: var(--on-dark-2); max-width: 38ch;
   }
 
   .foot-contact { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 320px; }
@@ -811,7 +857,7 @@
     padding: 9px 13px; border-radius: 10px;
     border: 1px solid var(--line-dark); background: rgba(243,239,230,0.03);
     color: var(--on-dark-2); text-decoration: none;
-    font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em;
+    font-size: var(--t-sm); font-weight: 500; letter-spacing: var(--ls-normal);
     transition: color 200ms var(--ease), border-color 200ms var(--ease),
                 background-color 200ms var(--ease), transform 200ms var(--ease);
   }
@@ -820,13 +866,13 @@
 
   .foot-col h4 {
     margin: 0 0 16px; font-family: var(--display);
-    font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.18em;
+    font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wider);
     text-transform: uppercase; color: var(--champ);
   }
   .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .foot-col a {
     position: relative; display: inline-block;
-    color: var(--on-dark-2); text-decoration: none; font-size: 0.9375rem;
+    color: var(--on-dark-2); text-decoration: none; font-size: var(--t-sm);
     transition: color 200ms var(--ease), transform 200ms var(--ease);
   }
   /* Champagne rule that draws in from the left on hover: the same
@@ -840,7 +886,7 @@
 
   .foot-bot {
     padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 28px;
-    align-items: center; justify-content: space-between; font-size: 0.8125rem;
+    align-items: center; justify-content: space-between; font-size: var(--t-xs);
   }
   .foot-bot p { margin: 0; }
   .foot-bot .foot-meta { color: var(--on-dark-3); }
@@ -886,6 +932,10 @@
     .foot-col a  { padding: 9px 0; }
     .foot-bot a  { display: inline-block; padding: 10px 0; }
     .cell-link   { padding: 11px 0; }
+    /* .btn-sm moved from 14px to 13px when the type scale collapsed those
+       two steps, which took the small buttons to 39.5px. Padding restores
+       them past 44px on touch without changing the desktop row. */
+    .btn-sm      { padding-block: 12px; }
     .crumb a     { display: inline-block; padding: 10px 0; }
     /* .toc a is a flex row with a numbered ::before, so only padding is
        added here — overriding its display would break the numbering. */
@@ -961,16 +1011,16 @@
   }
   .page-head .container { padding-top: clamp(2.5rem, 7vw, 4.5rem); padding-bottom: clamp(2.25rem, 6vw, 3.75rem); }
   .page-head h1 {
-    font-family: var(--display); font-weight: 600; line-height: 1.06;
-    font-size: clamp(2rem, 5.2vw, 3.35rem); letter-spacing: -0.02em;
+    font-family: var(--display); font-weight: 600; line-height: var(--lh-display);
+    font-size: clamp(2rem, 5.2vw, 3.35rem); letter-spacing: var(--ls-tight);
     margin: .5rem 0 0; text-wrap: balance; max-width: 24ch;
     /* h1 defaults to --ink, which is 1.18:1 on this band. Must be set. */
     color: var(--on-dark);
   }
-  .page-head .lead { color: var(--on-dark-2); max-width: 58ch; margin-top: 1rem; font-size: 1.0625rem; }
+  .page-head .lead { color: var(--on-dark-2); max-width: 58ch; margin-top: 1rem; font-size: var(--t-md); }
   .page-head .hero-cta { margin-top: 1.75rem; }
 
-  .crumb { font-size: .8125rem; color: var(--on-dark-2); display: flex; gap: .4rem; align-items: center; }
+  .crumb { font-size: var(--t-xs); color: var(--on-dark-2); display: flex; gap: .4rem; align-items: center; }
   .crumb a { color: var(--on-dark-2); text-decoration: none; }
   .crumb a:hover { color: var(--on-dark); text-decoration: underline; }
 
@@ -979,13 +1029,13 @@
                border-radius: var(--radius); overflow: hidden;
                grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
   .proof-row > div { background: var(--card); padding: 1.15rem 1.25rem; }
-  .proof-row dt { font-family: var(--display); font-size: 1.35rem; font-weight: 600; color: var(--ink); }
-  .proof-row dd { margin: .3rem 0 0; font-size: .875rem; color: var(--muted); }
+  .proof-row dt { font-family: var(--display); font-size: var(--t-lg); font-weight: 600; color: var(--ink); }
+  .proof-row dd { margin: .3rem 0 0; font-size: var(--t-sm); color: var(--muted); }
 
   /* Plain prose blocks, for the answer-the-question sections. */
   .prose { max-width: 68ch; }
   .prose p { margin: 0 0 1rem; }
-  .prose h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; margin: 1.75rem 0 .5rem; }
+  .prose h3 { font-family: var(--display); font-weight: 600; font-size: var(--t-lg); margin: 1.75rem 0 .5rem; }
   .prose ul { margin: 0 0 1rem; padding-left: 1.1rem; }
   .prose li { margin: 0 0 .45rem; }
 
@@ -993,7 +1043,7 @@
      the whole cell still reads as one object. */
   .cell-link {
     display: inline-flex; align-items: center; gap: .35rem; margin-top: .7rem;
-    font-size: .8125rem; font-weight: 600; letter-spacing: .01em;
+    font-size: var(--t-xs); font-weight: 600; letter-spacing: var(--ls-normal);
     color: var(--champ-deep); text-decoration: none;
   }
   .cell-link::after { content: "\2192"; transition: transform .18s cubic-bezier(.23,1,.32,1); }
@@ -1015,35 +1065,35 @@
   .toc { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card);
          padding: 1.15rem 1.25rem; }
   @media (min-width: 62rem) { .toc { position: sticky; top: 5.5rem; } }
-  .toc h2 { font-family: var(--sans); font-size: .75rem; font-weight: 700; letter-spacing: .09em;
+  .toc h2 { font-family: var(--sans); font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wide);
             text-transform: uppercase; color: var(--muted); margin: 0 0 .7rem; }
   .toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
   .toc li { margin: 0 0 .45rem; }
   .toc a { counter-increment: toc; display: flex; gap: .55rem; text-decoration: none;
-           font-size: .875rem; color: var(--ink); line-height: 1.35; }
+           font-size: var(--t-sm); color: var(--ink); line-height: var(--lh-snug); }
   .toc a::before { content: counter(toc, decimal-leading-zero); color: var(--champ-deep);
-                   font-variant-numeric: tabular-nums; font-size: .75rem; padding-top: .1rem; }
+                   font-variant-numeric: tabular-nums; font-size: var(--t-2xs); padding-top: .1rem; }
   @media (hover: hover) and (pointer: fine) { .toc a:hover { text-decoration: underline; } }
 
-  .updated { display: inline-block; margin-top: 1rem; font-size: .8125rem; color: var(--on-dark-2); }
+  .updated { display: inline-block; margin-top: 1rem; font-size: var(--t-xs); color: var(--on-dark-2); }
 
   .contact-box { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card);
                  padding: 1.25rem 1.4rem; margin-top: 2rem; }
-  .contact-box h3 { font-family: var(--display); font-size: 1.125rem; margin: 0 0 .4rem; }
-  .contact-box p { margin: 0 0 .3rem; font-size: .9375rem; color: var(--muted); }
+  .contact-box h3 { font-family: var(--display); font-size: var(--t-lg); margin: 0 0 .4rem; }
+  .contact-box p { margin: 0 0 .3rem; font-size: var(--t-sm); color: var(--muted); }
   .contact-box a { color: var(--champ-deep); }
 
   .fgrid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line);
            border-radius: var(--radius); overflow: hidden; margin: 1.25rem 0;
            grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
-  .fgrid > div { background: var(--card); padding: 1rem 1.15rem; font-size: .875rem; }
+  .fgrid > div { background: var(--card); padding: 1rem 1.15rem; font-size: var(--t-sm); }
 
   .note { border-left: 3px solid var(--champ); background: var(--card); border-radius: 0 8px 8px 0;
           padding: .9rem 1.1rem; margin: 1.25rem 0; }
-  .note p { margin: 0; font-size: .9375rem; color: var(--muted); }
+  .note p { margin: 0; font-size: var(--t-sm); color: var(--muted); }
   .note strong { color: var(--ink); }
 
-  .legal { font-size: .8125rem; color: var(--muted); }
+  .legal { font-size: var(--t-xs); color: var(--muted); }
   .legal a { color: var(--champ-deep); }
 
   /* 404 */
@@ -1051,8 +1101,8 @@
   .hero-404 .container { padding-top: clamp(3rem, 9vw, 6rem); padding-bottom: clamp(2.5rem, 7vw, 4.5rem); }
   .hero-404 h1 { color: var(--on-dark); max-width: 22ch; margin-inline: auto; }
   .hero-404 .lead { color: var(--on-dark-2); max-width: 52ch; margin: 1rem auto 0; }
-  .hero-404 .code { font-family: var(--sans); font-size: .75rem; font-weight: 700;
-                    letter-spacing: .14em; text-transform: uppercase; color: var(--champ); }
+  .hero-404 .code { font-family: var(--sans); font-size: var(--t-2xs); font-weight: 700;
+                    letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--champ); }
   .hero-404 .actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.75rem; }
 
   .quicklinks { display: grid; gap: 1rem; margin-top: 0;
@@ -1060,8 +1110,8 @@
   .qcard { display: block; text-decoration: none; border: 1px solid var(--line);
            border-radius: var(--radius); background: var(--card); padding: 1.15rem 1.25rem;
            transition: border-color .18s cubic-bezier(.23,1,.32,1), transform .18s cubic-bezier(.23,1,.32,1); }
-  .qcard h2 { font-family: var(--display); font-size: 1.0625rem; margin: 0 0 .25rem; }
-  .qcard .t { display: block; font-size: .875rem; color: var(--muted); }
+  .qcard h2 { font-family: var(--display); font-size: var(--t-md); margin: 0 0 .25rem; }
+  .qcard .t { display: block; font-size: var(--t-xs); color: var(--muted); }
   @media (hover: hover) and (pointer: fine) {
     .qcard:hover { border-color: var(--champ); transform: translateY(-2px); }
   }
@@ -1089,7 +1139,7 @@
      the form's other fields exactly so the row reads as one set. */
   .dp-trigger {
     display: flex; align-items: center; gap: 10px; width: 100%;
-    font-family: inherit; font-size: 0.9375rem; text-align: left;
+    font-family: inherit; font-size: var(--t-sm); text-align: left;
     color: var(--ink); padding: 12px 13px;
     background: var(--card); border: 1px solid var(--line); border-radius: 11px;
     cursor: pointer;
@@ -1165,8 +1215,8 @@
   .dp .dp-sel {
     appearance: none; -webkit-appearance: none;
     flex: none; width: 9.5rem;
-    font-family: var(--display); font-size: 1rem; font-weight: 700;
-    letter-spacing: -.02em; color: var(--ink);
+    font-family: var(--display); font-size: var(--t-md); font-weight: 700;
+    letter-spacing: var(--ls-snug); color: var(--ink);
     border: 1px solid transparent; border-radius: 9px;
     background: transparent; padding: 4px 18px 4px 7px; cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
@@ -1180,7 +1230,7 @@
   .dp .dp-sel:hover { background-color: rgba(201,183,154,0.22); border-color: rgba(201,183,154,0.42); }
   .dp .dp-sel:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   /* The panel is translucent; the dropdown list is not part of it. */
-  .dp .dp-sel option { background: var(--card); color: var(--ink); font-size: 0.9375rem; }
+  .dp .dp-sel option { background: var(--card); color: var(--ink); font-size: var(--t-sm); }
   .dp-grid { animation: dp-in 300ms var(--ease) 40ms both; }
   @keyframes dp-in { from { opacity: 0; transform: translateY(-6px); } }
 
@@ -1202,12 +1252,12 @@
 
   .dp-dow, .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
   .dp-dow span {
-    text-align: center; font-size: .6875rem; font-weight: 700; letter-spacing: .06em;
+    text-align: center; font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wide);
     text-transform: uppercase; color: var(--champ-deep); padding-bottom: 8px;
   }
   .dp-day {
     aspect-ratio: 1; display: grid; place-items: center; border: 0; background: transparent;
-    border-radius: 999px; font-family: inherit; font-size: .875rem; font-variant-numeric: tabular-nums;
+    border-radius: 999px; font-family: inherit; font-size: var(--t-sm); font-variant-numeric: tabular-nums;
     color: var(--ink); cursor: pointer; position: relative;
     transition: background-color 160ms var(--ease), color 160ms var(--ease),
                 transform 160ms var(--ease), box-shadow 200ms var(--ease);
@@ -1240,26 +1290,26 @@
     margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16,20,24,0.1);
   }
   .dp-foot button {
-    font-family: inherit; font-size: .8125rem; font-weight: 700; cursor: pointer;
+    font-family: inherit; font-size: var(--t-xs); font-weight: 700; cursor: pointer;
     border: 0; background: transparent; color: var(--champ-deep);
     padding: 4px 2px; border-radius: 6px;
     transition: color 160ms var(--ease);
   }
   @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { color: var(--ink); text-decoration: underline; } }
-  .dp-hint { font-size: .75rem; color: var(--muted); }
+  .dp-hint { font-size: var(--t-2xs); color: var(--muted); }
 
   /* ---- Time picker ---- */
   .tp { width: 15rem; }
   .tp-read {
-    font-family: var(--display); font-size: 1.375rem; font-weight: 700;
-    letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+    font-family: var(--display); font-size: var(--t-xl); font-weight: 700;
+    letter-spacing: var(--ls-tight); font-variant-numeric: tabular-nums;
     animation: dp-in 300ms var(--ease) both;
   }
   .tp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .tp-lab {
     display: block; text-align: center; padding-bottom: 6px;
-    font-family: var(--display); font-size: .6875rem; font-weight: 700;
-    letter-spacing: .09em; text-transform: uppercase; color: var(--champ-deep);
+    font-family: var(--display); font-size: var(--t-2xs); font-weight: 700;
+    letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--champ-deep);
   }
   .tp-scroll {
     height: 12.5rem; overflow-y: auto; overscroll-behavior: contain;
@@ -1269,7 +1319,7 @@
   .tp-opt {
     flex: none; padding: 7px 0; border: 0; border-radius: 9px; cursor: pointer;
     background: transparent; color: var(--ink);
-    font-family: inherit; font-size: .9375rem; font-variant-numeric: tabular-nums;
+    font-family: inherit; font-size: var(--t-sm); font-variant-numeric: tabular-nums;
     transition: background-color 150ms var(--ease), color 150ms var(--ease);
   }
   @media (hover: hover) and (pointer: fine) {
@@ -1328,8 +1378,8 @@
   }
   .rev-card blockquote { margin: 0; }
   .rev-card blockquote p {
-    margin: 0; font-family: var(--sans); font-size: 0.9375rem; line-height: 1.6;
-    letter-spacing: 0; color: var(--ink); text-wrap: pretty;
+    margin: 0; font-family: var(--sans); font-size: var(--t-sm); line-height: var(--lh-body);
+    letter-spacing: var(--ls-normal); color: var(--ink); text-wrap: pretty;
   }
   .rev-card footer { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
 
@@ -1337,18 +1387,18 @@
   .rev-mono {
     display: grid; place-items: center; flex: none; width: 38px; height: 38px;
     border-radius: 999px; background: linear-gradient(140deg, var(--champ-bright), var(--champ-deep));
-    color: #17110A; font-family: var(--display); font-size: 0.8125rem; font-weight: 700;
-    letter-spacing: 0.02em;
+    color: #17110A; font-family: var(--display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: var(--ls-wide);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
   }
   .rev-who { display: flex; flex-direction: column; min-width: 0; }
   .rev-who cite {
-    font-style: normal; font-weight: 600; font-size: 0.9375rem; line-height: 1.25;
-    letter-spacing: -0.01em; color: var(--ink);
+    font-style: normal; font-weight: 600; font-size: var(--t-sm); line-height: var(--lh-snug);
+    letter-spacing: var(--ls-snug); color: var(--ink);
   }
   .rev-role {
-    font-family: var(--display); font-size: 0.6875rem; font-weight: 700;
-    letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-top: 3px;
+    font-family: var(--display); font-size: var(--t-2xs); font-weight: 700;
+    letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--muted); margin-top: 3px;
   }
 
   @media (hover: hover) and (pointer: fine) {
