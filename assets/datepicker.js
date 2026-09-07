@@ -57,7 +57,16 @@
   openBtn.innerHTML = ICON_CAL;
   openBtn.setAttribute('aria-label', 'Choose a date of travel');
   openBtn.setAttribute('aria-expanded', 'false');
-  input.insertAdjacentElement('afterend', openBtn);
+
+  /* The button is centred on the input, so it needs a containing block
+     that is the input and nothing else. Hanging it off .field centred it
+     on the label + input + error message instead, which sat it visibly
+     high, and moved it again whenever the error message appeared. */
+  var box = document.createElement('span');
+  box.className = 'dp-box';
+  input.parentNode.insertBefore(box, input);
+  box.appendChild(input);
+  box.appendChild(openBtn);
 
   var pop = document.createElement('div');
   pop.className = 'dp';
