@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=1488e57f">
+<link rel="stylesheet" href="/assets/site.css?v=a423d571">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -247,32 +247,79 @@
       </div>
 
       <div class="cover-grid">
-        <div class="rev-in">
-          <h3>Across the North West</h3>
-          <p class="small" style="margin-top:8px;">
-            Regular pick-ups and drop-offs throughout Greater Manchester, Lancashire and Merseyside.
-          </p>
-          <div class="areas">
-            <span class="area key">Bolton</span><span class="area">Bury</span><span class="area">Wigan</span>
-            <span class="area">Salford</span><span class="area">Manchester</span><span class="area">Rochdale</span>
-            <span class="area">Oldham</span><span class="area">Stockport</span><span class="area">Warrington</span>
-            <span class="area">Preston</span><span class="area">Chorley</span><span class="area">Blackburn</span>
-            <span class="area">Liverpool</span><span class="area">St Helens</span><span class="area">Leigh</span>
-            <span class="area">Radcliffe</span>
-          </div>
-        </div>
+        <figure class="map rev-in">
+          <!-- The dot grid is a separate file: 1,913 circles is 70KB of
+               markup, which belongs in a cached asset rather than inline in
+               every page load. Generated offline with dotted-map from real
+               country outlines; the arc endpoints are that same library's
+               projection of each city, so they land on actual dots. -->
+          <img class="map-dots" src="/assets/uk-dots.svg?v=f0959dfa" alt=""
+               width="48" height="78" loading="lazy" decoding="async">
+          <svg class="map-arcs" viewBox="0 0 48 78" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <!-- Ordered nearest-first, so the reach reads as spreading out
+                 from Bolton rather than arriving from everywhere at once. -->
+            <path class="arc" pathLength="1" d="M27 47.63Q26.71 48.50 27 49.36" style="--d:0.00s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q25.79 49.01 24 49.36" style="--d:0.28s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q29.29 47.45 31 45.9" style="--d:0.56s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q23.93 44.33 23.5 39.84" style="--d:0.84s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q26.63 52.82 29.5 57.16" style="--d:1.12s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q27.84 57.49 22.5 65.82" style="--d:1.40s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q30.06 58.33 39 64.95" style="--d:1.68s"/>
+            <path class="arc" pathLength="1" d="M27 47.63Q21.07 37.57 22.5 25.98" style="--d:1.96s"/>
+            <circle class="stop" cx="27" cy="49.36" r=".55" style="--d:0.83s"/>
+            <circle class="stop" cx="24" cy="49.36" r=".55" style="--d:1.11s"/>
+            <circle class="stop" cx="31" cy="45.9" r=".55" style="--d:1.39s"/>
+            <circle class="stop" cx="23.5" cy="39.84" r=".55" style="--d:1.67s"/>
+            <circle class="stop" cx="29.5" cy="57.16" r=".55" style="--d:1.95s"/>
+            <circle class="stop" cx="22.5" cy="65.82" r=".55" style="--d:2.23s"/>
+            <circle class="stop" cx="39" cy="64.95" r=".55" style="--d:2.51s"/>
+            <circle class="stop" cx="22.5" cy="25.98" r=".55" style="--d:2.79s"/>
+            <circle class="home-ring" cx="27" cy="47.63" r=".8"/>
+            <circle class="home" cx="27" cy="47.63" r=".7"/>
+          </svg>
+          <figcaption class="map-cap">
+            <span class="map-home"><i></i>Bolton</span>
+            <ol class="map-legend">
+            <li style="--d:0.92s">Manchester Airport</li>
+            <li style="--d:1.20s">Liverpool</li>
+            <li style="--d:1.48s">Leeds</li>
+            <li style="--d:1.76s">The Lakes</li>
+            <li style="--d:2.04s">Birmingham</li>
+            <li style="--d:2.32s">Cardiff</li>
+            <li style="--d:2.60s">London</li>
+            <li style="--d:2.88s">Edinburgh</li>
+            </ol>
+          </figcaption>
+        </figure>
 
-        <div class="rev-in">
-          <h3>Nationwide work</h3>
-          <p class="small" style="margin-top:8px;">
-            Long-distance runs are part of what we do, not an exception. London, the Midlands,
-            Scotland, Wales and the South Coast, including multi-day trips where the vehicle and
-            driver stay with your group throughout.
-          </p>
-          <p class="small" style="margin-top:14px;">
-            Tell us the route and we&rsquo;ll price it properly, including driver hours and overnight
-            costs where they apply.
-          </p>
+        <div class="cover-copy">
+          <div class="rev-in">
+            <h3>Across the North West</h3>
+            <p class="small" style="margin-top:8px;">
+              Regular pick-ups and drop-offs throughout Greater Manchester, Lancashire and Merseyside.
+            </p>
+            <div class="areas">
+              <span class="area key">Bolton</span><span class="area">Bury</span><span class="area">Wigan</span>
+              <span class="area">Salford</span><span class="area">Manchester</span><span class="area">Rochdale</span>
+              <span class="area">Oldham</span><span class="area">Stockport</span><span class="area">Warrington</span>
+              <span class="area">Preston</span><span class="area">Chorley</span><span class="area">Blackburn</span>
+              <span class="area">Liverpool</span><span class="area">St Helens</span><span class="area">Leigh</span>
+              <span class="area">Radcliffe</span>
+            </div>
+          </div>
+
+          <div class="rev-in">
+            <h3>Nationwide work</h3>
+            <p class="small" style="margin-top:8px;">
+              Long-distance runs are part of what we do, not an exception. London, the Midlands,
+              Scotland, Wales and the South Coast, including multi-day trips where the vehicle and
+              driver stay with your group throughout.
+            </p>
+            <p class="small" style="margin-top:14px;">
+              Tell us the route and we&rsquo;ll price it properly, including driver hours and overnight
+              costs where they apply.
+            </p>
+          </div>
         </div>
       </div>
     </div>
