@@ -484,22 +484,67 @@
 
   .fan-card:focus-within { outline: 2px solid var(--champ); outline-offset: 3px; }
 
-  /* ================= Fleet: comparison rail, not three cards ================= */
-  .fleet-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
-  @media (max-width: 900px) { .fleet-grid { grid-template-columns: 1fr; gap: 28px; } }
-  .fleet-photo { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-dark); }
-  .fleet-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
-  .sizes { display: flex; flex-direction: column; }
-  .size {
-    display: grid; grid-template-columns: 4.4rem 1fr; gap: 20px; align-items: baseline;
-    padding: 22px 0; border-top: 1px solid var(--line-dark);
+  /* ================= Fleet: four cards, one per size =================
+     Ported from a dashboard statistics-card component. What that layout
+     gets right is the shape: a number as the headline, a label under it,
+     a soft decorative wash in the corner. What it carries that a minibus
+     operator has no use for is the dashboard furniture — per-card
+     kebab menus, Settings and Pin to Dashboard items, and a "vs last
+     month" delta. There is no last month for a seat count.
+
+     The reference gave each card its own hue (zinc, fuchsia, blue, teal).
+     Four unrelated colours would fight a two-colour brand, so the cards
+     share one ground and the champagne wash strengthens with capacity —
+     the card warms up as the vehicle gets bigger. */
+  .fleet-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
   }
-  .size:last-child { border-bottom: 1px solid var(--line-dark); }
+  @media (max-width: 1000px) { .fleet-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px)  { .fleet-cards { grid-template-columns: 1fr; } }
+
+  .size {
+    position: relative; overflow: hidden; isolation: isolate;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 22px 22px 18px;
+    background: rgba(243,239,230,0.035);
+    border: 1px solid var(--line-dark); border-radius: 16px;
+    transition: transform 300ms var(--ease), border-color 300ms var(--ease),
+                background-color 300ms var(--ease);
+  }
+  /* The corner wash, scaled by --i so the fifth-seater is a hint and the
+     eighteen-seater is unmistakable. */
+  .size-glow {
+    position: absolute; z-index: -1; pointer-events: none;
+    top: -35%; right: -25%; width: 78%; aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(closest-side,
+      rgba(201,183,154, calc(0.07 + var(--i) * 0.05)), transparent);
+  }
+  .size-art {
+    display: block; width: 100%; height: auto; margin-bottom: 12px;
+    fill: var(--champ); opacity: .85;
+  }
+  .size-art .g { fill: var(--band-deep); }
+  .size-art .w { fill: var(--band-deep); stroke: var(--champ); stroke-width: 2.5; }
+
   .size .n {
-    font-family: var(--display); font-size: 2.5rem; font-weight: 600; color: var(--champ);
+    font-family: var(--display); font-size: 2.75rem; font-weight: 700;
+    letter-spacing: -.03em; color: var(--champ-bright);
     line-height: 1; font-variant-numeric: tabular-nums;
   }
-  .size .n span { display: block; font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 5px; }
+  .size .n span {
+    display: block; font-family: var(--display); font-size: 0.625rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 7px;
+  }
+  .size-copy { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
+  .size-copy h3 { color: var(--on-dark); margin-bottom: 5px; }
+  .size-copy .small { color: var(--on-dark-2); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .size:hover {
+      transform: translateY(-3px); border-color: rgba(201,183,154,0.4);
+      background: rgba(243,239,230,0.06);
+    }
+  }
 
   /* ================= Coverage ================= */
   /* ---- Coverage map ----
@@ -792,19 +837,14 @@
         animation-timeline: view();
         animation-range: entry 0% exit 100%;
       }
-      .fleet-photo img {
-        animation: photoPar linear both;
-        animation-timeline: view();
-        animation-range: entry 0% exit 100%;
-      }
     }
   }
   @keyframes heroPar  { from { transform: scale(1.08) translateY(-2%); } to { transform: scale(1.08) translateY(6%); } }
-  @keyframes photoPar { from { transform: scale(1.06) translateY(-3%); } to { transform: scale(1.06) translateY(3%); } }
 
-  /* The three vehicle sizes step forward as the section passes */
-  .size { opacity: 0.34; transition: opacity 340ms var(--ease); }
-  .size.lit { opacity: 1; }
+  /* The rail dimmed whichever row was not centred, which made sense when
+     the sizes were stacked and read one at a time. Four cards side by side
+     are all on screen at once, so dimming three of them just made three
+     quarters of the section unreadable. Only the count-up survives. */
   .size .n em { font-style: normal; font-variant-numeric: tabular-nums; }
 
   /* Area chips arrive in sequence, not all at once */
@@ -822,10 +862,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .size { opacity: 1; }
     .area { opacity: 1; transform: none; }
     .fan.rev-in, .fan.rev-in.shown { transform: none; filter: none; }
-    .hero-bg, .fleet-photo img { animation: none; }
+    .hero-bg { animation: none; }
   }
 
   /* ---------------- Scroll entry ---------------- */
