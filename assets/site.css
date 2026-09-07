@@ -129,36 +129,164 @@
   .brand-txt b { display: block; font-family: var(--display); font-size: 1.125rem; font-weight: 600; color: var(--on-dark); line-height: 1.1; }
   .brand-txt span { display: block; font-size: 0.625rem; letter-spacing: 0.24em; color: var(--champ); text-transform: uppercase; }
 
-  .nav-links { display: flex; gap: 4px; }
+  .nav-links { display: flex; gap: 2px; }
   .nav-links a {
-    text-decoration: none; color: var(--on-dark-2); font-size: 0.9375rem;
-    padding: 8px 12px; border-radius: 9px;
-    transition: color 200ms var(--ease), background-color 200ms var(--ease);
+    position: relative; text-decoration: none; color: var(--on-dark-2);
+    font-family: var(--display); font-size: 0.8125rem; font-weight: 500;
+    letter-spacing: 0.055em; text-transform: uppercase;
+    padding: 9px 13px; border-radius: 9px;
+    transition: color 220ms var(--ease);
   }
-  .nav-links a[aria-current="true"] { color: var(--on-dark); background: rgba(243,239,230,0.09); }
+  /* Champagne rule under the label, drawn from the centre outwards so it
+     reads as the same gesture as the letter ripple. */
+  .nav-links a::after {
+    content: ""; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 1px;
+    background: var(--champ); transform: scaleX(0);
+    transition: transform 320ms var(--ease);
+  }
+
+  /* Per-letter weight ripple. The spans are written by navtype.js; until
+     they exist the link is an ordinary uppercase label, so nothing here
+     depends on the script having run. */
+  .nav-links a .ch {
+    display: inline-block; white-space: pre;
+    font-variation-settings: "wght" 500;
+    transition: font-variation-settings 300ms var(--ease), transform 300ms var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .nav-links a:is(:hover, :focus-visible) .ch {
+    font-variation-settings: "wght" 760;
+    transform: translateY(-1px);
+  }
+  .nav-links a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+
+  .nav-links a[aria-current="true"] { color: var(--on-dark); }
+  .nav-links a[aria-current="true"] .ch { font-variation-settings: "wght" 700; }
+  .nav-links a[aria-current="true"]::after { transform: scaleX(1); background: var(--champ-deep); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-links a .ch { transition: none; transition-delay: 0ms; transform: none; }
+    .nav-links a:is(:hover, :focus-visible) .ch { transform: none; }
+    .nav-links a::after { transition: none; }
+  }
   @media (max-width: 1000px) { .nav-links { display: none; } }
 
-  /* ---------------- Buttons ---------------- */
+  /* ---------------- Buttons ----------------
+     One mechanism, three layers, so a variant only ever declares two
+     colours (--btn-bg and --shine) and inherits the rest:
+
+       1. ::before  a diagonal sheen that crosses the face on hover
+       2. ::after   a soft glow that lifts the lower edge on hover
+       3. .btn-shine  a slow conic sweep around the border, reserved for
+                      the single highest-intent CTA in a view
+
+     Motion is opt-in per element. A permanently animated button in every
+     slot reads as a landing-page gimmick, not a licensed operator, so the
+     sweep is applied by hand and never by the base class. */
+
+  @property --btn-angle { syntax: "<angle>"; initial-value: 0deg;      inherits: false; }
+  @property --btn-bg    { syntax: "<color>"; initial-value: transparent; inherits: false; }
+
   .btn {
+    --btn-bg: transparent;
+    --shine: rgba(255, 255, 255, 0.92);
+    --btn-lift: rgba(16, 20, 24, 0.26);
+
+    position: relative; isolation: isolate; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: 9px;
     padding: 13px 20px; border-radius: 11px; border: 1px solid transparent;
     font-family: inherit; font-size: 0.9375rem; font-weight: 600; white-space: nowrap;
+    letter-spacing: -0.004em;
     text-decoration: none; cursor: pointer;
-    transition: transform 160ms var(--ease), background-color 200ms var(--ease), border-color 200ms var(--ease);
+    background: var(--btn-bg);
+    transition: transform 200ms var(--ease), --btn-bg 220ms var(--ease),
+                border-color 220ms var(--ease), box-shadow 300ms var(--ease);
   }
   .btn:active { transform: scale(0.975); }
   .btn svg { width: 18px; height: 18px; flex: none; }
-  .btn-wa { background: var(--wa-deep); color: #06231A; }
-  .btn-ink { background: var(--ink); color: var(--on-dark); }
-  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
-  .btn-ghost-dark { background: rgba(243,239,230,0.07); color: var(--on-dark); border-color: var(--line-dark); }
-  .btn-sm { padding: 9px 14px; font-size: 0.875rem; }
+
+  /* Sheen. Parked off the left edge and only given a travel time while
+     hovered, so releasing the pointer fades it out instead of sliding it
+     backwards through the button. */
+  .btn::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    top: -1px; bottom: -1px; left: -55%; width: 42%;
+    background: linear-gradient(100deg, transparent, var(--shine), transparent);
+    transform: skewX(-18deg);
+    opacity: 0;
+    transition: opacity 260ms var(--ease);
+  }
+
+  /* Lower-edge glow: the restrained half of the reference component's
+     inner shadow, without the breathing animation. */
+  .btn::after {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    inset: 0; border-radius: inherit;
+    background: radial-gradient(115% 88% at 50% 122%, var(--shine), transparent 64%);
+    opacity: 0;
+    transition: opacity 320ms var(--ease);
+  }
+
+  .btn-wa         { --btn-bg: var(--wa-deep); --shine: #E8FFF1; color: #06231A; }
+  .btn-ink        { --btn-bg: var(--ink);     --shine: var(--champ-bright); color: var(--on-dark); }
+  .btn-ghost      { --btn-bg: transparent;    --shine: var(--champ); color: var(--ink); border-color: var(--line); }
+  .btn-ghost-dark { --btn-bg: rgba(243,239,230,0.07); --shine: var(--champ); color: var(--on-dark); border-color: var(--line-dark); }
+  .btn-sm         { padding: 9px 14px; font-size: 0.875rem; border-radius: 9px; }
+
+  /* Conic border sweep. The reference component hardcoded black and a
+     literal `blue`; here the ring is the brand accent and the bright stop
+     is drawn from the button's own --shine, so it never fights the face
+     colour it sits on. */
+  .btn-shine {
+    /* box-sizing is border-box globally, so a heavier ring costs padding,
+       not height: shine buttons stay the same size as their siblings. */
+    border-width: 1.5px;
+    background:
+      linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box,
+      conic-gradient(from var(--btn-angle),
+        transparent 0%,
+        var(--shine) 5%,
+        #FFFFFF 9%,
+        var(--shine) 13%,
+        transparent 20%,
+        transparent 50%,
+        var(--shine) 55%,
+        transparent 66%) border-box;
+    box-shadow: 0 10px 26px -18px var(--btn-lift);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn-shine { animation: btn-sweep 6s linear infinite; }
+  }
+  @keyframes btn-sweep { to { --btn-angle: 360deg; } }
+
   @media (hover: hover) and (pointer: fine) {
-    .nav-links a:hover { color: var(--on-dark); background: rgba(243,239,230,0.07); }
-    .btn-wa:hover { background: var(--wa); }
-    .btn-ink:hover { background: #2A343E; }
-    .btn-ghost:hover { border-color: var(--champ); }
-    .btn-ghost-dark:hover { background: rgba(243,239,230,0.13); }
+    .nav-links a:hover { color: var(--on-dark); }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0) scale(0.985); }
+
+    .btn:is(:hover, :focus-visible)::before {
+      opacity: 0.30;
+      translate: 380% 0;
+      transition: opacity 180ms var(--ease), translate 780ms var(--ease);
+    }
+    .btn:is(:hover, :focus-visible)::after { opacity: 0.26; }
+
+    .btn-wa:hover         { --btn-bg: var(--wa); box-shadow: 0 12px 28px -18px rgba(31,168,85,.85); }
+    .btn-ink:hover        { --btn-bg: #1B222A; box-shadow: 0 12px 28px -18px rgba(16,20,24,.7); }
+    .btn-ghost:hover      { border-color: var(--champ-deep); --btn-bg: rgba(201,183,154,0.10); }
+    .btn-ghost-dark:hover { --btn-bg: rgba(243,239,230,0.13); border-color: rgba(201,183,154,0.42); }
+
+    .btn-shine:hover { animation-duration: 2.4s; }
+  }
+
+  /* Focus keeps the sweep visible for keyboard users, who get no hover. */
+  .btn-shine:focus-visible { animation-duration: 2.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .btn::before, .btn::after { transition: none; }
+    .btn:hover { transform: none; }
+    .btn:is(:hover, :focus-visible)::before { translate: 0; opacity: 0; }
   }
 
   /* ---------------- Sections ---------------- */
@@ -295,35 +423,38 @@
   }
   .area.key { background: rgba(201,183,154,0.15); border-color: rgba(201,183,154,0.4); color: var(--champ-bright); }
 
-  /* ================= Reviews: one quote, not a three-card row ================= */
-  .rev-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 44px; align-items: center; }
-  @media (max-width: 860px) { .rev-grid { grid-template-columns: 1fr; gap: 28px; } }
-  .rating { display: flex; flex-direction: column; gap: 6px; }
-  .rating .score { font-family: var(--display); font-size: 3.6rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  /* ================= Reviews: a wall, not one quote =================
+     Three columns creeping upward at different speeds, per the reference
+     testimonial marquee. Two differences worth stating:
+
+     - The reference paired each quote with a stock headshot. These are
+       real Google reviews from named customers, so a stranger's stock
+       photo next to a real person's name is a fabrication. They get an
+       initials monogram instead.
+     - The reference ran its columns at 15-19s, which is a visible sprint.
+       At this width that reads as a slot machine, so the columns run
+       roughly twice as slow and stop on hover and on keyboard focus.
+     ================================================================== */
+  .rev-top {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+    gap: 20px 32px; margin-bottom: 34px;
+    padding-bottom: 26px; border-bottom: 1px solid var(--line);
+  }
+  .rating { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; }
+  .rating .score {
+    font-family: var(--display); font-size: 3.2rem; font-weight: 700; line-height: 1;
+    letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+  }
+  .rating .small { margin: 0; max-width: 30ch; }
   .stars { display: flex; gap: 3px; color: #E8A33D; }
   .stars svg { width: 17px; height: 17px; }
-  blockquote {
-    margin: 0; font-family: var(--display); font-size: clamp(1.3rem, 2.4vw, 1.75rem);
-    line-height: 1.35; letter-spacing: -0.015em; color: var(--ink);
-  }
-  /* Real reviews vary a lot in length. The type steps down as they run
-     long, so the section keeps its shape whichever one is showing. */
-  blockquote.mid  { font-size: clamp(1.15rem, 1.9vw, 1.42rem); line-height: 1.4; }
-  blockquote.long { font-size: clamp(1.02rem, 1.5vw, 1.2rem);  line-height: 1.5; letter-spacing: -0.008em; }
-  .rev-slot {
-    border-left: 3px solid var(--champ); padding-left: 24px;
-    display: flex; flex-direction: column; gap: 16px;
-  }
+
   .rev-empty {
     font-family: var(--sans); font-size: 0.9375rem; color: var(--muted);
     background: rgba(201,183,154,0.14); border: 1px dashed var(--champ-deep);
     border-radius: var(--radius); padding: 16px 18px; line-height: 1.5;
   }
   .rev-empty b { color: var(--champ-deep); }
-  .rev-nav { display: flex; gap: 7px; margin-top: 6px; }
-  .rev-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--line); border: 0; padding: 0; cursor: pointer;
-             transition: background-color 200ms var(--ease), width 200ms var(--ease); }
-  .rev-dot.on { background: var(--champ-deep); width: 20px; }
 
   /* ================= Booking ================= */
   .book-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 44px; align-items: start; }
@@ -381,14 +512,107 @@
   .ans > div { overflow: hidden; }
   .ans p { padding-bottom: 18px; font-size: 0.9375rem; color: var(--on-dark-2); }
 
-  /* ================= Footer ================= */
-  footer { background: var(--band-deep); color: var(--on-dark-3); padding: 52px 0 40px; position: relative; z-index: 2; }
-  .foot-top { display: flex; flex-wrap: wrap; gap: 24px 40px; justify-content: space-between; align-items: flex-start;
-              padding-bottom: 28px; border-bottom: 1px solid var(--line-dark); }
-  .foot-links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.9375rem; }
-  .foot-links a { color: var(--on-dark-2); text-decoration: none; transition: color 180ms var(--ease); }
-  .foot-bot { padding-top: 22px; display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; font-size: 0.8125rem; }
-  @media (hover: hover) and (pointer: fine) { .foot-links a:hover { color: var(--champ); } }
+  /* ================= Footer =================
+     The reference footer was a single centred row of links over six
+     placeholder social icons. Centred link soup gives a reader no way to
+     scan, and Bux Travel has no social profiles to point at, so the
+     structure here is four labelled columns and the three contact routes
+     that actually exist: WhatsApp, phone, email. */
+  /* Scoped to the page footer. A bare `footer` selector also matches a
+     <footer> nested inside content — the attribution block in a review
+     card, for one — and paints it as a dark slab. */
+  body > footer {
+    background: var(--band-deep); color: var(--on-dark-3);
+    padding: 74px 0 34px; position: relative; z-index: 2;
+    overflow: hidden;
+  }
+  /* Champagne hairline, brightest in the middle, marking the seam
+     between the page and the footer. */
+  body > footer::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg,
+      transparent, rgba(201,183,154,0.10) 18%, rgba(201,183,154,0.55) 50%,
+      rgba(201,183,154,0.10) 82%, transparent);
+  }
+  /* A very slow champagne wash in the upper left, so the block does not
+     read as a flat slab of near-black. Inert, no animation. */
+  body > footer::after {
+    content: ""; position: absolute; pointer-events: none;
+    top: -220px; left: -140px; width: 620px; height: 480px;
+    background: radial-gradient(closest-side, rgba(201,183,154,0.085), transparent);
+  }
+  body > footer .container { position: relative; z-index: 1; }
+
+  .foot-grid {
+    display: grid; gap: 44px 40px;
+    grid-template-columns: minmax(260px, 1.5fr) repeat(3, minmax(140px, 1fr));
+    padding-bottom: 40px; border-bottom: 1px solid var(--line-dark);
+  }
+  @media (max-width: 900px) { .foot-grid { grid-template-columns: 1fr 1fr; gap: 36px 28px; } }
+  @media (max-width: 560px) { .foot-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+  .foot-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  @media (max-width: 900px) { .foot-brand { grid-column: 1 / -1; } }
+  .foot-blurb {
+    font-size: 0.9375rem; line-height: 1.6; color: var(--on-dark-2); max-width: 38ch;
+  }
+
+  .foot-contact { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 320px; }
+  .foot-contact a {
+    display: inline-flex; align-items: center; gap: 11px;
+    padding: 9px 13px; border-radius: 10px;
+    border: 1px solid var(--line-dark); background: rgba(243,239,230,0.03);
+    color: var(--on-dark-2); text-decoration: none;
+    font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em;
+    transition: color 200ms var(--ease), border-color 200ms var(--ease),
+                background-color 200ms var(--ease), transform 200ms var(--ease);
+  }
+  .foot-contact svg { width: 16px; height: 16px; flex: none; color: var(--champ); }
+  .foot-contact b { font-weight: 600; color: var(--on-dark); }
+
+  .foot-col h4 {
+    margin: 0 0 16px; font-family: var(--display);
+    font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--champ);
+  }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col a {
+    position: relative; display: inline-block;
+    color: var(--on-dark-2); text-decoration: none; font-size: 0.9375rem;
+    transition: color 200ms var(--ease), transform 200ms var(--ease);
+  }
+  /* Champagne rule that draws in from the left on hover: the same
+     device as .eyebrow::before, so the footer belongs to the same system
+     rather than inventing a new hover language. */
+  .foot-col a::after {
+    content: ""; position: absolute; left: 0; bottom: -3px; height: 1px; width: 100%;
+    background: var(--champ); transform: scaleX(0); transform-origin: left;
+    transition: transform 280ms var(--ease);
+  }
+
+  .foot-bot {
+    padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 28px;
+    align-items: center; justify-content: space-between; font-size: 0.8125rem;
+  }
+  .foot-bot p { margin: 0; }
+  .foot-bot .foot-meta { color: var(--on-dark-3); }
+  .foot-bot a { color: inherit; text-decoration: none; transition: color 200ms var(--ease); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .foot-col a:hover { color: var(--on-dark); }
+    .foot-col a:hover::after { transform: scaleX(1); }
+    .foot-contact a:hover {
+      color: var(--on-dark); border-color: rgba(201,183,154,0.42);
+      background: rgba(201,183,154,0.09); transform: translateX(2px);
+    }
+    .foot-bot a:hover { color: var(--champ); }
+  }
+  .foot-col a:focus-visible::after { transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foot-col a, .foot-col a::after, .foot-contact a { transition: none; }
+    .foot-contact a:hover { transform: none; }
+  }
 
   /* ================= Motion layer =================
      Parallax runs on native CSS scroll-driven animation where the
@@ -572,10 +796,16 @@
   }
 
   /* ====================================================================
-     Date picker
+     Date picker — frosted glass
      Layered over the native date input rather than replacing it, so
      typing, mobile keyboards and the existing form validation all keep
      working. The popover is the enhancement, not the mechanism.
+
+     The reference glass calendar was dark glass with a pink-to-orange
+     selection. Here the panel is light glass, because it opens over a
+     dark band into a column of light form fields and dark glass would
+     read as a foreign object; the selection gradient is champagne, and
+     every colour is a brand token.
      ==================================================================== */
   .dp-wrap { position: relative; }
   .dp-wrap input[type="date"] { padding-right: 42px; }
@@ -587,80 +817,134 @@
     position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
     display: grid; place-items: center; width: 30px; height: 30px;
     border: 0; background: transparent; border-radius: 8px; cursor: pointer;
-    color: var(--muted); transition: color 160ms var(--ease), background-color 160ms var(--ease);
+    color: var(--muted);
+    transition: color 180ms var(--ease), background-color 180ms var(--ease),
+                transform 220ms var(--ease);
   }
   .dp-open svg { width: 17px; height: 17px; }
   @media (hover: hover) and (pointer: fine) {
-    .dp-open:hover { color: var(--ink); background: var(--paper); }
+    .dp-open:hover { color: var(--ink); background: rgba(201,183,154,0.24); transform: translateY(-50%) scale(1.06); }
   }
-  .dp-open[aria-expanded="true"] { color: var(--ink); background: var(--paper); }
+  .dp-open[aria-expanded="true"] { color: var(--champ-deep); background: rgba(201,183,154,0.24); }
 
   .dp {
     /* Sized to the calendar, not to the field: the field sits in a narrow
        grid column and the popover must not collapse to it. */
-    position: absolute; z-index: 60; top: calc(100% + 8px); left: 0;
-    width: 20.5rem; max-width: calc(100vw - 2rem);
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg); padding: 14px; color: var(--ink);
-    opacity: 0; transform: translateY(-6px) scale(.985); pointer-events: none;
-    transition: opacity 160ms var(--ease), transform 160ms var(--ease);
+    position: absolute; z-index: 60; top: calc(100% + 10px); left: 0;
+    width: 21.5rem; max-width: calc(100vw - 2rem);
+    padding: 16px; color: var(--ink);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    /* A dense grid of small numerals is the wrong place to spend
+       transparency: at 74% the band and the green submit button behind it
+       bled straight through the digits. 94% keeps the frosted edge and the
+       refraction without costing legibility. */
+    background: rgba(252, 251, 248, 0.94);
+    box-shadow: 0 28px 64px -26px rgba(8, 11, 14, 0.66),
+                0 2px 8px rgba(8, 11, 14, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    backdrop-filter: blur(30px) saturate(150%);
+    overflow: hidden; isolation: isolate;
+    opacity: 0; transform: translateY(-8px) scale(.97); pointer-events: none;
+    transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+  }
+  /* Blur has nothing to work with on a browser that does not support it,
+     and a 74% panel over a dark band would be unreadable. Go opaque. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .dp { background: var(--card); border-color: var(--line); }
+  }
+  /* Champagne light catching the top edge of the pane. */
+  .dp::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(201,183,154,0.85) 30%, rgba(255,255,255,0.9) 50%, rgba(201,183,154,0.85) 70%, transparent);
   }
   .dp[data-open="true"] { opacity: 1; transform: none; pointer-events: auto; }
   .dp[hidden] { display: none; }
-  @media (prefers-reduced-motion: reduce) { .dp { transition: none; } }
 
   @media (max-width: 30rem) { .dp { left: auto; right: 0; } }
 
-  .dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-  .dp-title { font-family: var(--display); font-size: 1.0625rem; font-weight: 600;
-              letter-spacing: -.01em; white-space: nowrap; }
-  .dp-nav { display: flex; gap: 4px; }
+  .dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+  /* render() rewrites the popover's innerHTML on every month change, so
+     these entrance animations replay on navigation with no JS hook. */
+  .dp-title {
+    font-family: var(--display); font-size: 1.375rem; font-weight: 700;
+    letter-spacing: -.025em; white-space: nowrap;
+    animation: dp-in 320ms var(--ease) both;
+  }
+  .dp-grid { animation: dp-in 300ms var(--ease) 40ms both; }
+  @keyframes dp-in { from { opacity: 0; transform: translateY(-6px); } }
+
+  .dp-nav { display: flex; gap: 5px; }
   .dp-nav button {
-    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
-    transition: border-color 160ms var(--ease);
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 999px;
+    border: 1px solid rgba(16,20,24,0.12); background: rgba(255,255,255,0.6);
+    color: var(--ink); cursor: pointer;
+    transition: border-color 180ms var(--ease), background-color 180ms var(--ease),
+                transform 180ms var(--ease);
   }
   .dp-nav button svg { width: 15px; height: 15px; }
-  .dp-nav button:disabled { opacity: .38; cursor: not-allowed; }
+  .dp-nav button:disabled { opacity: .34; cursor: not-allowed; }
   @media (hover: hover) and (pointer: fine) {
-    .dp-nav button:not(:disabled):hover { border-color: var(--champ); }
+    .dp-nav button:not(:disabled):hover {
+      border-color: var(--champ-deep); background: rgba(201,183,154,0.26); transform: scale(1.08);
+    }
   }
 
   .dp-dow, .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
   .dp-dow span {
     text-align: center; font-size: .6875rem; font-weight: 700; letter-spacing: .06em;
-    text-transform: uppercase; color: var(--muted); padding-bottom: 6px;
+    text-transform: uppercase; color: var(--champ-deep); padding-bottom: 8px;
   }
   .dp-day {
     aspect-ratio: 1; display: grid; place-items: center; border: 0; background: transparent;
-    border-radius: 9px; font-family: inherit; font-size: .875rem; font-variant-numeric: tabular-nums;
+    border-radius: 999px; font-family: inherit; font-size: .875rem; font-variant-numeric: tabular-nums;
     color: var(--ink); cursor: pointer; position: relative;
-    transition: background-color 140ms var(--ease), color 140ms var(--ease);
+    transition: background-color 160ms var(--ease), color 160ms var(--ease),
+                transform 160ms var(--ease), box-shadow 200ms var(--ease);
   }
   .dp-day[data-blank] { cursor: default; }
-  .dp-day:disabled { color: #B9B1A2; cursor: not-allowed; }
+  .dp-day:disabled { color: rgba(16,20,24,.3); cursor: not-allowed; }
   @media (hover: hover) and (pointer: fine) {
-    .dp-day:not(:disabled):not([aria-selected="true"]):hover { background: var(--paper); }
+    .dp-day:not(:disabled):not([aria-selected="true"]):hover {
+      background: rgba(255,255,255,0.85); transform: scale(1.08);
+    }
   }
+  /* The reference filled the selected day with a pink-to-orange gradient.
+     Same idea, brand palette: ink text on champagne clears AA comfortably,
+     which white on champagne would not. */
   .dp-day[aria-selected="true"] {
-    background: var(--band); color: var(--on-dark); font-weight: 600;
+    background: linear-gradient(140deg, var(--champ-bright), var(--champ-deep));
+    color: #17110A; font-weight: 700;
+    box-shadow: 0 6px 16px -6px rgba(138, 115, 70, 0.8);
   }
   /* Today gets a mark, not a fill, so it never competes with the selection. */
   .dp-day[data-today]::after {
     content: ""; position: absolute; bottom: 5px; width: 4px; height: 4px;
     border-radius: 50%; background: var(--champ-deep);
   }
-  .dp-day[aria-selected="true"][data-today]::after { background: var(--champ-bright); }
+  .dp-day[aria-selected="true"][data-today]::after { background: #17110A; }
   .dp-day:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 
-  .dp-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px;
-             margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
-  .dp-foot button {
-    font-family: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer;
-    border: 0; background: transparent; color: var(--champ-deep); padding: 4px 2px; border-radius: 6px;
+  .dp-foot {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16,20,24,0.1);
   }
-  @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { text-decoration: underline; } }
+  .dp-foot button {
+    font-family: inherit; font-size: .8125rem; font-weight: 700; cursor: pointer;
+    border: 0; background: transparent; color: var(--champ-deep);
+    padding: 4px 2px; border-radius: 6px;
+    transition: color 160ms var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { color: var(--ink); text-decoration: underline; } }
   .dp-hint { font-size: .75rem; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dp, .dp-day, .dp-nav button, .dp-open { transition: none; }
+    .dp-title, .dp-grid { animation: none; }
+    .dp-day:not(:disabled):not([aria-selected="true"]):hover { transform: none; }
+    .dp-nav button:not(:disabled):hover { transform: none; }
+  }
 
   .field.invalid .dp-open { color: #A3231F; }
 
@@ -759,68 +1043,79 @@
   }
 
   /* ====================================================================
-     Reviews: a stack, not a single card
-     The depth is the message. One quote on its own says nothing about
-     how many there are; three edges behind it do. Every review sits in
-     the DOM and is readable to a screen reader and to a crawler.
+     Reviews: the marquee wall
      ==================================================================== */
-  .rev-stack {
-    position: relative; min-height: var(--rev-h, 210px);
-    padding-top: 46px; transition: min-height 320ms var(--ease);
+  .rev-wall {
+    display: grid; grid-template-columns: 1fr; gap: 18px;
+    max-height: 680px; overflow: hidden;
+    /* Fades the cut edges so cards do not appear to be sliced off. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 11%, #000 89%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 11%, #000 89%, transparent);
   }
-  .rev-stack:focus-visible { outline: 2px solid var(--champ); outline-offset: 10px; border-radius: 4px; }
+  @media (min-width: 700px)  { .rev-wall { grid-template-columns: 1fr 1fr; gap: 18px 20px; } }
+  @media (min-width: 1000px) { .rev-wall { grid-template-columns: repeat(3, 1fr); } }
+
+  .rev-col ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: 18px;
+    /* The list holds the set twice. Trailing padding equal to the gap
+       makes each half exactly half the total height, so -50% lands on a
+       seam and the loop is invisible. */
+    padding-bottom: 18px;
+    animation: rev-scroll var(--dur, 40s) linear infinite;
+    will-change: transform;
+  }
+  @keyframes rev-scroll { to { transform: translateY(-50%); } }
+
+  /* Stop for anyone reading, pointer or keyboard. */
+  .rev-wall:hover .rev-col ul,
+  .rev-wall:focus-within .rev-col ul { animation-play-state: paused; }
 
   .rev-card {
-    position: absolute; inset: 0 0 auto 0; margin: 0;
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 22px 24px; transform-origin: 50% 0%;
-    transition: transform 380ms var(--ease), opacity 260ms var(--ease), visibility 0s linear 260ms;
-    opacity: 0; visibility: hidden;
+    margin: 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px 24px;
+    transition: transform 260ms var(--ease), box-shadow 260ms var(--ease),
+                border-color 260ms var(--ease);
   }
-  /* The current card and the three behind it are the only ones drawn. */
-  .rev-card[data-depth="0"], .rev-card[data-depth="1"],
-  .rev-card[data-depth="2"], .rev-card[data-depth="3"] {
-    opacity: 1; visibility: visible; transition-delay: 0s;
+  .rev-card blockquote { margin: 0; }
+  .rev-card blockquote p {
+    margin: 0; font-family: var(--sans); font-size: 0.9375rem; line-height: 1.6;
+    letter-spacing: 0; color: var(--ink); text-wrap: pretty;
   }
-  .rev-card[data-depth="1"] { opacity: .55; }
-  .rev-card[data-depth="2"] { opacity: .3; }
-  .rev-card[data-depth="3"] { opacity: .14; }
-  /* Cards already read slide out of the way entirely. */
-  .rev-card[data-depth="-1"] { opacity: 0; visibility: hidden; }
-  .rev-card:not(.is-active) { pointer-events: none; }
-  .rev-card.is-active { box-shadow: var(--shadow-lg); }
+  .rev-card footer { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
 
-  .rev-card blockquote {
-    margin: 0; font-size: 1.0625rem; line-height: 1.55; color: var(--ink); text-wrap: pretty;
+  /* Initials, not a stock face. */
+  .rev-mono {
+    display: grid; place-items: center; flex: none; width: 38px; height: 38px;
+    border-radius: 999px; background: linear-gradient(140deg, var(--champ-bright), var(--champ-deep));
+    color: #17110A; font-family: var(--display); font-size: 0.8125rem; font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
   }
-  .rev-card blockquote.mid  { font-size: 1rem; }
-  .rev-card blockquote.long { font-size: 0.9375rem; line-height: 1.6; }
-  .rev-card figcaption {
-    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
-    font-family: var(--display); font-size: 0.75rem; font-weight: 700;
-    letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  .rev-who { display: flex; flex-direction: column; min-width: 0; }
+  .rev-who cite {
+    font-style: normal; font-weight: 600; font-size: 0.9375rem; line-height: 1.25;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .rev-role {
+    font-family: var(--display); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-top: 3px;
   }
 
-  .rev-nav { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
-  .rev-arrow {
-    display: grid; place-items: center; width: 34px; height: 34px; flex: none;
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    border-radius: 999px; cursor: pointer;
-    transition: border-color 160ms var(--ease), background-color 160ms var(--ease);
-  }
-  .rev-arrow svg { width: 15px; height: 15px; }
-  .rev-arrow:disabled { opacity: .3; cursor: not-allowed; }
   @media (hover: hover) and (pointer: fine) {
-    .rev-arrow:not(:disabled):hover { border-color: var(--champ); background: var(--card); }
+    .rev-card:hover {
+      transform: translateY(-3px); border-color: var(--champ);
+      box-shadow: 0 22px 44px -26px rgba(16,20,24,.45);
+    }
   }
-  .rev-dots { display: flex; align-items: center; gap: 7px; }
-  .rev-dot {
-    width: 7px; height: 7px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
-    background: #C6C6C1;
-    transition: width 220ms var(--ease), background-color 220ms var(--ease);
-  }
-  .rev-dot.on { width: 26px; background: var(--champ-deep); }
+  .rev-card:focus-within { border-color: var(--champ); }
 
+  /* Reduced motion: no travel, no clipping, no mask. Every review is
+     simply on the page in a static grid. */
   @media (prefers-reduced-motion: reduce) {
-    .rev-stack, .rev-card, .rev-dot { transition: none; }
+    .rev-wall { max-height: none; -webkit-mask-image: none; mask-image: none; }
+    .rev-col ul { animation: none; padding-bottom: 0; }
+    .rev-col li[aria-hidden="true"] { display: none; }
+    .rev-card { transition: none; }
+    .rev-card:hover { transform: none; }
   }
