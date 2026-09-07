@@ -80,9 +80,30 @@
     var sel = selected();
     var atFloor = y === today.getFullYear() && m === today.getMonth();
 
+    /* Month and year as selects rather than a static caption. Booking a
+       trip eight months out was eight clicks on the chevron. The range
+       is today to two years ahead: travel cannot be booked into the past,
+       and a 1970-2050 spread — as the reference component offered — is
+       eighty years of scrolling for a minibus quote. */
+    var yFloor = today.getFullYear();
+    var yCeil = yFloor + 2;
+    var mFloor = (y === yFloor) ? today.getMonth() : 0;
+
+    var months = '';
+    for (var mi = mFloor; mi < 12; mi++) {
+      months += '<option value="' + mi + '"' + (mi === m ? ' selected' : '') + '>' + MONTHS[mi] + '</option>';
+    }
+    var years = '';
+    for (var yi = yFloor; yi <= yCeil; yi++) {
+      years += '<option value="' + yi + '"' + (yi === y ? ' selected' : '') + '>' + yi + '</option>';
+    }
+
     var html =
       '<div class="dp-head">' +
-        '<span class="dp-title">' + MONTHS[m] + ' ' + y + '</span>' +
+        '<span class="dp-title">' +
+          '<select class="dp-sel" data-jump="month" aria-label="Month">' + months + '</select>' +
+          '<select class="dp-sel" data-jump="year" aria-label="Year">' + years + '</select>' +
+        '</span>' +
         '<span class="dp-nav">' +
           '<button type="button" data-nav="-1" aria-label="Previous month"' + (atFloor ? ' disabled' : '') + '>' + ICON_L + '</button>' +
           '<button type="button" data-nav="1" aria-label="Next month">' + ICON_R + '</button>' +
@@ -174,6 +195,21 @@
 
   openBtn.addEventListener('click', function () { isOpen() ? close(true) : open(); });
 
+  pop.addEventListener('change', function (e) {
+    var sel = e.target.closest('[data-jump]');
+    if (!sel) return;
+    var y = view.getFullYear(), m = view.getMonth();
+    if (sel.getAttribute('data-jump') === 'month') m = +sel.value; else y = +sel.value;
+    /* Jumping to the current year from a later one can land on a month
+       already gone. Clamp forward rather than silently showing the past. */
+    var floor = new Date(today.getFullYear(), today.getMonth(), 1);
+    var cand = new Date(y, m, 1);
+    view = cand < floor ? floor : cand;
+    render();
+    var again = pop.querySelector('[data-jump="' + sel.getAttribute('data-jump') + '"]');
+    if (again) again.focus();
+  });
+
   pop.addEventListener('click', function (e) {
     var nav = e.target.closest('[data-nav]');
     if (nav) {
@@ -194,6 +230,7 @@
   pop.addEventListener('keydown', function (e) {
     var k = e.key;
     if (k === 'Escape') { e.preventDefault(); close(true); return; }
+    /* Arrow keys belong to the select while it has focus. */
     if (!e.target.classList.contains('dp-day')) return;
     var map = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7, PageUp: -28, PageDown: 28 };
     if (k in map) { e.preventDefault(); shiftFocus(map[k]); return; }
