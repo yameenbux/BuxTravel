@@ -90,6 +90,18 @@ endpoints land on real dots. The arcs and their stagger live inline in
 `index.html`; the `viewBox` must match the generated SVG exactly, or the two
 layers will drift apart.
 
+**The thirty arc endpoints are unlabelled on purpose.** A written list of the
+destinations used to run underneath the map. It was removed to bring the
+section down to the height of the fleet section above it, which was an explicit
+call: the names went so the map could stay legible. The reach is now shown by
+the arcs and stated in words by the "Nationwide work" copy, not enumerated.
+
+If those city names are ever wanted back for search — they are the terms people
+actually type — put them back as **visible** text. Do not hide them behind
+`sr-only` or `display: none` to get the height back for free: a block of city
+names visible only to crawlers is textbook hidden-text keyword stuffing, and
+the penalty is worse than the ranking it buys.
+
 ## Reviews
 
 The nine reviews in `index.html` are **real, from the Google profile, and

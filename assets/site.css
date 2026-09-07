@@ -700,28 +700,10 @@
     letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--champ);
   }
   .map-home i { width: 7px; height: 7px; border-radius: 999px; background: var(--champ-bright); flex: none; }
-  .dest-h {
-    margin: 20px 0 10px; font-family: var(--display);
-    font-size: var(--t-2xs); font-weight: 700; letter-spacing: var(--ls-wider);
-    text-transform: uppercase; color: var(--champ);
-  }
-  /* Thirty pills is a lot of chrome for a supporting list, and cost about
-     190px of height wherever it sat. Set as a flowing run instead: same
-     thirty names, same per-name reveal, a third of the height. */
-  .map-legend {
-    list-style: none; margin: 0; padding: 0;
-    font-size: var(--t-xs); line-height: var(--lh-body); color: var(--on-dark-2);
-  }
-  .map-legend li { display: inline; opacity: 0; }
-  .map-legend li + li::before {
-    content: "·"; color: var(--champ-deep); margin: 0 .5em; opacity: .9;
-  }
-  .cover-dest.shown .map-legend li { animation: stop-in .5s var(--ease) var(--d, 0s) forwards; }
-
-  /* Two columns of copy with the destinations running full width beneath.
-     A third column was tried and saved 15px, at the cost of squeezing the
-     area chips into a 217px column where they wrapped to eight rows. */
-  .cover-dest { grid-column: 1 / -1; }
+  /* The named destinations list that ran full width under these two
+     columns is gone: it was the 134px standing between this section and
+     the height of the fleet section above it. The arcs still show the
+     reach; the "Nationwide work" copy still states it in words. */
   .cover-copy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 34px; align-items: start; }
   @media (max-width: 820px) { .cover-copy { grid-template-columns: 1fr; gap: 30px; } }
 
@@ -730,9 +712,9 @@
      never withheld — only the drawing of it is. */
   @media (prefers-reduced-motion: reduce) {
     .map.shown .arc, .map.shown .stop,
-    .map.shown .home-ring, .cover-dest.shown .map-legend li { animation: none; }
+    .map.shown .home-ring { animation: none; }
     .arc { stroke-dashoffset: 0; }
-    .stop, .map-legend li { opacity: 1; }
+    .stop { opacity: 1; }
   }
   .areas { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
   .area {
