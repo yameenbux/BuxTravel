@@ -528,8 +528,8 @@
   .map-arcs { position: absolute; inset: 0; overflow: visible; }
 
   .arc {
-    fill: none; stroke: var(--champ); stroke-width: .28;
-    stroke-linecap: round; opacity: .85;
+    fill: none; stroke: var(--champ); stroke-width: .17;
+    stroke-linecap: round; opacity: .6;
     /* pathLength normalises every path to 1, so one dash length draws them
        all regardless of how long the route actually is. */
     stroke-dasharray: 1; stroke-dashoffset: 1;
@@ -540,7 +540,7 @@
 
   /* Nothing moves until the section is on screen. .shown is added by the
      page's existing IntersectionObserver. */
-  .map.shown .arc  { animation: arc-draw 1.15s var(--ease) var(--d, 0s) forwards; }
+  .map.shown .arc  { animation: arc-draw .95s var(--ease) var(--d, 0s) forwards; }
   .map.shown .stop { animation: stop-in .45s var(--ease) var(--d, 0s) forwards; }
   .map.shown .home-ring { animation: home-pulse 2.6s ease-out infinite; }
   @keyframes arc-draw { to { stroke-dashoffset: 0; } }
@@ -1183,99 +1183,6 @@
   }
 
 
-
-  /* ====================================================================
-     Fleet reveal
-     A minibus silhouette that opens as you scroll, until the vehicle
-     shape has grown past the edges of the screen and you are simply
-     looking at the photograph.
-
-     Native CSS scroll-driven animation, no library. Where the browser
-     does not support it the mask is never applied at all, so the panel
-     shows the photograph full-bleed instead of an empty box. That is the
-     whole fallback: worse, but never broken.
-     ==================================================================== */
-  .reveal { position: relative; background: var(--band); }
-  .reveal__pin {
-    position: relative; overflow: hidden; display: grid; place-items: center;
-    aspect-ratio: 16 / 9;
-  }
-  .reveal__shot, .reveal__full { position: absolute; inset: 0; }
-  .reveal__shot img, .reveal__full img { width: 100%; height: 100%; object-fit: cover; }
-  /* Unmasked copy underneath. The silhouette has wheels at the bottom, so its
-     full-width band never reaches the bottom of the screen at any sane size.
-     Rather than overshoot the mask to absurdity, the plain photograph fades up
-     underneath as the shape opens out. */
-  .reveal__full { opacity: 0; }
-
-  /* Sits above the photo, and is what the mask cuts through. */
-  .reveal__cap {
-    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
-    text-align: center; padding: 0 24px; pointer-events: none; isolation: isolate;
-  }
-  /* The photograph is bright in the middle, which is exactly where the words
-     sit. A text-shadow alone does not hold it; this does. */
-  .reveal__cap::before {
-    content: ""; position: absolute; inset: 0; z-index: -1;
-    background: radial-gradient(60% 45% at 50% 50%,
-                rgba(8,11,14,.74) 0%, rgba(8,11,14,.58) 45%, rgba(8,11,14,0) 78%);
-  }
-  .reveal__cap p {
-    font-family: var(--display); font-weight: 800; text-transform: uppercase;
-    font-size: clamp(1.5rem, 4.4vw, 3.2rem); line-height: 1; letter-spacing: -0.03em;
-    color: var(--on-dark); max-width: 16ch; text-shadow: 0 1px 2px rgba(0,0,0,.55);
-  }
-  .reveal__cap span { display: block; font-family: var(--sans); font-weight: 500;
-    text-transform: none; font-size: 1rem; letter-spacing: 0; margin-top: 14px;
-    color: var(--on-dark); opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.55); }
-
-  /* Only a browser that can run the reveal gets the tall pinned panel. Without
-     this guard Safari and Firefox were handed 215vh of sticky section and no
-     animation to justify it: two screens of scrolling past a static photo. */
-  @supports (animation-timeline: view()) {
-    @media (min-width: 46rem) and (prefers-reduced-motion: no-preference) {
-      .reveal { min-height: 215vh; }
-      .reveal__pin { position: sticky; top: 0; height: 100vh; aspect-ratio: auto; }
-    }
-    .reveal { view-timeline-name: --busline; view-timeline-axis: block; }
-    .reveal__shot {
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%2210%2039%20216%2075%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M10%2098%20L10%2070%20Q10%2061%2017%2057%20L40%2042%20Q45%2039%2052%2039%20L212%2039%20Q226%2039%20226%2053%20L226%2098%20L200%2098%20A20%2020%200%200%200%20160%2098%20L80%2098%20A20%2020%200%200%200%2040%2098%20Z%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2298%22%20r%3D%2216%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-      -webkit-mask-repeat: no-repeat;     mask-repeat: no-repeat;
-      -webkit-mask-position: 50% 50%;     mask-position: 50% 50%;
-      -webkit-mask-size: 34vmin;          mask-size: 34vmin;
-      animation: reveal-open linear both;
-      animation-timeline: --busline;
-      /* contain, for an element taller than the screen, resolves to exactly
-         the window where it fully covers the scrollport, which is exactly
-         the window where the panel is pinned. entry/exit leaves a dead third
-         at the start; cover begins before the pin does. */
-      animation-range: contain 0% contain 100%;
-    }
-    @keyframes reveal-open {
-      from { -webkit-mask-size: 34vmin; mask-size: 34vmin; }
-      to   { -webkit-mask-size: 260vmin; mask-size: 260vmin; }
-    }
-    /* The words arrive once there is enough picture behind them to sit on. */
-    .reveal__full {
-      animation: reveal-settle linear both;
-      animation-timeline: --busline; animation-range: contain 0% contain 100%;
-    }
-    @keyframes reveal-settle { from { opacity: 0; } 62% { opacity: 0; } to { opacity: 1; } }
-
-    .reveal__cap { animation: reveal-fade linear both;
-                   animation-timeline: --busline; animation-range: contain 0% contain 100%; }
-    @keyframes reveal-fade { from { opacity: 0; } 45% { opacity: 0; } 70% { opacity: 1; } to { opacity: 1; } }
-  }
-
-  /* On a phone, and under reduced motion, the panel stays the plain picture
-     the default already gives, and nothing animates. */
-  @media (max-width: 46rem), (prefers-reduced-motion: reduce) {
-    .reveal__pin { aspect-ratio: 4 / 3; }
-    .reveal__shot { -webkit-mask-image: none !important; mask-image: none !important;
-                    animation: none !important; }
-    .reveal__full { opacity: 1 !important; animation: none !important; }
-    .reveal__cap { animation: none !important; opacity: 1 !important; }
-  }
 
   /* ====================================================================
      Reviews: the marquee wall
