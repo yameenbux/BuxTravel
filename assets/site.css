@@ -528,8 +528,8 @@
   .map-arcs { position: absolute; inset: 0; overflow: visible; }
 
   .arc {
-    fill: none; stroke: var(--champ); stroke-width: .28;
-    stroke-linecap: round; opacity: .85;
+    fill: none; stroke: var(--champ); stroke-width: .17;
+    stroke-linecap: round; opacity: .6;
     /* pathLength normalises every path to 1, so one dash length draws them
        all regardless of how long the route actually is. */
     stroke-dasharray: 1; stroke-dashoffset: 1;
@@ -540,7 +540,7 @@
 
   /* Nothing moves until the section is on screen. .shown is added by the
      page's existing IntersectionObserver. */
-  .map.shown .arc  { animation: arc-draw 1.15s var(--ease) var(--d, 0s) forwards; }
+  .map.shown .arc  { animation: arc-draw .95s var(--ease) var(--d, 0s) forwards; }
   .map.shown .stop { animation: stop-in .45s var(--ease) var(--d, 0s) forwards; }
   .map.shown .home-ring { animation: home-pulse 2.6s ease-out infinite; }
   @keyframes arc-draw { to { stroke-dashoffset: 0; } }
