@@ -24,7 +24,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
 
-<link rel="stylesheet" href="/assets/site.css?v=e4bb72d6">
+<link rel="stylesheet" href="/assets/site.css?v=c691d7a7">
+<noscript>
+  <!-- Scroll-entry elements start at opacity 0 and are revealed by
+       script. With script off, nothing would ever reveal them, so the
+       whole masthead would be invisible. Show them all instead. -->
+  <style>.rev-in{opacity:1;transform:none}</style>
+</noscript>
 </head>
 <body>
 
@@ -42,10 +48,10 @@
 
 <section class="page-head">
   <div class="container">
-    <span class="eyebrow">Legal</span>
-    <h1>Booking Terms</h1>
-    <p>The terms on which Bux Travel accepts bookings. Written plainly, so there is nothing to argue about on the day.</p>
-    <span class="updated">Last updated: 21 August 2026</span>
+    <span class="eyebrow rev-in">Legal</span>
+    <h1 class="rev-in">Booking Terms</h1>
+    <p class="rev-in">The terms on which Bux Travel accepts bookings. Written plainly, so there is nothing to argue about on the day.</p>
+    <span class="updated rev-in">Last updated: 21 August 2026</span>
   </div>
 </section>
 
@@ -53,7 +59,7 @@
   <div class="container">
     <div class="doc-grid">
 
-      <nav class="toc" aria-label="Contents">
+      <nav class="toc rev-in" aria-label="Contents">
         <h2>Contents</h2>
         <ol>
           <li><a href="#quotes">Quotes &amp; prices</a></li>
@@ -244,6 +250,7 @@
   </script>
 </footer>
 
+<script src="/assets/reveal.js?v=ec197ad1" defer></script>
 <script src="/assets/navtype.js?v=b74d729d" defer></script>
 </body>
 </html>

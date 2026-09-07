@@ -40,6 +40,22 @@
     --sans:    "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
 
     --ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* ---- Motion scale ----
+       Three durations, replacing twelve ad-hoc values that ran from
+       150ms to 780ms. Every hover, focus and scroll-entry transition
+       uses one of them; nothing is timed outside them. --ease is
+       cubic-bezier(0.23, 1, 0.32, 1) — it decelerates hard and settles
+       at 1. It never passes 1, so nothing overshoots and nothing
+       bounces back.
+
+       Ambient set-pieces are deliberately not on this scale: the map
+       draw, the home-marker pulse, the button sweep and the review
+       marquee are narrative, not feedback, and clamping a 40s marquee
+       to 300ms would be nonsense. */
+    --d-1: 200ms;  /* micro   - colour, small icon shifts   */
+    --d-2: 240ms;  /* default - borders, backgrounds, lifts */
+    --d-3: 300ms;  /* large   - reveals, panels, cards      */
     --maxw: 1140px;
 
 
@@ -174,6 +190,7 @@
   }
   @media (max-width: 620px) { .nav-in { padding: 11px 16px; } }
   .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .brand-mark, .brand-txt b { transition: transform var(--d-2) var(--ease), color var(--d-1) var(--ease); }
   .brand-mark {
     width: 40px; height: 40px; border-radius: 11px; flex: none;
     background: linear-gradient(155deg, var(--champ-bright), var(--champ));
@@ -190,14 +207,14 @@
     font-family: var(--display); font-size: var(--t-xs); font-weight: 500;
     letter-spacing: var(--ls-wide); text-transform: uppercase;
     padding: 9px 13px; border-radius: 9px;
-    transition: color 220ms var(--ease);
+    transition: color var(--d-2) var(--ease);
   }
   /* Champagne rule under the label, drawn from the centre outwards so it
      reads as the same gesture as the letter ripple. */
   .nav-links a::after {
     content: ""; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 1px;
     background: var(--champ); transform: scaleX(0);
-    transition: transform 320ms var(--ease);
+    transition: transform var(--d-3) var(--ease);
   }
 
   /* Per-letter weight ripple. The spans are written by navtype.js; until
@@ -206,7 +223,7 @@
   .nav-links a .ch {
     display: inline-block; white-space: pre;
     font-variation-settings: "wght" 500;
-    transition: font-variation-settings 300ms var(--ease), transform 300ms var(--ease);
+    transition: font-variation-settings var(--d-3) var(--ease), transform var(--d-3) var(--ease);
     transition-delay: var(--d, 0ms);
   }
   .nav-links a:is(:hover, :focus-visible) .ch {
@@ -254,8 +271,8 @@
     letter-spacing: var(--ls-normal);
     text-decoration: none; cursor: pointer;
     background: var(--btn-bg);
-    transition: transform 200ms var(--ease), --btn-bg 220ms var(--ease),
-                border-color 220ms var(--ease), box-shadow 300ms var(--ease);
+    transition: transform var(--d-1) var(--ease), --btn-bg var(--d-2) var(--ease),
+                border-color var(--d-2) var(--ease), box-shadow var(--d-3) var(--ease);
   }
   .btn:active { transform: scale(0.975); }
   .btn svg { width: 18px; height: 18px; flex: none; }
@@ -269,7 +286,7 @@
     background: linear-gradient(100deg, transparent, var(--shine), transparent);
     transform: skewX(-18deg);
     opacity: 0;
-    transition: opacity 260ms var(--ease);
+    transition: opacity var(--d-2) var(--ease);
   }
 
   /* Lower-edge glow: the restrained half of the reference component's
@@ -279,7 +296,7 @@
     inset: 0; border-radius: inherit;
     background: radial-gradient(115% 88% at 50% 122%, var(--shine), transparent 64%);
     opacity: 0;
-    transition: opacity 320ms var(--ease);
+    transition: opacity var(--d-3) var(--ease);
   }
 
   .btn-wa         { --btn-bg: var(--wa-deep); --shine: #E8FFF1; color: #06231A; }
@@ -317,13 +334,18 @@
   @media (hover: hover) and (pointer: fine) {
     .nav-links a:hover { color: var(--on-dark); }
 
+    /* The logo is a link on every page and was the only one with no
+       hover state at all. A 2% lift on the mark, nothing on the type. */
+    .brand:hover .brand-mark { transform: scale(1.02); }
+    .brand:hover .brand-txt b { color: var(--champ-bright); }
+
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0) scale(0.985); }
 
     .btn:is(:hover, :focus-visible)::before {
       opacity: 0.30;
       translate: 380% 0;
-      transition: opacity 180ms var(--ease), translate 780ms var(--ease);
+      transition: opacity var(--d-1) var(--ease), translate var(--d-3) var(--ease);
     }
     .btn:is(:hover, :focus-visible)::after { opacity: 0.26; }
 
@@ -385,13 +407,13 @@
   .rot {
     display: inline-block; position: relative; vertical-align: bottom;
     height: 1.03em; overflow: hidden; color: var(--champ);
-    transition: width 320ms var(--ease);
+    transition: width var(--d-3) var(--ease);
     will-change: width;
   }
   .rot i {
     position: absolute; left: 0; top: 0; white-space: nowrap; font-style: normal;
     opacity: 0; transform: translateY(0.5em);
-    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+    transition: opacity var(--d-2) var(--ease), transform var(--d-2) var(--ease);
   }
   .rot i.on { opacity: 1; transform: none; }
   .rot i.out { opacity: 0; transform: translateY(-0.5em); }
@@ -456,8 +478,8 @@
     min-height: 300px; padding: 24px; overflow: hidden;
     background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    transition: transform 220ms var(--ease), box-shadow 220ms var(--ease),
-                border-color 220ms var(--ease);
+    transition: transform var(--d-2) var(--ease), box-shadow var(--d-2) var(--ease),
+                border-color var(--d-2) var(--ease);
   }
   .fan-card img {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
@@ -514,11 +536,12 @@
     transform-origin: 50% 118%;
     transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
     z-index: var(--z, 1);
-    /* A spring, expressed as an easing curve rather than as 70KB of
-       animation library. */
-    transition: transform 520ms linear(
-      0, 0.2 3.2%, 0.68 8.2%, 1.02 13%, 1.11 16.4%, 1.13 19.6%, 1.06 25.6%,
-      0.99 31.4%, 0.976 37.2%, 0.998 49%, 1.005 61%, 1);
+    /* Was a spring: a linear() curve that overshot to 1.13 and settled
+       back over 520ms. It bounced, and it took nearly twice as long as
+       anything else on the page. Now the same --ease as every other
+       transition here, at the top of the scale — the card still arrives
+       with weight, it just stops when it gets there. */
+    transition: transform var(--d-3) var(--ease);
     transition-property: transform, box-shadow, border-color, filter;
     will-change: transform;
   }
@@ -528,7 +551,7 @@
   .fan.fan-on .fan-card:not(.is-centre)::after {
     content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
     background: rgba(16,20,24,0.17); border-radius: inherit;
-    transition: opacity 380ms var(--ease);
+    transition: opacity var(--d-3) var(--ease);
   }
   .fan.fan-on .fan-card.is-centre {
     box-shadow: 0 34px 70px -28px rgba(16,20,24,.62), 0 0 0 1px rgba(201,183,154,0.5);
@@ -540,7 +563,7 @@
   .fan.fan-on .fan-card .small,
   .fan.fan-on .fan-card .cell-link {
     opacity: 0; max-height: 0; overflow: hidden;
-    transition: opacity 260ms var(--ease), max-height 380ms var(--ease);
+    transition: opacity var(--d-2) var(--ease), max-height var(--d-3) var(--ease);
   }
   .fan.fan-on .fan-card.is-centre .small,
   .fan.fan-on .fan-card.is-centre .cell-link {
@@ -580,8 +603,8 @@
     padding: 22px 22px 18px;
     background: rgba(243,239,230,0.035);
     border: 1px solid var(--line-dark); border-radius: 16px;
-    transition: transform 300ms var(--ease), border-color 300ms var(--ease),
-                background-color 300ms var(--ease);
+    transition: transform var(--d-3) var(--ease), border-color var(--d-3) var(--ease),
+                background-color var(--d-3) var(--ease);
   }
   /* The corner wash, scaled by --i so the fifth-seater is a hint and the
      eighteen-seater is unmistakable. */
@@ -769,7 +792,7 @@
   .field input, .field select, .field textarea {
     font-family: inherit; font-size: var(--t-sm); color: var(--ink); padding: 12px 13px; width: 100%;
     background: var(--card); border: 1px solid var(--line); border-radius: 11px;
-    transition: border-color 180ms var(--ease);
+    transition: border-color var(--d-1) var(--ease);
   }
   .field textarea { resize: vertical; min-height: 84px; }
   .field input::placeholder, .field textarea::placeholder { color: #A9A296; }
@@ -804,17 +827,24 @@
     list-style: none; cursor: pointer; padding: var(--sp-5) 0;
     display: flex; gap: 16px; align-items: baseline; justify-content: space-between;
     color: var(--on-dark); font-weight: 600; font-size: var(--t-md);
+    transition: color var(--d-1) var(--ease);
   }
   summary::-webkit-details-marker { display: none; }
   summary i { flex: none; width: 12px; height: 12px; position: relative; margin-top: 5px; }
   summary i::before, summary i::after {
     content: ""; position: absolute; background: var(--champ); border-radius: 2px;
-    transition: transform 220ms var(--ease), opacity 220ms var(--ease);
+    transition: transform var(--d-2) var(--ease), opacity var(--d-2) var(--ease);
   }
   summary i::before { left: 0; top: 5.5px; width: 12px; height: 1.5px; }
   summary i::after  { left: 5.5px; top: 0; width: 1.5px; height: 12px; }
   details[open] summary i::after { transform: rotate(90deg); opacity: 0; }
-  .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 240ms var(--ease); }
+  /* The plus/minus already animated; the question it belongs to did
+     not, so a whole row of FAQ headings had no hover feedback. */
+  @media (hover: hover) and (pointer: fine) {
+    summary:hover { color: var(--champ-bright); }
+    summary:hover i::before, summary:hover i::after { background: var(--champ-bright); }
+  }
+  .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--d-2) var(--ease); }
   details[open] .ans { grid-template-rows: 1fr; }
   .ans > div { overflow: hidden; }
   .ans p { padding-bottom: 18px; font-size: var(--t-sm); color: var(--on-dark-2); }
@@ -871,8 +901,8 @@
     border: 1px solid var(--line-dark); background: rgba(243,239,230,0.03);
     color: var(--on-dark-2); text-decoration: none;
     font-size: var(--t-sm); font-weight: 500; letter-spacing: var(--ls-normal);
-    transition: color 200ms var(--ease), border-color 200ms var(--ease),
-                background-color 200ms var(--ease), transform 200ms var(--ease);
+    transition: color var(--d-1) var(--ease), border-color var(--d-1) var(--ease),
+                background-color var(--d-1) var(--ease), transform var(--d-1) var(--ease);
   }
   .foot-contact svg { width: 16px; height: 16px; flex: none; color: var(--champ); }
   .foot-contact b { font-weight: 600; color: var(--on-dark); }
@@ -886,7 +916,7 @@
   .foot-col a {
     position: relative; display: inline-block;
     color: var(--on-dark-2); text-decoration: none; font-size: var(--t-sm);
-    transition: color 200ms var(--ease), transform 200ms var(--ease);
+    transition: color var(--d-1) var(--ease), transform var(--d-1) var(--ease);
   }
   /* Champagne rule that draws in from the left on hover: the same
      device as .eyebrow::before, so the footer belongs to the same system
@@ -894,7 +924,7 @@
   .foot-col a::after {
     content: ""; position: absolute; left: 0; bottom: -3px; height: 1px; width: 100%;
     background: var(--champ); transform: scaleX(0); transform-origin: left;
-    transition: transform 280ms var(--ease);
+    transition: transform var(--d-3) var(--ease);
   }
 
   .foot-bot {
@@ -903,7 +933,7 @@
   }
   .foot-bot p { margin: 0; }
   .foot-bot .foot-meta { color: var(--on-dark-3); }
-  .foot-bot a { color: inherit; text-decoration: none; transition: color 200ms var(--ease); }
+  .foot-bot a { color: inherit; text-decoration: none; transition: color var(--d-1) var(--ease); }
 
   @media (hover: hover) and (pointer: fine) {
     .foot-col a:hover { color: var(--on-dark); }
@@ -982,14 +1012,14 @@
   .area { opacity: 0; transform: translateY(8px) scale(0.96); }
   .area.pop {
     opacity: 1; transform: none;
-    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+    transition: opacity var(--d-2) var(--ease), transform var(--d-2) var(--ease);
   }
 
   /* Bento cells lift in with a touch of blur, masking the crossfade */
   .fan.rev-in { transform: translateY(20px) scale(0.985); filter: blur(4px); }
   .fan.rev-in.shown {
     transform: none; filter: blur(0);
-    transition: opacity 320ms var(--ease), transform 320ms var(--ease), filter 320ms var(--ease);
+    transition: opacity var(--d-3) var(--ease), transform var(--d-3) var(--ease), filter var(--d-3) var(--ease);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1002,7 +1032,7 @@
   .rev-in { opacity: 0; transform: translateY(16px); }
   .rev-in.shown {
     opacity: 1; transform: none;
-    transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+    transition: opacity var(--d-3) var(--ease), transform var(--d-3) var(--ease);
   }
   @media (prefers-reduced-motion: reduce) {
     .rev-in, .rev-in.shown { opacity: 1; transform: none; transition: none; }
@@ -1034,7 +1064,8 @@
   .page-head .hero-cta { margin-top: 1.75rem; }
 
   .crumb { font-size: var(--t-xs); color: var(--on-dark-2); display: flex; gap: .4rem; align-items: center; }
-  .crumb a { color: var(--on-dark-2); text-decoration: none; }
+  .crumb a { color: var(--on-dark-2); text-decoration: none;
+             transition: color var(--d-1) var(--ease); }
   .crumb a:hover { color: var(--on-dark); text-decoration: underline; }
 
   /* Proof strip: the licence and contract facts, stated plainly. */
@@ -1059,7 +1090,7 @@
     font-size: var(--t-xs); font-weight: 600; letter-spacing: var(--ls-normal);
     color: var(--champ-deep); text-decoration: none;
   }
-  .cell-link::after { content: "\2192"; transition: transform .18s cubic-bezier(.23,1,.32,1); }
+  .cell-link::after { content: "\2192"; transition: transform var(--d-1) cubic-bezier(.23,1,.32,1); }
   .cell-photo .cell-link { color: var(--champ-bright); }
   @media (hover: hover) and (pointer: fine) {
     .cell-link:hover { text-decoration: underline; }
@@ -1083,10 +1114,17 @@
   .toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
   .toc li { margin: 0 0 .45rem; }
   .toc a { counter-increment: toc; display: flex; gap: .55rem; text-decoration: none;
-           font-size: var(--t-sm); color: var(--ink); line-height: var(--lh-snug); }
+           font-size: var(--t-sm); color: var(--ink); line-height: var(--lh-snug);
+           transition: color var(--d-1) var(--ease); }
   .toc a::before { content: counter(toc, decimal-leading-zero); color: var(--champ-deep);
-                   font-variant-numeric: tabular-nums; font-size: var(--t-2xs); padding-top: .1rem; }
-  @media (hover: hover) and (pointer: fine) { .toc a:hover { text-decoration: underline; } }
+                   font-variant-numeric: tabular-nums; font-size: var(--t-2xs); padding-top: .1rem;
+                   transition: transform var(--d-2) var(--ease); }
+  @media (hover: hover) and (pointer: fine) {
+    .toc a:hover { text-decoration: underline; color: var(--champ-deep); }
+    /* The numeral shifts, not the label: moving the text would reflow
+       a two-line entry under the cursor. */
+    .toc a:hover::before { transform: translateX(2px); }
+  }
 
   .updated { display: inline-block; margin-top: 1rem; font-size: var(--t-xs); color: var(--on-dark-2); }
 
@@ -1095,6 +1133,19 @@
   .contact-box h3 { font-family: var(--display); font-size: var(--t-lg); margin: 0 0 .4rem; }
   .contact-box p { margin: 0 0 .3rem; font-size: var(--t-sm); color: var(--muted); }
   .contact-box a { color: var(--champ-deep); }
+  /* Inline links in legal prose, the contact box and the retention
+     table. These had no hover feedback at all beyond the underline they
+     already carry, so the two directions are set separately: body links
+     sit at --ink and warm to the accent, the contact box already sits
+     at the accent and darkens. Hovering both to the same colour would
+     have been a no-op for one of them. */
+  .prose a, .contact-box a, .doc td a {
+    transition: color var(--d-1) var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .prose a:hover, .doc td a:hover { color: var(--champ-deep); }
+    .contact-box a:hover { color: var(--ink); }
+  }
 
   .fgrid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line);
            border-radius: var(--radius); overflow: hidden; margin: 1.25rem 0;
@@ -1122,7 +1173,7 @@
                 grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
   .qcard { display: block; text-decoration: none; border: 1px solid var(--line);
            border-radius: var(--radius); background: var(--card); padding: 1.15rem 1.25rem;
-           transition: border-color .18s cubic-bezier(.23,1,.32,1), transform .18s cubic-bezier(.23,1,.32,1); }
+           transition: border-color var(--d-1) cubic-bezier(.23,1,.32,1), transform var(--d-1) cubic-bezier(.23,1,.32,1); }
   .qcard h2 { font-family: var(--display); font-size: var(--t-md); margin: 0 0 .25rem; }
   .qcard .t { display: block; font-size: var(--t-xs); color: var(--muted); }
   @media (hover: hover) and (pointer: fine) {
@@ -1156,8 +1207,8 @@
     color: var(--ink); padding: 12px 13px;
     background: var(--card); border: 1px solid var(--line); border-radius: 11px;
     cursor: pointer;
-    transition: border-color 180ms var(--ease), background-color 180ms var(--ease),
-                box-shadow 220ms var(--ease);
+    transition: border-color var(--d-1) var(--ease), background-color var(--d-1) var(--ease),
+                box-shadow var(--d-2) var(--ease);
   }
   .dp-trigger svg { width: 17px; height: 17px; flex: none; color: var(--champ-deep); }
   .dp-trigger .pick-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -1194,7 +1245,7 @@
     backdrop-filter: blur(30px) saturate(150%);
     overflow: hidden; isolation: isolate;
     opacity: 0; transform: translateY(-8px) scale(.97); pointer-events: none;
-    transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+    transition: opacity var(--d-1) var(--ease), transform var(--d-1) var(--ease);
   }
   /* Blur has nothing to work with on a browser that does not support it,
      and a 74% panel over a dark band would be unreadable. Go opaque. */
@@ -1237,7 +1288,7 @@
     background-position: right 9px center, right 4px center;
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
-    transition: background-color 180ms var(--ease), border-color 180ms var(--ease);
+    transition: background-color var(--d-1) var(--ease), border-color var(--d-1) var(--ease);
   }
   .dp .dp-sel[data-jump="year"] { width: 5.5rem; }
   .dp .dp-sel:hover { background-color: rgba(201,183,154,0.22); border-color: rgba(201,183,154,0.42); }
@@ -1252,8 +1303,8 @@
     display: grid; place-items: center; width: 30px; height: 30px; border-radius: 999px;
     border: 1px solid rgba(16,20,24,0.12); background: rgba(255,255,255,0.6);
     color: var(--ink); cursor: pointer;
-    transition: border-color 180ms var(--ease), background-color 180ms var(--ease),
-                transform 180ms var(--ease);
+    transition: border-color var(--d-1) var(--ease), background-color var(--d-1) var(--ease),
+                transform var(--d-1) var(--ease);
   }
   .dp-nav button svg { width: 15px; height: 15px; }
   .dp-nav button:disabled { opacity: .34; cursor: not-allowed; }
@@ -1272,8 +1323,8 @@
     aspect-ratio: 1; display: grid; place-items: center; border: 0; background: transparent;
     border-radius: 999px; font-family: inherit; font-size: var(--t-sm); font-variant-numeric: tabular-nums;
     color: var(--ink); cursor: pointer; position: relative;
-    transition: background-color 160ms var(--ease), color 160ms var(--ease),
-                transform 160ms var(--ease), box-shadow 200ms var(--ease);
+    transition: background-color var(--d-1) var(--ease), color var(--d-1) var(--ease),
+                transform var(--d-1) var(--ease), box-shadow var(--d-1) var(--ease);
   }
   .dp-day[data-blank] { cursor: default; }
   .dp-day:disabled { color: rgba(16,20,24,.3); cursor: not-allowed; }
@@ -1306,7 +1357,7 @@
     font-family: inherit; font-size: var(--t-xs); font-weight: 700; cursor: pointer;
     border: 0; background: transparent; color: var(--champ-deep);
     padding: 4px 2px; border-radius: 6px;
-    transition: color 160ms var(--ease);
+    transition: color var(--d-1) var(--ease);
   }
   @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { color: var(--ink); text-decoration: underline; } }
   .dp-hint { font-size: var(--t-2xs); color: var(--muted); }
@@ -1333,7 +1384,7 @@
     flex: none; padding: 7px 0; border: 0; border-radius: 9px; cursor: pointer;
     background: transparent; color: var(--ink);
     font-family: inherit; font-size: var(--t-sm); font-variant-numeric: tabular-nums;
-    transition: background-color 150ms var(--ease), color 150ms var(--ease);
+    transition: background-color var(--d-1) var(--ease), color var(--d-1) var(--ease);
   }
   @media (hover: hover) and (pointer: fine) {
     .tp-opt:not([aria-selected="true"]):hover { background: rgba(255,255,255,0.85); }
@@ -1386,8 +1437,8 @@
   .rev-card {
     margin: 0; background: var(--card); border: 1px solid var(--line);
     border-radius: 14px; padding: 22px 24px;
-    transition: transform 260ms var(--ease), box-shadow 260ms var(--ease),
-                border-color 260ms var(--ease);
+    transition: transform var(--d-2) var(--ease), box-shadow var(--d-2) var(--ease),
+                border-color var(--d-2) var(--ease);
   }
   .rev-card blockquote { margin: 0; }
   .rev-card blockquote p {

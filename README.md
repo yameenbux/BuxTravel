@@ -114,6 +114,35 @@ the review wall stops and shows every review in a static grid, the services fan
 becomes a plain readable grid, and the coverage map draws complete and
 immediately.
 
+Durations come from three tokens and nothing is timed outside them:
+
+| Token | Value | Use |
+|---|---|---|
+| `--d-1` | 200ms | Colour, small icon shifts |
+| `--d-2` | 240ms | Borders, backgrounds, lifts |
+| `--d-3` | 300ms | Reveals, panels, card transforms |
+
+`--ease` is `cubic-bezier(0.23, 1, 0.32, 1)`. It never passes 1, so nothing
+overshoots and nothing bounces back. **If you add a transition, use a token and
+use `--ease`.** A spring curve was tried on the services fan and removed: it
+overshot to 1.13 and took 520ms, which read as a wobble next to everything else
+on the page.
+
+Four things are deliberately off that scale, because they are narrative rather
+than feedback: the coverage map draw, the home-marker pulse, the ambient sweep
+on the primary button, and the review marquee. Clamping a 40s marquee to 300ms
+would be nonsense.
+
+**Scroll-reveal has a `<noscript>` guard in every page's `<head>`.** `.rev-in`
+starts at `opacity: 0` and is revealed by script; with script off, nothing would
+ever reveal it and the masthead would be invisible. The guard sets it back to
+visible. If you add a page with `.rev-in`, copy the guard too.
+
+Scroll-reveal is applied to mastheads, section heads and card grids. It is
+deliberately **not** applied to the body prose in `privacy.html` and
+`terms.html` — hiding paragraphs of legal text until they scroll into view helps
+nobody reading a policy.
+
 ## Analytics — deliberately absent
 
 `privacy.html` states "we do not use tracking cookies, advertising pixels or
