@@ -502,8 +502,85 @@
   .size .n span { display: block; font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--on-dark-3); margin-top: 5px; }
 
   /* ================= Coverage ================= */
-  .cover-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; }
-  @media (max-width: 860px) { .cover-grid { grid-template-columns: 1fr; gap: 32px; } }
+  /* ---- Coverage map ----
+     The reference component was a world map. The UK on an 800x400
+     equirectangular projection is about forty pixels wide, so the entire
+     service area would have been a smudge. This is the same idea drawn at
+     the scale the business actually works at.
+
+     dotted-map is a build-time generator and this site has no build step,
+     so the grid was generated offline from real country outlines and the
+     result committed as a static asset. The arc endpoints come from that
+     same library's projection of each city, which is why they land on
+     actual dots rather than near them. */
+  .cover-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 44px; align-items: start; }
+  @media (max-width: 900px) {
+    .cover-grid { grid-template-columns: 1fr; gap: 34px; }
+    .map { max-width: 22rem; margin-inline: auto; }
+  }
+
+  .map { margin: 0; position: relative; }
+  .map-dots, .map-arcs { display: block; width: 100%; height: auto; aspect-ratio: 48 / 78; }
+  .map-dots { opacity: .55; }
+  /* Both layers carry the same viewBox and the same preserveAspectRatio,
+     so they letterbox identically and the arcs sit on the grid at every
+     width without a single magic number. */
+  .map-arcs { position: absolute; inset: 0; overflow: visible; }
+
+  .arc {
+    fill: none; stroke: var(--champ); stroke-width: .28;
+    stroke-linecap: round; opacity: .85;
+    /* pathLength normalises every path to 1, so one dash length draws them
+       all regardless of how long the route actually is. */
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+  }
+  .stop { fill: var(--champ-bright); opacity: 0; }
+  .home { fill: var(--champ-bright); }
+  .home-ring { fill: none; stroke: var(--champ); stroke-width: .22; opacity: .9; }
+
+  /* Nothing moves until the section is on screen. .shown is added by the
+     page's existing IntersectionObserver. */
+  .map.shown .arc  { animation: arc-draw 1.15s var(--ease) var(--d, 0s) forwards; }
+  .map.shown .stop { animation: stop-in .45s var(--ease) var(--d, 0s) forwards; }
+  .map.shown .home-ring { animation: home-pulse 2.6s ease-out infinite; }
+  @keyframes arc-draw { to { stroke-dashoffset: 0; } }
+  @keyframes stop-in  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes home-pulse {
+    0%   { r: .8;  opacity: .9; }
+    70%  { r: 3.4; opacity: 0; }
+    100% { r: 3.4; opacity: 0; }
+  }
+
+  .map-cap { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .map-home {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--display); font-size: .6875rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--champ);
+  }
+  .map-home i { width: 7px; height: 7px; border-radius: 999px; background: var(--champ-bright); flex: none; }
+  .map-legend {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 6px 8px;
+    font-size: .8125rem; color: var(--on-dark-2);
+  }
+  .map-legend li {
+    padding: 3px 9px; border-radius: 999px;
+    border: 1px solid var(--line-dark); background: rgba(243,239,230,0.04);
+    opacity: 0;
+  }
+  .map.shown .map-legend li { animation: stop-in .5s var(--ease) var(--d, 0s) forwards; }
+
+  .cover-copy { display: flex; flex-direction: column; gap: 34px; }
+
+  /* Reduced motion: the map is drawn complete, immediately. It is
+     information about where the business works, not decoration, so it is
+     never withheld — only the drawing of it is. */
+  @media (prefers-reduced-motion: reduce) {
+    .map.shown .arc, .map.shown .stop,
+    .map.shown .home-ring, .map.shown .map-legend li { animation: none; }
+    .arc { stroke-dashoffset: 0; }
+    .stop, .map-legend li { opacity: 1; }
+  }
   .areas { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
   .area {
     font-size: 0.8125rem; padding: 7px 12px; border-radius: 9px;
