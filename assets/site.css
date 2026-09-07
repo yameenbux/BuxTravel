@@ -66,7 +66,7 @@
   }
 
   h1, h2, h3 { margin: 0; font-family: var(--display); color: var(--ink); text-wrap: balance; }
-  h1 { font-size: clamp(2.6rem, 6.2vw, 4.6rem); font-weight: 800; line-height: 0.98;
+  h1 { font-size: clamp(2.05rem, 8.4vw, 4.6rem); font-weight: 800; line-height: 0.98;
        letter-spacing: -0.035em; text-transform: uppercase; }
   h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.02;
        letter-spacing: -0.03em; text-transform: uppercase; }
@@ -336,6 +336,19 @@
   }
   .rot i.on { opacity: 1; transform: none; }
   .rot i.out { opacity: 0; transform: translateY(-0.5em); }
+
+  /* On a phone the rotator's fixed width — set in pixels by the script from
+     the widest phrase — is wider than the screen, so the headline was cut
+     off at the right edge. Below 620px the phrases flow inline and wrap
+     instead. !important because the width is an inline style. */
+  @media (max-width: 620px) {
+    .rot {
+      display: inline; width: auto !important; height: auto;
+      overflow: visible; transition: none;
+    }
+    .rot i { position: static; display: none; white-space: normal; transform: none; }
+    .rot i.on { display: inline; opacity: 1; }
+  }
 
   .hero-cta { display: flex; flex-wrap: wrap; gap: 11px; }
   .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -681,7 +694,12 @@
 
   /* ================= Booking ================= */
   .book-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 44px; align-items: start; }
-  @media (max-width: 900px) { .book-grid { grid-template-columns: 1fr; gap: 32px; } }
+  @media (max-width: 900px) { .book-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+  /* Grid items default to min-width:auto, so a wide descendant pushes the
+     item past its track. At 375px the form and the aside were each 360px
+     inside a 343px column, which is where the page's 1px of horizontal
+     scroll came from. */
+  .book-grid > * { min-width: 0; }
   form { display: flex; flex-direction: column; gap: 16px; }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
@@ -842,6 +860,36 @@
   @media (prefers-reduced-motion: reduce) {
     .foot-col a, .foot-col a::after, .foot-contact a { transition: none; }
     .foot-contact a:hover { transform: none; }
+  }
+
+  /* Buttons are nowrap so a label never breaks mid-phrase on a desktop
+     row. On a narrow phone that is the wrong trade: "Open WhatsApp with
+     these details" demanded 360px inside a 343px column and was the last
+     source of horizontal scroll on the page. Below 420px they wrap. */
+  @media (max-width: 420px) {
+    .btn { max-width: 100%; white-space: normal; text-align: center; }
+  }
+
+  /* ---- Touch targets ----
+     Measured at 375px: footer navigation links were 23px tall, the
+     table-of-contents links 19px, the card links 20px and the breadcrumb
+     20px. All are navigation, and all were well under the 44px both Apple
+     and Google ask for. Padding is added on coarse pointers only, so the
+     desktop rhythm is untouched, and the list gaps are tightened to give
+     part of the height back.
+
+     Inline links inside running prose are deliberately left alone: padding
+     them to 44px would blow the line spacing of the paragraph apart, and a
+     link in a sentence is targeted by its text, not by a button box. */
+  @media (pointer: coarse) {
+    .foot-col ul { gap: 4px; }
+    .foot-col a  { padding: 9px 0; }
+    .foot-bot a  { display: inline-block; padding: 10px 0; }
+    .cell-link   { padding: 11px 0; }
+    .crumb a     { display: inline-block; padding: 10px 0; }
+    /* .toc a is a flex row with a numbered ::before, so only padding is
+       added here — overriding its display would break the numbering. */
+    .toc a       { padding: 11px 0; }
   }
 
   /* ================= Motion layer =================
