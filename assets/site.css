@@ -558,13 +558,15 @@
      result committed as a static asset. The arc endpoints come from that
      same library's projection of each city, which is why they land on
      actual dots rather than near them. */
-  .cover-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 44px; align-items: start; }
+  .cover-grid { display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr); gap: 44px; align-items: start; }
   @media (max-width: 900px) {
     .cover-grid { grid-template-columns: 1fr; gap: 34px; }
     .map { max-width: 22rem; margin-inline: auto; }
   }
 
-  .map { margin: 0; position: relative; }
+  /* The map is portrait at 48:78, so its width sets its height. Capping the
+     width is the only lever on how tall this section gets. */
+  .map { margin: 0 auto; position: relative; width: 100%; max-width: 15rem; }
   .map-dots, .map-arcs { display: block; width: 100%; height: auto; aspect-ratio: 48 / 78; }
   .map-dots { opacity: .55; }
   /* Both layers carry the same viewBox and the same preserveAspectRatio,
@@ -603,26 +605,37 @@
     letter-spacing: .12em; text-transform: uppercase; color: var(--champ);
   }
   .map-home i { width: 7px; height: 7px; border-radius: 999px; background: var(--champ-bright); flex: none; }
+  .dest-h {
+    margin: 20px 0 10px; font-family: var(--display);
+    font-size: .6875rem; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--champ);
+  }
+  /* Thirty pills is a lot of chrome for a supporting list, and cost about
+     190px of height wherever it sat. Set as a flowing run instead: same
+     thirty names, same per-name reveal, a third of the height. */
   .map-legend {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap; gap: 6px 8px;
-    font-size: .8125rem; color: var(--on-dark-2);
+    font-size: .8125rem; line-height: 1.75; color: var(--on-dark-2);
   }
-  .map-legend li {
-    padding: 3px 9px; border-radius: 999px;
-    border: 1px solid var(--line-dark); background: rgba(243,239,230,0.04);
-    opacity: 0;
+  .map-legend li { display: inline; opacity: 0; }
+  .map-legend li + li::before {
+    content: "·"; color: var(--champ-deep); margin: 0 .5em; opacity: .9;
   }
-  .map.shown .map-legend li { animation: stop-in .5s var(--ease) var(--d, 0s) forwards; }
+  .cover-dest.shown .map-legend li { animation: stop-in .5s var(--ease) var(--d, 0s) forwards; }
 
-  .cover-copy { display: flex; flex-direction: column; gap: 34px; }
+  /* Two columns of copy with the destinations running full width beneath.
+     A third column was tried and saved 15px, at the cost of squeezing the
+     area chips into a 217px column where they wrapped to eight rows. */
+  .cover-dest { grid-column: 1 / -1; }
+  .cover-copy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 34px; align-items: start; }
+  @media (max-width: 820px) { .cover-copy { grid-template-columns: 1fr; gap: 30px; } }
 
   /* Reduced motion: the map is drawn complete, immediately. It is
      information about where the business works, not decoration, so it is
      never withheld — only the drawing of it is. */
   @media (prefers-reduced-motion: reduce) {
     .map.shown .arc, .map.shown .stop,
-    .map.shown .home-ring, .map.shown .map-legend li { animation: none; }
+    .map.shown .home-ring, .cover-dest.shown .map-legend li { animation: none; }
     .arc { stroke-dashoffset: 0; }
     .stop, .map-legend li { opacity: 1; }
   }
@@ -693,6 +706,13 @@
     background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
     padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
   }
+  /* A light card sitting inside a dark band. The band sets on-dark text for
+     everything beneath it, so without these the card rendered #F4F4F2 text
+     on an #F6F6F4 ground — a contrast ratio of about 1:1, which made the
+     whole panel invisible. */
+  .band-dark .aside-card, .band-deep .aside-card { color: var(--ink); }
+  .band-dark .aside-card h3, .band-deep .aside-card h3 { color: var(--ink); }
+  .band-dark .aside-card .small, .band-deep .aside-card .small { color: var(--muted); }
   .checklist { display: flex; flex-direction: column; gap: 0; }
   .checklist div { display: flex; gap: 11px; align-items: baseline; padding: 10px 0; font-size: 0.9375rem; }
   .checklist div + div { border-top: 1px solid var(--line); }
