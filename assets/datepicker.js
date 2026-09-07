@@ -51,22 +51,38 @@
   var ICON_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
   var ICON_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
+  /* The visible control is a trigger carrying a formatted date, per the
+     chrono-select pattern, rather than a native dd/mm/yyyy field. The
+     native input keeps the value and stays in the DOM; it is hidden by a
+     class this script adds, so if the script never runs the ordinary date
+     field is still there and still works. */
   var openBtn = document.createElement('button');
   openBtn.type = 'button';
-  openBtn.className = 'dp-open';
-  openBtn.innerHTML = ICON_CAL;
-  openBtn.setAttribute('aria-label', 'Choose a date of travel');
+  openBtn.className = 'dp-trigger';
+  openBtn.innerHTML = ICON_CAL + '<span class="pick-txt"></span>';
+  openBtn.setAttribute('aria-haspopup', 'dialog');
   openBtn.setAttribute('aria-expanded', 'false');
+  input.classList.add('pick-native');
+  input.insertAdjacentElement('afterend', openBtn);
 
-  /* The button is centred on the input, so it needs a containing block
-     that is the input and nothing else. Hanging it off .field centred it
-     on the label + input + error message instead, which sat it visibly
-     high, and moved it again whenever the error message appeared. */
-  var box = document.createElement('span');
-  box.className = 'dp-box';
-  input.parentNode.insertBefore(box, input);
-  box.appendChild(input);
-  box.appendChild(openBtn);
+  var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var triggerTxt = openBtn.querySelector('.pick-txt');
+
+  function paintTrigger() {
+    var d = parseISO(input.value);
+    if (d) {
+      triggerTxt.textContent =
+        DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MON3[d.getMonth()] + ' ' + d.getFullYear();
+      openBtn.classList.remove('is-empty');
+      openBtn.setAttribute('aria-label', 'Date of travel, ' + triggerTxt.textContent + '. Change it');
+    } else {
+      triggerTxt.textContent = 'Pick a date';
+      openBtn.classList.add('is-empty');
+      openBtn.setAttribute('aria-label', 'Choose a date of travel');
+    }
+  }
+  paintTrigger();
 
   var pop = document.createElement('div');
   pop.className = 'dp';
@@ -184,6 +200,7 @@
 
   function commit(d) {
     input.value = iso(d);
+    paintTrigger();
     /* Let the form's own listeners clear the invalid state. */
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -260,6 +277,7 @@
      in step with whatever was typed. */
   input.addEventListener('change', function () {
     var d = parseISO(input.value);
+    paintTrigger();
     if (d) { view = startOfDay(d); focusDay = startOfDay(d); if (isOpen()) render(); }
   });
 })();

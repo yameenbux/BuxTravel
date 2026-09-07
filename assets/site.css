@@ -895,27 +895,37 @@
      every colour is a brand token.
      ==================================================================== */
   .dp-wrap { position: relative; }
-  /* Hugs the input alone, so the trigger button centres on the field the
-     user actually sees rather than on the whole label/input/error group. */
-  .dp-box { position: relative; display: block; }
-  .dp-wrap input[type="date"] { padding-right: 42px; }
-  /* The native indicator would sit under our own button. */
-  .dp-wrap input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
-  .dp-wrap input[type="date"]::-webkit-inner-spin-button { display: none; }
 
-  .dp-open {
-    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-    display: grid; place-items: center; width: 30px; height: 30px;
-    border: 0; background: transparent; border-radius: 8px; cursor: pointer;
-    color: var(--muted);
-    transition: color 180ms var(--ease), background-color 180ms var(--ease),
-                transform 220ms var(--ease);
+  /* The native input keeps the value and stays in the DOM. This class is
+     added by the picker scripts, so with no JS the ordinary date and time
+     fields are visible and fully working. */
+  .pick-native { display: none; }
+
+  /* The visible control: a trigger carrying the chosen value, matching
+     the form's other fields exactly so the row reads as one set. */
+  .dp-trigger {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    font-family: inherit; font-size: 0.9375rem; text-align: left;
+    color: var(--ink); padding: 12px 13px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 11px;
+    cursor: pointer;
+    transition: border-color 180ms var(--ease), background-color 180ms var(--ease),
+                box-shadow 220ms var(--ease);
   }
-  .dp-open svg { width: 17px; height: 17px; }
+  .dp-trigger svg { width: 17px; height: 17px; flex: none; color: var(--champ-deep); }
+  .dp-trigger .pick-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Placeholder weight, matching ::placeholder on the sibling inputs. */
+  .dp-trigger.is-empty .pick-txt { color: #A9A296; }
+  .dp-trigger[aria-expanded="true"] {
+    border-color: var(--champ-deep); box-shadow: 0 0 0 3px rgba(201,183,154,0.22);
+  }
+  .dp-trigger:focus-visible { outline: 2px solid var(--champ); outline-offset: 2px; }
   @media (hover: hover) and (pointer: fine) {
-    .dp-open:hover { color: var(--ink); background: rgba(201,183,154,0.24); transform: translateY(-50%) scale(1.06); }
+    .dp-trigger:hover { border-color: var(--champ); }
   }
-  .dp-open[aria-expanded="true"] { color: var(--champ-deep); background: rgba(201,183,154,0.24); }
+  /* The invalid state used to be carried by the input's border. The input
+     is hidden now, so the trigger has to show it instead. */
+  .field.invalid .dp-trigger { border-color: #A3231F; background: #FBF0EE; }
 
   .dp {
     /* Sized to the calendar, not to the field: the field sits in a narrow
@@ -1054,14 +1064,47 @@
   @media (hover: hover) and (pointer: fine) { .dp-foot button:hover { color: var(--ink); text-decoration: underline; } }
   .dp-hint { font-size: .75rem; color: var(--muted); }
 
+  /* ---- Time picker ---- */
+  .tp { width: 15rem; }
+  .tp-read {
+    font-family: var(--display); font-size: 1.375rem; font-weight: 700;
+    letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+    animation: dp-in 300ms var(--ease) both;
+  }
+  .tp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tp-lab {
+    display: block; text-align: center; padding-bottom: 6px;
+    font-family: var(--display); font-size: .6875rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--champ-deep);
+  }
+  .tp-scroll {
+    height: 12.5rem; overflow-y: auto; overscroll-behavior: contain;
+    display: flex; flex-direction: column; gap: 2px; padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .tp-opt {
+    flex: none; padding: 7px 0; border: 0; border-radius: 9px; cursor: pointer;
+    background: transparent; color: var(--ink);
+    font-family: inherit; font-size: .9375rem; font-variant-numeric: tabular-nums;
+    transition: background-color 150ms var(--ease), color 150ms var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tp-opt:not([aria-selected="true"]):hover { background: rgba(255,255,255,0.85); }
+  }
+  .tp-opt[aria-selected="true"] {
+    background: linear-gradient(140deg, var(--champ-bright), var(--champ-deep));
+    color: #17110A; font-weight: 700;
+  }
+  .tp-opt:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
   @media (prefers-reduced-motion: reduce) {
-    .dp, .dp-day, .dp-nav button, .dp-open { transition: none; }
+    .dp, .dp-day, .dp-nav button, .dp-trigger, .tp-opt { transition: none; }
     .dp-title, .dp-grid { animation: none; }
+    .tp-read { animation: none; }
     .dp-day:not(:disabled):not([aria-selected="true"]):hover { transform: none; }
     .dp-nav button:not(:disabled):hover { transform: none; }
   }
 
-  .field.invalid .dp-open { color: #A3231F; }
 
 
   /* ====================================================================

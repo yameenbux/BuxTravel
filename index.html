@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=b01c6381">
+<link rel="stylesheet" href="/assets/site.css?v=1488e57f">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -798,8 +798,11 @@ var REVIEWS = [
   function val(id) { return (document.getElementById(id).value || '').trim(); }
   function mark(f, bad) {
     f.classList.toggle('invalid', bad);
-    var input = f.querySelector('input, select, textarea');
-    if (input) input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    /* A picker-backed field hides its native input behind a trigger
+       button, so the state has to be announced on whichever control the
+       customer can actually reach. */
+    var ctl = f.querySelector('.dp-trigger') || f.querySelector('input, select, textarea');
+    if (ctl) ctl.setAttribute('aria-invalid', bad ? 'true' : 'false');
   }
 
   form.addEventListener('submit', function (ev) {
@@ -814,7 +817,10 @@ var REVIEWS = [
       var bad = !(input.value || '').trim();
       if (!bad && key === 'pax') bad = !(parseInt(input.value, 10) > 0);
       mark(f, bad);
-      if (bad && !firstBad) firstBad = input;
+      /* Focus the trigger, not the hidden input behind it: focusing an
+         element with display:none silently does nothing, which would
+         leave the customer with an error and no idea where it is. */
+      if (bad && !firstBad) firstBad = f.querySelector('.dp-trigger') || input;
     });
 
     if (firstBad) {
@@ -848,7 +854,8 @@ var REVIEWS = [
   });
 })();
 </script>
-<script src="/assets/datepicker.js?v=b62226ba" defer></script>
+<script src="/assets/timepicker.js?v=0935ebf3" defer></script>
+<script src="/assets/datepicker.js?v=cd934db0" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
