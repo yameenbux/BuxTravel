@@ -471,7 +471,6 @@
   @media (max-width: 900px) { #services .sec-head { align-items: flex-start; text-align: left; margin-inline: 0; } }
 
   .fan { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 900px) { .fan { grid-template-columns: 1fr; gap: 14px; } }
 
   .fan-card {
     position: relative; display: flex; flex-direction: column; justify-content: flex-end;
@@ -512,6 +511,74 @@
     color: var(--champ); margin-bottom: auto;
   }
   .fan-card .ico svg { width: 20px; height: 20px; }
+
+  /* ---- Phones: a swipe deck, not a stack ----
+     Six cards cannot fan in 375px — each would show a 40px sliver. And a
+     single column of six 300px cards is 1,870px of scrolling for one
+     section. The phone-native form of a deck is a swipe, so below 900px
+     the grid becomes a scroll-snap carousel: one card at a time, the next
+     one peeking so it reads as swipeable without needing to be told.
+     No JavaScript is involved in the scrolling itself. */
+  @media (max-width: 900px) {
+    .fan {
+      display: flex;
+      grid-template-columns: none;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      /* Bleed to the viewport edge so the strip reads as continuing off
+         screen, which is the affordance that says "swipe me". */
+      padding-inline: 24px;
+      margin-inline: -24px;
+      scroll-padding-inline-start: 24px;
+      /* Room for the card shadows, which overflow-y: hidden would clip. */
+      padding-block: 8px;
+      margin-block: -8px;
+      scrollbar-width: none;
+    }
+    .fan::-webkit-scrollbar { display: none; }
+
+    .fan-card {
+      flex: 0 0 82%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      min-height: 420px;
+    }
+
+    /* A blur filter on a horizontally scrolling strip of six photographs
+       is an expensive composited layer, and iOS is where that bites. The
+       reveal keeps its fade and lift; only the blur goes. */
+    .fan.rev-in, .fan.rev-in.shown { filter: none; }
+  }
+
+  @media (max-width: 620px) {
+    .fan {
+      padding-inline: 16px; margin-inline: -16px;
+      scroll-padding-inline-start: 16px;
+    }
+    .fan-card { flex-basis: 84%; min-height: 400px; }
+  }
+
+  /* Position dots. Hidden on desktop, where the fan shows position by
+     itself; written by fan.js, so with no JavaScript the strip still
+     swipes and simply has no dots. */
+  .fan-dots { display: none; }
+  @media (max-width: 900px) {
+    .fan-dots {
+      display: flex; gap: 7px; justify-content: center;
+      margin-top: var(--sp-5); list-style: none; padding: 0;
+    }
+    .fan-dots i {
+      display: block; width: 6px; height: 6px; border-radius: 999px;
+      background: var(--line);
+      transition: background-color var(--d-1) var(--ease), width var(--d-1) var(--ease);
+    }
+    .fan-dots i.on { width: 18px; background: var(--champ-deep); }
+  }
+
 
   @media (hover: hover) and (pointer: fine) {
     .fan:not(.fan-on) .fan-card:hover {
