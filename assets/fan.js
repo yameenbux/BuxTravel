@@ -30,6 +30,7 @@
   if (cards.length < 2) return;
 
   var mqNarrow = window.matchMedia('(max-width: 1100px)');
+  var mqPhone  = window.matchMedia('(max-width: 900px)');
   var mqMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   /* The card the fan opens on, and the one it falls back to. Chosen in
@@ -94,8 +95,14 @@
     /* Tabbing to a card opens it, so the fan is usable without a pointer. */
     card.addEventListener('focusin', function () { open(i); });
     /* On touch there is no hover: the first tap opens the card, and only
-       a tap on the already-open card follows its link. */
+       a tap on the already-open card follows its link. This applies ONLY
+       while the fan is on. Below 1100px the cards are a plain carousel
+       with every link visible and tappable, and swallowing the first tap
+       there would break them — the old version relied on the browser
+       synthesising a mouseenter before the click to avoid that, which is
+       not something to depend on. */
     card.addEventListener('click', function (e) {
+      if (!fan.classList.contains('fan-on')) return;
       if (centre !== i) { e.preventDefault(); open(i); }
     });
   });
@@ -112,9 +119,43 @@
     if (link.focus) link.focus();
   });
 
+  /* Position dots for the carousel. IntersectionObserver against the
+     scroller itself — this file does not get to add a scroll listener,
+     the same rule the rest of the site follows. */
+  var dots = null, dotIO = null;
+
+  function buildDots() {
+    if (dots) return;
+    dots = document.createElement('div');
+    dots.className = 'fan-dots';
+    dots.setAttribute('aria-hidden', 'true');
+    cards.forEach(function () { dots.appendChild(document.createElement('i')); });
+    fan.parentNode.insertBefore(dots, fan.nextSibling);
+
+    dotIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var i = cards.indexOf(e.target);
+        if (i < 0 || !dots.children[i]) return;
+        dots.children[i].classList.toggle('on', e.isIntersecting);
+      });
+    }, { root: fan, threshold: 0.62 });
+    cards.forEach(function (c) { dotIO.observe(c); });
+  }
+
+  function dropDots() {
+    if (!dots) return;
+    if (dotIO) { dotIO.disconnect(); dotIO = null; }
+    dots.parentNode.removeChild(dots);
+    dots = null;
+  }
+
   function sync() {
     var fanned = !mqNarrow.matches && !mqMotion.matches;
     fan.classList.toggle('fan-on', fanned);
+    /* The carousel is the layout below 900px; the 900-1100px band is the
+       ordinary grid, which needs no dots. */
+    if (!fanned && mqPhone.matches && 'IntersectionObserver' in window) { buildDots(); }
+    else { dropDots(); }
     if (fanned) { layout(); }
     else {
       cards.forEach(function (c) {
@@ -129,5 +170,7 @@
                              : mqNarrow.addListener.bind(mqNarrow))(sync);
   (mqMotion.addEventListener ? mqMotion.addEventListener.bind(mqMotion, 'change')
                              : mqMotion.addListener.bind(mqMotion))(sync);
+  (mqPhone.addEventListener ? mqPhone.addEventListener.bind(mqPhone, 'change')
+                            : mqPhone.addListener.bind(mqPhone))(sync);
   sync();
 })();
