@@ -55,24 +55,50 @@ rotator, the scroll-spy and the quote form, rather than loading `reveal.js`.
 `<input type="time">` are visible and fully working. The native input is always
 the source of truth — the WhatsApp handoff reads it, not the trigger.
 
-## Asset versioning — read this before editing any asset
+## Asset versioning
 
-Every asset URL carries a content hash: `site.css?v=a423d571`. **The hash is not
-generated at build time; there is no build.** If you edit an asset and do not
-update the hash by hand, returning visitors keep the cached old file and your
-change appears not to have deployed.
-
-After editing any file in `assets/`, re-stamp it across all eight pages:
+Every asset URL carries a content hash: `site.css?v=5ffc4743`. There is still no
+build step — the deployed artifact is the committed HTML — but the hashes are no
+longer maintained by hand.
 
 ```sh
-for f in site.css datepicker.js timepicker.js navtype.js fan.js reveal.js uk-dots.svg; do
-  h=$(md5sum "assets/$f" | cut -c1-8)
-  sed -i "s|${f}?v=[a-f0-9]*|${f}?v=$h|g" *.html
-done
+node tools/stamp.mjs           # rewrite any stale hashes
+node tools/stamp.mjs --check   # report and exit 1, change nothing
 ```
 
-Note this only busts the *assets*. It cannot help if a browser is holding a
-stale `index.html`, because that copy still points at the old hashes.
+It is idempotent, and it only corrects references that already carry `?v=`. You
+should rarely need to run it: **CI does it for you** (`.github/workflows/stamp.yml`).
+A pull request that leaves a stale hash fails the check; a push to `main` gets
+restamped and the correction pushed back as a bot commit.
+
+Optionally catch it a few seconds earlier, before it is ever pushed:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+That runs the stamper before each commit and re-stages only pages already in the
+commit. Skip it once with `git commit --no-verify`.
+
+### Why this is automated
+
+A hand-stamped hash goes stale **silently.** The page looks correct to whoever
+shipped it and serves a cached old stylesheet to everyone who has visited before.
+It bit this repo twice: once when two branches both touched `site.css` and every
+one of the eight pages conflicted on the stamp line, and once when two new pages
+shipped pointing at a hash that no longer existed. A local hook alone would not
+have caught either, because commits reach this repo from the web editor and from
+agent sessions as well as from a checkout — hence the CI backstop.
+
+Note this only busts the *assets*. It cannot help if a browser is holding a stale
+`index.html`, because that copy still points at the old hashes.
+
+**The photographs are not stamped.** Nine images (`hero-minibus.jpg`, the service
+photos, the favicons) are referenced without `?v=`, so replacing one in place will
+not reach returning visitors until their cache expires. That is the current
+behaviour rather than a considered decision — `tools/stamp.mjs` lists them on every
+run so the choice stays visible. Either stamp them too, or replace an image under
+a new filename.
 
 ## The coverage map
 
