@@ -1,0 +1,64 @@
+name: Stamp asset hashes
+
+# A hand-stamped cache-bust hash goes stale silently: the page looks fine
+# to whoever shipped it and serves stale CSS to every returning visitor.
+# Commits reach this repo from several places — the web editor, other
+# machines, agent sessions — so a local git hook alone cannot cover it.
+# This is the backstop that does.
+#
+#   pull_request : check only, so a stale hash shows red before merge
+#   push to main : fix it and push the correction
+
+on:
+  pull_request:
+    paths: ['**.html', 'assets/**', 'tools/stamp.mjs']
+  push:
+    branches: [main]
+    paths: ['**.html', 'assets/**', 'tools/stamp.mjs']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stamp-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # On a PR, only report. Fixing someone's branch from CI is a
+      # surprise; failing the check tells them what to run.
+      - name: Check stamps
+        if: github.event_name == 'pull_request'
+        run: node tools/stamp.mjs --check
+
+      - name: Restamp
+        if: github.event_name != 'pull_request'
+        run: node tools/stamp.mjs
+
+      # A push made with GITHUB_TOKEN does not trigger further workflow
+      # runs — GitHub's own recursion guard — so this cannot loop. The
+      # [skip ci] marker is belt and braces.
+      - name: Commit any corrections
+        if: github.event_name != 'pull_request'
+        run: |
+          if git diff --quiet; then
+            echo "Every stamp already correct — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A '*.html'
+          git commit -m "Restamp asset hashes [skip ci]" \
+                     -m "Automated by .github/workflows/stamp.yml. One or more pages referenced an asset by a hash that no longer matched the file on disk, so returning visitors would have been served a cached older copy."
+          git push

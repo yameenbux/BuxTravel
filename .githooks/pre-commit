@@ -1,0 +1,39 @@
+#!/bin/sh
+# Restamp asset hashes before the commit is written, and stage the fix.
+#
+# Optional — CI catches a stale hash either way. This just catches it a
+# few minutes earlier, before it is ever pushed. Install with:
+#
+#   git config core.hooksPath .githooks
+#
+# Skip once with: git commit --no-verify
+
+command -v node >/dev/null 2>&1 || {
+  echo "pre-commit: node not found, skipping the asset stamp check." >&2
+  exit 0
+}
+
+node tools/stamp.mjs >/tmp/stamp-hook.log 2>&1
+status=$?
+
+if [ $status -ne 0 ]; then
+  cat /tmp/stamp-hook.log >&2
+  echo "pre-commit: stamping failed — commit aborted." >&2
+  exit 1
+fi
+
+# Re-stage anything the stamper rewrote, but only pages already staged,
+# so the hook never quietly widens someone's commit.
+changed=""
+for f in $(git diff --name-only -- '*.html'); do
+  if git diff --cached --name-only -- "$f" | grep -q .; then
+    git add "$f"
+    changed="$changed $f"
+  fi
+done
+
+if [ -n "$changed" ]; then
+  echo "pre-commit: restamped and re-staged:$changed"
+fi
+
+exit 0
