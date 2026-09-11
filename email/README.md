@@ -82,16 +82,18 @@ a fair complaint.
 
 ## Before switching the autoresponder on
 
-1. **Check your provider does autoresponders**, and on which tier. They are
-   frequently a paid feature.
-2. **Name the provider in section 6 of `privacy.html`**, "Who we share your
-   information with". It becomes a processor handling customer names, numbers and
-   email addresses on your behalf.
-3. **Add its SPF and DKIM records to `buxtravel.co.uk`.** Without them this lands
-   in spam, and a customer who never sees the acknowledgement concludes you never
-   replied — worse than sending nothing.
-4. **Send yourself a test to Outlook, Gmail and an iPhone.** A browser preview
-   proves the markup holds together and nothing whatsoever about how it lands.
+The acknowledgement is sent by `one-com/quote-handler.php`, which reads these
+two files at send time — so there is one copy of the wording, not two that
+drift. Upload the templates beside the handler and re-upload when you edit them.
+
+Because that handler runs on one.com, where the mailbox lives, **there is no SPF
+or DKIM work and no third-party processor to name in `privacy.html`.** Both were
+requirements of the form-service route and neither applies here. See
+`one-com/README.md`.
+
+What does still apply: **send yourself a test to Outlook, Gmail and an iPhone.**
+A browser preview proves the markup holds together and nothing whatsoever about
+how it lands.
 
 ## Suggested subject lines
 
