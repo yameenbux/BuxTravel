@@ -84,20 +84,20 @@ var FORM_ENDPOINT = '';   // in index.html
 var EXTRA = {};           // provider fields, e.g. Web3Forms' access_key
 ```
 
-GitHub Pages cannot send mail, so the email route posts to a form service —
-anything that accepts a JSON POST. **While `FORM_ENDPOINT` is empty the email
-button stays hidden**, and the section's intro copy describes the WhatsApp route
-only. Set it and both appear. A button that silently swallows an enquiry is
-worse than no button.
+GitHub Pages cannot send mail, so the email route posts somewhere that can.
+**While `FORM_ENDPOINT` is empty the email button stays hidden**, and the
+section's intro copy describes the WhatsApp route only. Set it and both appear.
+A button that silently swallows an enquiry is worse than no button.
 
-Three things are not optional before switching it on:
+`one-com/quote-handler.php` is the endpoint to use. `bookings@buxtravel.co.uk`
+is hosted by one.com, so mail sent from one.com is already an authorised sender
+for the domain — which means **no SPF/DKIM work and no third-party processor to
+name in the privacy policy.** See `one-com/README.md`. It needs a one.com plan
+with PHP hosting, not just email; if the plan is email-only, the fallback is a
+form service and both of those obligations come back.
 
-1. **Name the provider in section 6 of `privacy.html`**, "Who we share your
-   information with". It becomes a processor handling customer names, numbers
-   and email addresses.
-2. **Add its SPF and DKIM records** to `buxtravel.co.uk`, or replies sent as
-   `bookings@` land in spam and the customer concludes you never answered.
-3. **Check the provider does autoresponders**, and on which tier — often paid.
+Any endpoint that accepts a JSON POST will work, so the site is not tied to that
+choice.
 
 ### Both routes log
 
