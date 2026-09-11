@@ -412,7 +412,7 @@
       <div class="sec-head">
         <span class="eyebrow on-dark rev-in">Bookings &amp; quotes</span>
         <h2 class="rev-in">Tell us where you&rsquo;re going.</h2>
-        <p class="lead rev-in">
+        <p class="lead rev-in" id="quoteLead">
           Fill this in and it opens WhatsApp with the details ready to send. If you&rsquo;d rather
           just type it yourself, message us directly.
         </p>
@@ -964,7 +964,16 @@ var REVIEWS = [
   var EXTRA = {};
 
   var emailBtn = document.getElementById('sendEmail');
-  if (emailBtn && FORM_ENDPOINT) emailBtn.hidden = false;
+  if (emailBtn && FORM_ENDPOINT) {
+    emailBtn.hidden = false;
+    /* The static copy describes the WhatsApp route only, which is the
+       truth until an endpoint exists. Once it does, say so here too
+       rather than leaving the page promising less than it offers. */
+    var lead = document.getElementById('quoteLead');
+    if (lead) lead.textContent =
+      'Fill this in once, then send it whichever way suits you — straight to WhatsApp, '
+      + 'or by email if you need it in writing. Either reaches the same person.';
+  }
 
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
