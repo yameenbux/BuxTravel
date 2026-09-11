@@ -61,6 +61,71 @@ rotator, the scroll-spy and the quote form, rather than loading `reveal.js`.
 `<input type="time">` are visible and fully working. The native input is always
 the source of truth — the WhatsApp handoff reads it, not the trigger.
 
+## The quote form
+
+Two routes out of one form, in `index.html`'s inline script.
+
+**WhatsApp is primary**, because it is the route that gets answered while the
+operator is driving, which is what makes the site's "price back within 30
+minutes" true. **Email is secondary**, for the school and corporate bookers who
+are on a work laptop, often cannot use WhatsApp there, and need something in
+writing for a purchase order. That is the most repeatable work on the list, and
+WhatsApp-only was a barrier in front of it.
+
+Every submission also generates a reference (`BX-Q-<ddmm><4 digits>`) that goes
+into the WhatsApp message, the logged record and the acknowledgement email, so
+an email can be matched to a WhatsApp thread when both arrive from the same
+person a minute apart.
+
+### Turning the email route on
+
+```js
+var FORM_ENDPOINT = '';   // in index.html
+var EXTRA = {};           // provider fields, e.g. Web3Forms' access_key
+```
+
+GitHub Pages cannot send mail, so the email route posts to a form service —
+anything that accepts a JSON POST. **While `FORM_ENDPOINT` is empty the email
+button stays hidden**, and the section's intro copy describes the WhatsApp route
+only. Set it and both appear. A button that silently swallows an enquiry is
+worse than no button.
+
+Three things are not optional before switching it on:
+
+1. **Name the provider in section 6 of `privacy.html`**, "Who we share your
+   information with". It becomes a processor handling customer names, numbers
+   and email addresses.
+2. **Add its SPF and DKIM records** to `buxtravel.co.uk`, or replies sent as
+   `bookings@` land in spam and the customer concludes you never answered.
+3. **Check the provider does autoresponders**, and on which tier — often paid.
+
+### Both routes log
+
+The WhatsApp button posts the same payload before opening WhatsApp, tagged
+`route: "whatsapp"` rather than `"email"`. Without it, an enquiry that dies at
+the handoff — WhatsApp not installed, the tab blocked, second thoughts — was a
+lead nobody ever knew existed.
+
+Two details in that code are load-bearing and easy to break:
+
+- **`window.open` is called synchronously**, before any promise callback. Move
+  it after an `await` and the browser treats it as an unrequested popup and
+  blocks it. There is a test for the ordering.
+- **The log is fire-and-forget**, with `keepalive` so it survives the browser
+  being backgrounded when WhatsApp takes over, which on a phone is the normal
+  case. A logging failure is never shown to the customer: WhatsApp already
+  worked, and it is our problem, not theirs.
+
+A hidden honeypot field (`#q-company`) suppresses both routes silently when
+filled.
+
+## Email templates
+
+`email/` holds the two customer emails, their merge tags and the setup notes.
+See `email/README.md` — it covers which tags come from the form and which you
+fill in, and a payment assumption in the confirmation that contradicts this
+site's own FAQ and needs resolving before that one is used.
+
 ## Asset versioning
 
 Every asset URL carries a content hash: `site.css?v=5ffc4743`. There is still no

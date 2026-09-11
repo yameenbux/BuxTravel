@@ -1010,22 +1010,59 @@ var REVIEWS = [
     status.textContent = msg;
   }
 
+  /* A short reference, generated here so the same string appears in the
+     WhatsApp message, the logged record and the acknowledgement email.
+     It is how an email gets matched to a WhatsApp thread, which matters
+     when both arrive from the same person a minute apart. Not unique in
+     any guaranteed sense — it is a handle for a human, not a key. */
+  function reference() {
+    var d = new Date();
+    var day = ('0' + d.getDate()).slice(-2) + ('0' + (d.getMonth() + 1)).slice(-2);
+    var rand = Math.floor(Math.random() * 9000 + 1000);
+    return 'BX-Q-' + day + rand;
+  }
+
   function details() {
+    var name = val('q-name');
     return {
-      name: val('q-name'), phone: val('q-phone'), email: val('q-email'),
+      ref: reference(),
+      name: name,
+      /* The templates greet on a first name; the form asks for a full
+         one. Split here rather than asking the mail provider to do it. */
+      firstName: name.split(/\s+/)[0] || name,
+      phone: val('q-phone'), email: val('q-email'),
       pickup: val('q-pickup'), dropoff: val('q-dropoff'),
       date: val('q-date'), time: val('q-time'),
       passengers: val('q-pax'), journey: val('q-type'), notes: val('q-notes')
     };
   }
 
+  /* Post the enquiry without waiting for it. Used by the WhatsApp route,
+     which must not be slowed down or blocked by our logging: WhatsApp
+     has already opened by the time this runs, so a failure here is ours
+     to notice, not the customer's. keepalive lets the request finish
+     even if the browser is backgrounded when the app takes over, which
+     on a phone is the normal case rather than the exception. */
+  function logQuietly(payload) {
+    if (!FORM_ENDPOINT) return;
+    try {
+      fetch(FORM_ENDPOINT, {
+        method: 'POST', keepalive: true,
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(function () {});
+    } catch (e) { /* logging must never break the route that works */ }
+  }
+
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     if (!validate()) return;
+    if (val('q-company')) { say('Thanks, we will be in touch.'); return; }
     var d = details();
 
     var lines = [
       'Hi Bux Travel, I would like a quote.',
+      'Ref: ' + d.ref,
       '',
       'Name: ' + d.name,
       'Phone: ' + d.phone,
@@ -1039,7 +1076,20 @@ var REVIEWS = [
     if (d.notes) lines.push('Notes: ' + d.notes);
 
     say('Opening WhatsApp with your details. If nothing happens, message us directly.');
+
+    /* window.open MUST be called synchronously inside the click, before
+       any await or promise callback, or the browser treats it as an
+       unrequested popup and blocks it. So WhatsApp opens first and the
+       logging follows. */
     window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+
+    /* Log it too, so an enquiry that dies at the handoff — WhatsApp not
+       installed, the tab blocked, second thoughts — is still something
+       we know happened rather than a lead that was never visible. */
+    d.route = 'whatsapp';
+    d.subject = 'Minibus enquiry from ' + d.name + ' (via WhatsApp)';
+    Object.keys(EXTRA).forEach(function (k) { d[k] = EXTRA[k]; });
+    logQuietly(d);
   });
 
   if (emailBtn) emailBtn.addEventListener('click', function () {
@@ -1054,7 +1104,8 @@ var REVIEWS = [
     say('Sending your enquiry…');
 
     var payload = details();
-    payload.subject = 'Minibus enquiry from ' + payload.name;
+    payload.route = 'email';
+    payload.subject = 'Minibus enquiry from ' + payload.name + ' (by email)';
     Object.keys(EXTRA).forEach(function (k) { payload[k] = EXTRA[k]; });
 
     fetch(FORM_ENDPOINT, {

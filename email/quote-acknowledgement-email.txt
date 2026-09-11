@@ -1,0 +1,72 @@
+Plain-text alternative for the quote acknowledgement.
+
+Set this as the text part alongside quote-acknowledgement-email.html.
+Two reasons it matters: spam filters score an HTML-only message worse,
+and some people read mail as text by choice or necessity. Same merge
+tags as the HTML, and it should stay that way — if you edit one, edit
+both.
+
+-- 8< -- everything below this line is the email ---------------------
+
+We've got this, {{firstName}}.
+
+Ref {{ref}}
+
+A person is reading your request now, not a system. You'll have a fixed
+price back within 30 minutes — one figure for the whole job, with
+nothing added later.
+
+
+WHAT HAPPENS NEXT
+
+  1. We check the date against the fleet and work out the right size
+     vehicle for {{passengers}} passengers.
+
+  2. You get a reply with one fixed price, by email and on WhatsApp if
+     you gave us a mobile.
+
+  3. Nothing is booked or held until you say yes. This email is an
+     acknowledgement, not a confirmation.
+
+Thirty minutes holds between 7am and 9pm. Outside those hours you'll
+hear from us first thing. If your journey is unusual — multiple
+pick-ups, a long wait, a 4am start — we may come back with a question
+before a price, because a guess helps nobody.
+
+
+WHAT YOU TOLD US
+
+Check it over. If anything here is wrong, reply now rather than later —
+the price is worked out from these lines.
+
+  Your name:      {{name}}
+  Phone:          {{phone}}
+  Email:          {{email}}
+  Pick-up from:   {{pickup}}
+  Going to:       {{dropoff}}
+  Date of travel: {{date}}
+  Pick-up time:   {{time}}
+  Passengers:     {{passengers}}
+  Journey type:   {{journey}}
+  Anything else:  {{notes}}
+
+
+IN A HURRY
+
+Message us on WhatsApp with your reference and we'll pull your request
+up and price it while you're there. It's the fastest way to reach us.
+
+  https://wa.me/447581234042
+
+Or reply to this email — it reaches the same person.
+
+--
+Bux Travel
+Licensed PSV and private hire operator
+Grasmere St, Bolton BL1 8LH
+07581 234042 · bookings@buxtravel.co.uk · https://www.buxtravel.co.uk/
+
+You are receiving this because you sent us an enquiry from our website.
+It is a reply to that enquiry, not marketing, so there is nothing to
+unsubscribe from. How we handle your information:
+https://www.buxtravel.co.uk/privacy.html
