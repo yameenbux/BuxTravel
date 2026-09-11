@@ -66,8 +66,9 @@ node tools/stamp.mjs           # rewrite any stale hashes
 node tools/stamp.mjs --check   # report and exit 1, change nothing
 ```
 
-It is idempotent, and it only corrects references that already carry `?v=`. You
-should rarely need to run it: **CI does it for you** (`.github/workflows/stamp.yml`).
+It is idempotent, and it stamps **every relative `src=` and `href=`** pointing at
+`assets/` — stylesheets, scripts, photographs and favicons alike. You should
+rarely need to run it: **CI does it for you** (`.github/workflows/stamp.yml`).
 A pull request that leaves a stale hash fails the check; a push to `main` gets
 restamped and the correction pushed back as a bot commit.
 
@@ -93,12 +94,22 @@ agent sessions as well as from a checkout — hence the CI backstop.
 Note this only busts the *assets*. It cannot help if a browser is holding a stale
 `index.html`, because that copy still points at the old hashes.
 
-**The photographs are not stamped.** Nine images (`hero-minibus.jpg`, the service
-photos, the favicons) are referenced without `?v=`, so replacing one in place will
-not reach returning visitors until their cache expires. That is the current
-behaviour rather than a considered decision — `tools/stamp.mjs` lists them on every
-run so the choice stays visible. Either stamp them too, or replace an image under
-a new filename.
+**Absolute URLs are not stamped, deliberately.** `bux-travel-logo-dark.jpg` appears
+as an absolute URL in `og:image` and in the JSON-LD `logo`/`image`. Those are
+canonical identifiers that social scrapers and Google store and match on, and a
+query string that rotates whenever an unrelated file changes is more likely to
+confuse them than to solve a caching problem. If you ever replace the logo, give
+it a new filename rather than overwriting it. The stamper lists these on every run
+so the exception stays visible.
+
+### If you change tools/stamp.mjs
+
+It rewrites 20 files with a regex, so it carries a structural guard: after each
+rewrite it compares the counts of `"`, `<` and `>` and refuses to write if they
+moved, because the only legitimate change is inserting `?v=<hash>` inside an
+attribute value. That guard exists because an earlier version swallowed the
+closing quote of every `href` and produced 20 pages of malformed HTML that still
+*looked* right in a grep. Do not remove it.
 
 ## The coverage map
 
