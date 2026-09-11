@@ -259,6 +259,12 @@
   @property --btn-angle { syntax: "<angle>"; initial-value: 0deg;      inherits: false; }
   @property --btn-bg    { syntax: "<color>"; initial-value: transparent; inherits: false; }
 
+  /* The browser's own [hidden] rule is display:none at user-agent
+     weight, so ANY author rule that sets display beats it. .btn sets
+     display:inline-flex, which meant a <button hidden> rendered anyway.
+     Restate it here so the attribute means what it says. */
+  [hidden] { display: none !important; }
+
   .btn {
     --btn-bg: transparent;
     --shine: rgba(255, 255, 255, 0.92);
@@ -835,6 +841,24 @@
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
   @media (max-width: 640px) { .row2, .row3 { grid-template-columns: 1fr; } }
+
+  /* Two routes out of the quote form. WhatsApp leads because it is the
+     one that gets answered while the operator is driving; email is there
+     for the corporate and school bookers who need a written trail. */
+  .form-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+  @media (max-width: 520px) {
+    .form-actions { flex-direction: column; align-items: stretch; }
+    .form-actions .btn { width: 100%; }
+  }
+
+  /* Spam trap: off-screen rather than display:none, because some bots
+     skip anything that is not rendered. Never focusable. */
+  .hp {
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
   .field label { font-size: var(--t-sm); font-weight: 600; }
   .field .hint { font-size: var(--t-xs); color: var(--muted); }
