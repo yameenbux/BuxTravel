@@ -1,0 +1,55 @@
+Plain-text alternative for the enquiry acknowledgement.
+
+Set this as the text part alongside the HTML. Two reasons it matters:
+spam filters score an HTML-only message worse, and some people read
+mail as text by choice or necessity. Same merge tags as the HTML.
+
+-- 8< -- everything below this line is the email ---------------------
+
+Got it, {{name}}.
+
+Thanks for the details. We will work out a price and come back to you,
+usually within 30 minutes, day or night.
+
+This is just to confirm your enquiry reached us. Nothing is booked yet,
+and no money is due. We will agree the price with you first, and it will
+not move afterwards.
+
+
+WHAT YOU SENT US
+
+  Pick-up:        {{pickup}}
+  Going to:       {{dropoff}}
+  Date and time:  {{date}} at {{time}}
+  Passengers:     {{passengers}}
+  Journey:        {{journey}}
+  Notes:          {{notes}}
+
+Something wrong above? Reply to this email or message us on WhatsApp and
+we will correct it before pricing.
+
+
+WHAT HAPPENS NEXT
+
+  - A price back within 30 minutes, day or night.
+  - Fixed and confirmed in writing. No meter.
+  - Driver name and vehicle sent before the day.
+  - Same driver kept on contract work.
+
+
+GET IN TOUCH
+
+  WhatsApp:  https://wa.me/447581234042
+  Phone:     07581 234042
+  Email:     bookings@buxtravel.co.uk
+  Web:       https://www.buxtravel.co.uk/
+
+--
+Bux Travel
+Licensed PSV and private hire operator
+Grasmere St, Bolton BL1 8LH
+
+You are receiving this because you sent us an enquiry from our website.
+It is a reply to that enquiry, not marketing, so there is nothing to
+unsubscribe from. How we handle your information:
+https://www.buxtravel.co.uk/privacy.html

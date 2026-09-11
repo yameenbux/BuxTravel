@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="robots" content="noindex, nofollow" />
+<title>We have your enquiry</title>
+<!--[if mso]>
+<style type="text/css">
+  /* Outlook renders with Word and ignores web fonts entirely. Force a
+     face it actually has, or it falls back to Times New Roman. */
+  body, table, td, p, a, span { font-family: Arial, Helvetica, sans-serif !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  /* Almost nothing here is load-bearing. Gmail keeps a <style> block on
+     desktop but strips it in some contexts, and Outlook.com rewrites it,
+     so every style that matters is inline on the element. This block
+     only holds the things that CANNOT be inlined: media queries and
+     pseudo-classes. */
+  @media screen and (max-width: 600px) {
+    .wrap      { width: 100% !important; }
+    .pad       { padding-left: 22px !important; padding-right: 22px !important; }
+    .stack     { display: block !important; width: 100% !important; }
+    .btn-cell  { display: block !important; width: 100% !important; padding-bottom: 10px !important; }
+    .btn-a     { display: block !important; width: auto !important; }
+    .h1        { font-size: 26px !important; line-height: 32px !important; }
+  }
+  a { color: #8A7346; }
+  .lbl { white-space: nowrap; }
+</style>
+</head>
+
+<!-- =====================================================================
+     Bux Travel — enquiry acknowledgement
+
+     Sent automatically the moment someone submits the quote form. It
+     acknowledges an ENQUIRY. It does not confirm a booking, because at
+     this point no price has been agreed and nothing has been booked —
+     saying otherwise would promise something that has not happened.
+
+     MERGE TAGS use the same names as the JSON the form posts, so the
+     payload keys and the template placeholders are one list:
+
+       {{name}} {{phone}} {{email}} {{pickup}} {{dropoff}}
+       {{date}} {{time}} {{passengers}} {{journey}} {{notes}}
+
+     Most providers use the double-brace form above. Some use %field%
+     or *|FIELD|* instead. Check yours and adjust — a placeholder that
+     does not match just arrives as literal text in front of the
+     customer.
+
+     WHY IT IS BUILT LIKE THIS. Tables, inline styles, 600px, no flex,
+     no grid, no custom properties, no web fonts. Outlook renders email
+     with Microsoft Word's engine and supports none of the modern CSS a
+     web page uses. A design that looks right in a browser routinely
+     arrives as a stack of unstyled text. Test before you rely on it.
+
+     Plain-text alternative: email/enquiry-acknowledgement.txt — set it
+     as the text part. Without one, spam filters score you worse.
+     ===================================================================== -->
+
+<body style="margin:0; padding:0; background-color:#F6F6F4;">
+
+<!-- Preheader: the grey line the inbox shows after the subject. Hidden
+     in the body itself, then padded so the client does not pull the
+     next sentence in after it. -->
+<div style="display:none; font-size:1px; color:#F6F6F4; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
+  Got it. We will come back with a price, usually within 30 minutes.
+  &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+</div>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#F6F6F4;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+
+      <table role="presentation" class="wrap" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; background-color:#FFFFFF; border-radius:14px; overflow:hidden;">
+
+        <!-- Masthead. Drawn in type and table cells rather than as an
+             image, because most clients block images by default and a
+             logo nobody sees is not a masthead. -->
+        <tr>
+          <td class="pad" style="background-color:#101418; padding:26px 34px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="40" style="width:40px; background-color:#DFCBA8; border-radius:10px; text-align:center; font-family:Arial,Helvetica,sans-serif; font-size:22px; font-weight:bold; color:#101418; height:40px; line-height:40px;">B</td>
+                <td width="12" style="width:12px;">&nbsp;</td>
+                <td style="font-family:Arial,Helvetica,sans-serif;">
+                  <div style="font-size:19px; font-weight:bold; color:#F4F4F2; line-height:22px;">Bux&nbsp;Travel</div>
+                  <div style="font-size:10px; letter-spacing:2px; color:#C9B79A; text-transform:uppercase; line-height:14px;">Minibus hire &middot; Bolton</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- The message -->
+        <tr>
+          <td class="pad" style="padding:34px 34px 6px 34px; font-family:Arial,Helvetica,sans-serif;">
+            <p style="margin:0 0 6px 0; font-size:11px; font-weight:bold; letter-spacing:2px; text-transform:uppercase; color:#8A7346;">Enquiry received</p>
+            <h1 class="h1" style="margin:0 0 16px 0; font-size:30px; line-height:36px; font-weight:bold; color:#101418;">Got it, {{name}}.</h1>
+            <p style="margin:0 0 14px 0; font-size:16px; line-height:25px; color:#3C434A;">
+              Thanks for the details. We will work out a price and come back to you,
+              <strong style="color:#101418;">usually within 30 minutes</strong>, day or night.
+            </p>
+            <p style="margin:0 0 26px 0; font-size:16px; line-height:25px; color:#3C434A;">
+              This is just to confirm your enquiry reached us. Nothing is booked yet, and no
+              money is due &mdash; we will agree the price with you first, and it will not move
+              afterwards.
+            </p>
+          </td>
+        </tr>
+
+        <!-- What they sent, so a mistake can be caught before we price it -->
+        <tr>
+          <td class="pad" style="padding:0 34px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#F6F6F4; border-radius:12px;">
+              <tr>
+                <td style="padding:20px 22px 8px 22px; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:bold; letter-spacing:1.6px; text-transform:uppercase; color:#5A6068;">
+                  What you sent us
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 22px 18px 22px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:22px;">
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068; width:34%;">Pick-up</td>
+                      <td valign="top" style="padding:6px 0; color:#101418; font-weight:bold;">{{pickup}}</td>
+                    </tr>
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068;">Going to</td>
+                      <td valign="top" style="padding:6px 0; color:#101418; font-weight:bold;">{{dropoff}}</td>
+                    </tr>
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068;">Date and time</td>
+                      <td valign="top" style="padding:6px 0; color:#101418; font-weight:bold;">{{date}} at {{time}}</td>
+                    </tr>
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068;">Passengers</td>
+                      <td valign="top" style="padding:6px 0; color:#101418; font-weight:bold;">{{passengers}}</td>
+                    </tr>
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068;">Journey</td>
+                      <td valign="top" style="padding:6px 0; color:#101418; font-weight:bold;">{{journey}}</td>
+                    </tr>
+                    <tr>
+                      <td class="lbl" valign="top" style="padding:6px 14px 6px 0; color:#5A6068;">Notes</td>
+                      <td valign="top" style="padding:6px 0; color:#101418;">{{notes}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 22px 20px 22px; font-family:Arial,Helvetica,sans-serif; font-size:13px; line-height:20px; color:#5A6068;">
+                  Something wrong above? Reply to this email or message us on WhatsApp and we will
+                  correct it before pricing.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Buttons. Bulletproof: Outlook gets a VML rectangle, everything
+             else gets the anchor. -->
+        <tr>
+          <td class="pad" style="padding:26px 34px 6px 34px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="btn-cell" style="padding-right:10px;">
+                  <!--[if mso]>
+                  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://wa.me/447581234042" style="height:46px;v-text-anchor:middle;width:230px;" arcsize="24%" stroke="f" fillcolor="#1FA855">
+                    <w:anchorlock/>
+                    <center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Message us on WhatsApp</center>
+                  </v:roundrect>
+                  <![endif]-->
+                  <!--[if !mso]><!-- -->
+                  <a class="btn-a" href="https://wa.me/447581234042" style="background-color:#1FA855; border-radius:11px; color:#FFFFFF; display:inline-block; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; line-height:46px; text-align:center; text-decoration:none; width:230px; -webkit-text-size-adjust:none;">Message us on WhatsApp</a>
+                  <!--<![endif]-->
+                </td>
+                <td class="btn-cell">
+                  <!--[if mso]>
+                  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="tel:+447581234042" style="height:46px;v-text-anchor:middle;width:160px;" arcsize="24%" strokecolor="#E2E2DE" fillcolor="#FFFFFF">
+                    <w:anchorlock/>
+                    <center style="color:#101418;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Call us</center>
+                  </v:roundrect>
+                  <![endif]-->
+                  <!--[if !mso]><!-- -->
+                  <a class="btn-a" href="tel:+447581234042" style="background-color:#FFFFFF; border:1px solid #E2E2DE; border-radius:11px; color:#101418; display:inline-block; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; line-height:44px; text-align:center; text-decoration:none; width:158px; -webkit-text-size-adjust:none;">Call 07581 234042</a>
+                  <!--<![endif]-->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- What happens next -->
+        <tr>
+          <td class="pad" style="padding:26px 34px 30px 34px; font-family:Arial,Helvetica,sans-serif;">
+            <p style="margin:0 0 12px 0; font-size:11px; font-weight:bold; letter-spacing:1.6px; text-transform:uppercase; color:#5A6068;">What happens next</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:15px; line-height:23px; color:#3C434A;">
+              <tr>
+                <td width="18" valign="top" style="width:18px; color:#8A7346; font-weight:bold; padding:5px 0;">&#10003;</td>
+                <td style="padding:5px 0;">A price back within 30 minutes, day or night.</td>
+              </tr>
+              <tr>
+                <td width="18" valign="top" style="width:18px; color:#8A7346; font-weight:bold; padding:5px 0;">&#10003;</td>
+                <td style="padding:5px 0;">Fixed and confirmed in writing. No meter.</td>
+              </tr>
+              <tr>
+                <td width="18" valign="top" style="width:18px; color:#8A7346; font-weight:bold; padding:5px 0;">&#10003;</td>
+                <td style="padding:5px 0;">Driver name and vehicle sent before the day.</td>
+              </tr>
+              <tr>
+                <td width="18" valign="top" style="width:18px; color:#8A7346; font-weight:bold; padding:5px 0;">&#10003;</td>
+                <td style="padding:5px 0;">Same driver kept on contract work.</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td class="pad" style="background-color:#101418; padding:26px 34px; font-family:Arial,Helvetica,sans-serif;">
+            <p style="margin:0 0 10px 0; font-size:14px; line-height:21px; color:#F4F4F2; font-weight:bold;">Bux Travel</p>
+            <p style="margin:0 0 4px 0; font-size:13px; line-height:21px; color:rgba(244,244,242,0.74);">
+              Licensed PSV and private hire operator &middot; Grasmere St, Bolton BL1 8LH
+            </p>
+            <p style="margin:0 0 14px 0; font-size:13px; line-height:21px; color:rgba(244,244,242,0.74);">
+              <a href="tel:+447581234042" style="color:#DFCBA8; text-decoration:none;">07581 234042</a>
+              &nbsp;&middot;&nbsp;
+              <a href="mailto:bookings@buxtravel.co.uk" style="color:#DFCBA8; text-decoration:none;">bookings@buxtravel.co.uk</a>
+              &nbsp;&middot;&nbsp;
+              <a href="https://www.buxtravel.co.uk/" style="color:#DFCBA8; text-decoration:none;">buxtravel.co.uk</a>
+            </p>
+            <p style="margin:0; font-size:12px; line-height:19px; color:rgba(244,244,242,0.55);">
+              You are receiving this because you sent us an enquiry from our website. It is a reply
+              to that enquiry, not marketing, so there is nothing to unsubscribe from. How we handle
+              your information is set out in our
+              <a href="https://www.buxtravel.co.uk/privacy.html" style="color:rgba(244,244,242,0.75);">privacy policy</a>.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
