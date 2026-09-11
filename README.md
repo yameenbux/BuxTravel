@@ -31,8 +31,14 @@ defined anywhere on purpose. Archivo is loaded as a variable font
 (`wght@100..900`) because the nav animates its weight per letter — the static
 cuts cannot interpolate.
 
-WhatsApp number `447581234042` and email `saeed@buxtravel.co.uk` appear across
-all eight pages. Find and replace in all of them if either changes.
+WhatsApp number `447581234042` and email `bookings@buxtravel.co.uk` appear across
+all twenty pages. Find and replace in all of them if either changes.
+
+`bookings@` is the only public address, including in the privacy policy's
+data-controller block and the complaints contact in the booking terms. That is
+deliberate: a sole trader's monitored inbox is the right destination for a
+subject access request, and routing legal contact to a second address nobody
+watches is worse than having one.
 
 ## JavaScript
 
