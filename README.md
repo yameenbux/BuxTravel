@@ -8,8 +8,8 @@ index.html                       privacy.html   terms.html   404.html
 airport-transfers.html           weddings.html
 school-college-transport.html    days-out-sports.html
 .nojekyll   CNAME   robots.txt   sitemap.xml
-assets/     <-- 29 files
-tools/      <-- stamp.mjs, sitemap.mjs
+assets/     <-- 55 files (32 source + 23 generated WebP)
+tools/      <-- stamp.mjs, sitemap.mjs, images.mjs
 ```
 
 The page list above is out of date — there are 20 `.html` files now, not eight.
@@ -202,9 +202,20 @@ node tools/sitemap.mjs           # write the dates
 node tools/sitemap.mjs --check   # report and exit 1, change nothing
 ```
 
-The date for a page is the commit date of the last commit that touched it; a
-page with uncommitted edits is dated today, because it is about to be committed.
-Same CI and hook wiring as the asset stamper, so you should rarely run it by hand.
+The date for a page is the commit date of the last commit that **meaningfully**
+changed it; a page with uncommitted edits is dated today, because it is about to
+be committed. Same CI and hook wiring as the asset stamper, so you should rarely
+run it by hand.
+
+"Meaningfully" is load-bearing. `tools/stamp.mjs` rewrites the `?v=` hash on all
+twenty pages whenever `site.css` changes, so a naive "last commit that touched
+this file" reports every page as modified every time the stylesheet moves a
+pixel. A sitemap claiming all nineteen pages changed today, every time, is
+precisely how Google learns to distrust the field. So the script walks each
+page's history comparing content with the stamps stripped out, and reports the
+last commit where something other than a cache-bust hash actually changed. There
+are tests for both halves: a stamp-only edit must not move the date, and a real
+edit must.
 
 A hand-written `lastmod` is **worse than no `lastmod` at all.** Google ignores
 the field wholesale on sitemaps where it proves untrustworthy, so nineteen dates
@@ -232,6 +243,67 @@ the output strips the leading space of the first line — so a fixed-width slice
 then cuts one character too many and yields `ndex.html`, silently dating a
 modified page as unmodified. The script uses `git diff --name-only HEAD` and
 `git ls-files --others`, which emit bare paths with nothing to mis-slice.
+
+## Photographs
+
+Seven photographs on the homepage, each one `position: absolute; inset: 0`
+with `object-fit: cover` inside its card. They used to ship as full-size JPEGs —
+945 KB, the same bytes to a 390px phone as to a 1440px desktop, with the hero
+alone at 402 KB. The browser was downloading four to sixteen times the pixels it
+could ever paint.
+
+Each now has a WebP ladder beside it, generated:
+
+```sh
+npm i sharp
+node tools/images.mjs           # write any missing sizes
+node tools/images.mjs --force   # rewrite everything
+```
+
+`sharp` is **not** a dependency of this site — there is still no build step and no
+`package.json`. Install it when you add or replace a photograph, run the script,
+commit what it writes, and forget about it again. Same arrangement as
+`dotted-map` for the coverage map below.
+
+| Viewport | Total page | Was |
+|---|---|---|
+| 390px @1x | 344 KB | 1,118 KB |
+| 390px @2x | 523 KB | 1,118 KB |
+| 768px @2x | 765 KB | 1,118 KB |
+| 1440px @1x | 568 KB | 1,118 KB |
+
+**The originals stay exactly where they are** and remain the `<img src>`. Nothing
+was deleted and nothing was re-encoded in place, so the fallback for anything that
+cannot read WebP is the same file it was always served.
+
+### The widths are measured, not guessed
+
+They come from rendering the page at 390, 768 and 1440 CSS pixels and reading each
+image's actual box, then allowing for a 2x display:
+
+- **hero** — full-bleed, `sizes="100vw"`, ladder 640/960/1280/1600/1920.
+  The 1600 step exists because a 1440px desktop renders the hero 1555px wide, so
+  without it the commonest desktop width jumps to the 1920 file for 65 KB of
+  nothing.
+- **cards** — never render wider than ~588 CSS px, ladder 400/800/1200,
+  `sizes="(max-width: 900px) 82vw, 25vw"`. The 900px and 82vw are not arbitrary:
+  they are the breakpoint and the card width of the phone carousel in `site.css`.
+  **If you change either, change both**, or the browser picks the wrong file and
+  you will not notice, because the wrong file still looks correct.
+
+### Two things that would quietly break
+
+`picture { display: contents; }` is in `site.css` on purpose. A `<picture>` is a
+real element; with all seven images absolutely positioned it happens to be
+harmless today, but the first photograph that is laid out normally would find an
+unexpected inline box between it and its container. `display: contents` removes
+the box entirely.
+
+**`srcset` is stamped by `tools/stamp.mjs` like everything else** — that support
+had to be added for this. srcset is a comma-separated list, so the
+leading-quote trick that keeps the stamper off absolute URLs does not work past
+the first entry. Until it was taught to read them, all 22 WebP files would have
+been served with no cache-busting at all.
 
 ## The coverage map
 

@@ -113,6 +113,14 @@
 
   * { box-sizing: border-box; }
   img { max-width: 100%; display: block; }
+  /* Every photograph is wrapped in <picture> for its WebP sources. The
+     wrapper must not become a layout box of its own: all seven images
+     are `position: absolute; inset: 0` inside their card, and a static
+     inline wrapper between them and that card would be harmless today
+     but is a trap the first time one of them is laid out normally.
+     display: contents removes the box and leaves the <img> exactly where
+     the CSS below already expects to find it. */
+  picture { display: contents; }
   html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   body {
     margin: 0; background: var(--paper); color: var(--ink);
