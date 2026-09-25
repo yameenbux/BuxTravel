@@ -47,6 +47,19 @@ const git = (...args) => {
   }
 };
 
+/* A shallow clone has no history to read a date OUT of: `git log -1`
+   then returns the single available commit for every file, so every page
+   looks modified today. In --check that is a spurious red build; writing
+   would silently stamp 19 wrong dates, which is the exact failure this
+   script exists to prevent. So refuse, loudly, rather than guess.
+   CI must check out with fetch-depth: 0. */
+if (git('rev-parse', '--is-shallow-repository') === 'true') {
+  console.error('FAIL: this is a shallow clone, so per-file commit dates are not available.');
+  console.error('Every page would be dated as though it changed in the tip commit.');
+  console.error('Check out with full history instead — actions/checkout needs fetch-depth: 0.');
+  process.exit(1);
+}
+
 /* Uncommitted edits mean the committed date is already wrong, so date
    the page today. Asked once, not once per page.
 
@@ -123,9 +136,16 @@ if (locs(after) !== locs(before)) {
 
 const w = (s, n) => String(s).padEnd(n);
 
+/* One stream per outcome. A failing --check writes its rows to stderr
+   alongside the summary, because stdout and stderr interleave
+   unpredictably in a CI log and a list split across the failure message
+   is harder to read than either half alone. */
+const failing = CHECK && changes.length > 0;
+const say = failing ? console.error : console.log;
+
 if (changes.length) {
-  console.log(CHECK ? 'WOULD SET:' : 'SET:');
-  for (const [file, was, now] of changes) console.log(`  ${w(file, 48)} ${w(was, 12)} -> ${now}`);
+  say(CHECK ? 'WOULD SET:' : 'SET:');
+  for (const [file, was, now] of changes) say(`  ${w(file, 48)} ${w(was, 12)} -> ${now}`);
 }
 
 if (CHECK) {

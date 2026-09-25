@@ -36,9 +36,16 @@ jobs:
   stamp:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 is required, not a nicety. tools/sitemap.mjs reads
+      # each page's last commit date; a shallow clone has one commit, so
+      # every page would date to the tip. The script refuses to run on a
+      # shallow clone rather than write 19 wrong dates, so removing this
+      # turns the build red rather than corrupting the sitemap — but it
+      # does turn it red.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
