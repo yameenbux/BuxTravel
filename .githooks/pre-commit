@@ -1,15 +1,16 @@
 #!/bin/sh
-# Restamp asset hashes before the commit is written, and stage the fix.
+# Restamp asset hashes and refresh sitemap lastmod dates before the
+# commit is written, then stage the fixes.
 #
-# Optional — CI catches a stale hash either way. This just catches it a
-# few minutes earlier, before it is ever pushed. Install with:
+# Optional — CI catches both either way. This just catches them a few
+# minutes earlier, before anything is ever pushed. Install with:
 #
 #   git config core.hooksPath .githooks
 #
 # Skip once with: git commit --no-verify
 
 command -v node >/dev/null 2>&1 || {
-  echo "pre-commit: node not found, skipping the asset stamp check." >&2
+  echo "pre-commit: node not found, skipping the stamp and sitemap checks." >&2
   exit 0
 }
 
@@ -19,6 +20,19 @@ status=$?
 if [ $status -ne 0 ]; then
   cat /tmp/stamp-hook.log >&2
   echo "pre-commit: stamping failed — commit aborted." >&2
+  exit 1
+fi
+
+# After the stamper, so the dates describe the pages as they will be
+# committed. This also fails when a page on disk is missing from
+# sitemap.xml, which is worth stopping a commit for: an unlisted page
+# does not get crawled.
+node tools/sitemap.mjs >/tmp/sitemap-hook.log 2>&1
+status=$?
+
+if [ $status -ne 0 ]; then
+  cat /tmp/sitemap-hook.log >&2
+  echo "pre-commit: sitemap update failed — commit aborted." >&2
   exit 1
 fi
 
@@ -34,6 +48,16 @@ done
 
 if [ -n "$changed" ]; then
   echo "pre-commit: restamped and re-staged:$changed"
+fi
+
+# sitemap.xml is the one file the hook will add that you did not stage
+# yourself. It is metadata about the pages in this commit — a lastmod
+# describing a page committed separately would simply be wrong — so it
+# belongs in the same commit rather than trailing behind in a second one.
+# Announced, never silent.
+if ! git diff --quiet -- sitemap.xml; then
+  git add sitemap.xml
+  echo "pre-commit: refreshed sitemap lastmod and staged sitemap.xml"
 fi
 
 exit 0

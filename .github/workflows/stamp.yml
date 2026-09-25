@@ -1,20 +1,28 @@
-name: Stamp asset hashes
+name: Stamp assets and sitemap
 
-# A hand-stamped cache-bust hash goes stale silently: the page looks fine
-# to whoever shipped it and serves stale CSS to every returning visitor.
+# Two things here go stale silently if left to a human.
+#
+# A hand-stamped cache-bust hash: the page looks fine to whoever shipped
+# it and serves stale CSS to every returning visitor.
+#
+# A hand-written sitemap <lastmod>: worse than absent, because Google
+# ignores the field wholesale on sitemaps where it proves untrustworthy.
+# The sitemap step also fails if a page on disk is missing from
+# sitemap.xml, so a new page cannot quietly go uncrawled.
+#
 # Commits reach this repo from several places — the web editor, other
 # machines, agent sessions — so a local git hook alone cannot cover it.
 # This is the backstop that does.
 #
-#   pull_request : check only, so a stale hash shows red before merge
+#   pull_request : check only, so a problem shows red before merge
 #   push to main : fix it and push the correction
 
 on:
   pull_request:
-    paths: ['**.html', 'assets/**', 'tools/stamp.mjs']
+    paths: ['**.html', 'assets/**', 'sitemap.xml', 'tools/*.mjs']
   push:
     branches: [main]
-    paths: ['**.html', 'assets/**', 'tools/stamp.mjs']
+    paths: ['**.html', 'assets/**', 'sitemap.xml', 'tools/*.mjs']
   workflow_dispatch:
 
 permissions:
@@ -28,9 +36,16 @@ jobs:
   stamp:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 is required, not a nicety. tools/sitemap.mjs reads
+      # each page's last commit date; a shallow clone has one commit, so
+      # every page would date to the tip. The script refuses to run on a
+      # shallow clone rather than write 19 wrong dates, so removing this
+      # turns the build red rather than corrupting the sitemap — but it
+      # does turn it red.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -42,9 +57,19 @@ jobs:
         if: github.event_name == 'pull_request'
         run: node tools/stamp.mjs --check
 
+      - name: Check sitemap
+        if: github.event_name == 'pull_request'
+        run: node tools/sitemap.mjs --check
+
       - name: Restamp
         if: github.event_name != 'pull_request'
         run: node tools/stamp.mjs
+
+      # After the stamper, so the dates reflect the final state of the
+      # pages rather than the state before they were restamped.
+      - name: Rewrite sitemap lastmod
+        if: github.event_name != 'pull_request'
+        run: node tools/sitemap.mjs
 
       # A push made with GITHUB_TOKEN does not trigger further workflow
       # runs — GitHub's own recursion guard — so this cannot loop. The
@@ -53,12 +78,12 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           if git diff --quiet; then
-            echo "Every stamp already correct — nothing to commit."
+            echo "Stamps and sitemap already correct — nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A '*.html'
-          git commit -m "Restamp asset hashes [skip ci]" \
-                     -m "Automated by .github/workflows/stamp.yml. One or more pages referenced an asset by a hash that no longer matched the file on disk, so returning visitors would have been served a cached older copy."
+          git add -A '*.html' sitemap.xml
+          git commit -m "Restamp assets and sitemap lastmod [skip ci]" \
+                     -m "Automated by .github/workflows/stamp.yml. Either a page referenced an asset by a hash that no longer matched the file on disk — so returning visitors would have been served a cached older copy — or a sitemap lastmod no longer matched the page's last commit."
           git push
