@@ -9,7 +9,11 @@ airport-transfers.html           weddings.html
 school-college-transport.html    days-out-sports.html
 .nojekyll   CNAME   robots.txt   sitemap.xml
 assets/     <-- 29 files
+tools/      <-- stamp.mjs, sitemap.mjs
 ```
+
+The page list above is out of date — there are 20 `.html` files now, not eight.
+`ls *.html` is the list.
 
 ## Design system
 
@@ -139,9 +143,10 @@ node tools/stamp.mjs --check   # report and exit 1, change nothing
 
 It is idempotent, and it stamps **every relative `src=` and `href=`** pointing at
 `assets/` — stylesheets, scripts, photographs and favicons alike. You should
-rarely need to run it: **CI does it for you** (`.github/workflows/stamp.yml`).
-A pull request that leaves a stale hash fails the check; a push to `main` gets
-restamped and the correction pushed back as a bot commit.
+rarely need to run it: **CI does it for you** (`.github/workflows/stamp.yml`,
+which runs this and the sitemap tool below). A pull request that leaves a stale
+hash fails the check; a push to `main` gets restamped and the correction pushed
+back as a bot commit.
 
 Optionally catch it a few seconds earlier, before it is ever pushed:
 
@@ -149,8 +154,11 @@ Optionally catch it a few seconds earlier, before it is ever pushed:
 git config core.hooksPath .githooks
 ```
 
-That runs the stamper before each commit and re-stages only pages already in the
-commit. Skip it once with `git commit --no-verify`.
+That runs the stamper and the sitemap tool before each commit, re-staging only
+pages already in the commit — plus `sitemap.xml`, the one file it will add that
+you did not stage yourself, because a `lastmod` describing a page committed
+separately would be wrong. It says so when it does. Skip it once with
+`git commit --no-verify`.
 
 ### Why this is automated
 
@@ -181,6 +189,49 @@ moved, because the only legitimate change is inserting `?v=<hash>` inside an
 attribute value. That guard exists because an earlier version swallowed the
 closing quote of every `href` and produced 20 pages of malformed HTML that still
 *looked* right in a grep. Do not remove it.
+
+## The sitemap
+
+`sitemap.xml` lists all 19 indexable pages. `404.html` is deliberately absent:
+it is `noindex` and is reached by a server rewrite, not by a URL worth crawling.
+
+The `<lastmod>` dates are **generated, never typed**:
+
+```sh
+node tools/sitemap.mjs           # write the dates
+node tools/sitemap.mjs --check   # report and exit 1, change nothing
+```
+
+The date for a page is the commit date of the last commit that touched it; a
+page with uncommitted edits is dated today, because it is about to be committed.
+Same CI and hook wiring as the asset stamper, so you should rarely run it by hand.
+
+A hand-written `lastmod` is **worse than no `lastmod` at all.** Google ignores
+the field wholesale on sitemaps where it proves untrustworthy, so nineteen dates
+maintained by hand buy nothing and cost the field's credibility. This is the same
+reasoning that automated the asset hashes, and the same failure mode.
+
+`lastmod` is only a crawl hint and never a ranking factor. It was added because
+this site has a crawl problem — pages live and linked for two weeks and still not
+indexed — and a crawl hint is the cheapest honest thing to send.
+
+**It also checks the sitemap against the pages on disk, both ways**, and fails if
+they disagree: a page that exists but is not listed would never be crawled, and a
+listed page that does not exist hands Google a 404. Both are silent failures
+otherwise, which is why they exit 1 rather than warn.
+
+### If you change tools/sitemap.mjs
+
+It carries the same kind of structural guard as the stamper: after the rewrite it
+compares the `<loc>` count and refuses to write if it moved, because the only
+legitimate change is inserting or replacing a `<lastmod>`. Do not remove it.
+
+One trap, already hit once: do **not** read modified files out of
+`git status --porcelain`. Its two-column status field is positional, and trimming
+the output strips the leading space of the first line — so a fixed-width slice
+then cuts one character too many and yields `ndex.html`, silently dating a
+modified page as unmodified. The script uses `git diff --name-only HEAD` and
+`git ls-files --others`, which emit bare paths with nothing to mis-slice.
 
 ## The coverage map
 
@@ -220,6 +271,19 @@ quote.
 Seven carry written text and are quoted. Two are a star rating with no written
 review: they count toward the total of nine but there is nothing to display, so
 `RATING` is `5.0` and `revCount` reads the array length.
+
+**There is deliberately no `aggregateRating` in the JSON-LD.** There was one,
+carrying `5.0` and a hardcoded `reviewCount` of 10. It was removed for two
+reasons. Google does not use self-serving review markup — an entity rating its
+own reviews of itself is not eligible for rich results — so it was earning
+nothing. And it duplicated `TOTAL_REVIEWS`, putting the same number in two places
+that had to be updated together and would not have been. The reviews stay as
+visible page content, which is where they do their actual work: they convince
+people. Do not add the block back expecting stars in the search results.
+
+`TOTAL_REVIEWS` is now the single place that number lives, and it is **not**
+derived from the array — see the comment on it. Update it when the profile total
+changes.
 
 To add a review, paste it into the `REVIEWS` array at the top of the inline
 script with the reviewer's name and journey type. The section counts what it
