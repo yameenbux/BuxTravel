@@ -74,11 +74,47 @@ const dirty = new Set([
   ...git('ls-files', '--others', '--exclude-standard', '--', '*.html').split('\n'),
 ].filter(Boolean));
 
+/* Cache-bust stamps are not content. tools/stamp.mjs rewrites the
+   ?v= hash on all twenty pages whenever site.css changes, so "the last
+   commit that touched this file" would report every page as modified
+   every time the stylesheet moves a pixel. A sitemap that says all
+   nineteen pages changed today, every time, is exactly how Google
+   learns to ignore lastmod — the failure this script exists to
+   prevent. So compare pages with the stamps stripped out. */
+const unstamped = (s) => s.replace(/\?v=[A-Za-z0-9]*/g, '');
+
+const show = (sha, file) => {
+  try {
+    return execFileSync('git', ['show', `${sha}:${file}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  } catch {
+    return null;   // file did not exist at that commit
+  }
+};
+
 function lastmodFor(file) {
-  if (dirty.has(file)) return today();
-  const committed = git('log', '-1', '--format=%cs', '--', file);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(committed)) return committed;
-  return statSync(join(ROOT, file)).mtime.toISOString().slice(0, 10);   // fallback: no git history
+  if (dirty.has(file)) {
+    /* Even uncommitted, a stamp-only edit is not a modification. Compare
+       the working copy against HEAD with the stamps removed before
+       claiming today's date. */
+    const head = show('HEAD', file);
+    const now = readFileSync(join(ROOT, file), 'utf8');
+    if (head === null || unstamped(head) !== unstamped(now)) return today();
+  }
+
+  const log = git('log', '--format=%H %cs', '--', file).split('\n').filter(Boolean);
+  if (!log.length) return statSync(join(ROOT, file)).mtime.toISOString().slice(0, 10);
+
+  /* Walk newest to oldest and stop at the first commit whose content
+     actually differs from its predecessor's. */
+  let newer = null;
+  for (let i = 0; i < log.length; i++) {
+    const [sha, date] = log[i].split(' ');
+    const content = show(sha, file);
+    if (content === null) continue;
+    if (newer !== null && unstamped(newer.content) !== unstamped(content)) return newer.date;
+    newer = { date, content };
+  }
+  return newer ? newer.date : log[log.length - 1].split(' ')[1];   // only ever one real version
 }
 
 /* https://www.buxtravel.co.uk/          -> index.html

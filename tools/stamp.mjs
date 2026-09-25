@@ -16,8 +16,8 @@
      node tools/stamp.mjs            add or correct stamps
      node tools/stamp.mjs --check    report and exit 1, change nothing
 
-   It stamps RELATIVE src= and href= references only. Absolute URLs are
-   left alone on purpose — see ABSOLUTE below.
+   It stamps RELATIVE src=, href= and srcset= references. Absolute URLs
+   are left alone on purpose — see ABSOLUTE below.
    ==================================================================== */
 
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
@@ -35,6 +35,17 @@ const hashOf = (file) =>
    The leading quote is what keeps this off absolute URLs: an og:image
    value starts "https:, so there is no quote immediately before assets/. */
 const REF = /(\b(?:src|href)=")(\/?)assets\/([A-Za-z0-9._-]+)(\?v=[A-Za-z0-9]*)?"/g;
+
+/* srcset is a comma-separated list, so the leading-quote trick above does
+   not work past the first entry: they are preceded by ", ". These two
+   regexes pull out each srcset attribute and then each candidate inside
+   it, anchored to the start of the value or a comma/space so a URL that
+   happens to contain "assets/" mid-path is not clipped. Responsive
+   images went unstamped entirely until this existed — 22 WebP files
+   served with no cache-busting at all, which is the same silent
+   staleness the rest of this script prevents. */
+const SRCSET = /(\bsrcset=")([^"]*)(")/g;
+const IN_SRCSET = /(^|[\s,])(\/?)assets\/([A-Za-z0-9._-]+)(\?v=[A-Za-z0-9]*)?/g;
 
 /* Absolute asset URLs — og:image, and logo/image in the JSON-LD — are
    deliberately NOT stamped. They are canonical identifiers that social
@@ -61,14 +72,25 @@ for (const page of pages) {
   const path = join(ROOT, page);
   const before = readFileSync(path, 'utf8');
 
-  const after = before.replace(REF, (match, attr, slash, name, stamp) => {
+  const note = (name, stamp) => {
     const now = currentHash(name);
-    if (now === null) { missing.push([page, name]); return match; }
+    if (now === null) { missing.push([page, name]); return null; }
     const was = stamp ? stamp.slice(3) : null;
     if (was === null) added.push([page, name, now]);
     else if (was !== now) fixed.push([page, name, was || '(empty)', now]);
-    return `${attr}${slash}assets/${name}?v=${now}"`;
+    return now;
+  };
+
+  let after = before.replace(REF, (match, attr, slash, name, stamp) => {
+    const now = note(name, stamp);
+    return now === null ? match : `${attr}${slash}assets/${name}?v=${now}"`;
   });
+
+  after = after.replace(SRCSET, (match, open, value, close) =>
+    open + value.replace(IN_SRCSET, (m, lead, slash, name, stamp) => {
+      const now = note(name, stamp);
+      return now === null ? m : `${lead}${slash}assets/${name}?v=${now}`;
+    }) + close);
 
   for (const m of before.matchAll(ABSOLUTE)) absolute.add(m[1]);
 
