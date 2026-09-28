@@ -174,6 +174,10 @@ agent sessions as well as from a checkout — hence the CI backstop.
 Note this only busts the *assets*. It cannot help if a browser is holding a stale
 `index.html`, because that copy still points at the old hashes.
 
+Two further assets, `bux-travel-mark-email.png` and `bux-travel-lockup-email.png`,
+exist only for the email signature and are hotlinked by every message ever sent
+with it. **Never rename, move or delete them** — see `email/README.md`.
+
 **Absolute URLs are not stamped, deliberately.** `bux-travel-logo-dark.jpg` appears
 as an absolute URL in `og:image` and in the JSON-LD `logo`/`image`. Those are
 canonical identifiers that social scrapers and Google store and match on, and a

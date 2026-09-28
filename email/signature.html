@@ -1,78 +1,124 @@
 <!-- ======================================================================
      Bux Travel — email signature.
 
-     Open this file in a browser, select the block you want, copy, and
-     paste into your mail client's signature box. See email/README.md.
+     Open this file in a BROWSER, select the variant you want, copy the
+     rendered block (not the source), paste into your mail client. See
+     email/README.md for the install notes and the reasoning.
 
-     Built to the same rules as the other templates in this folder:
-     tables for layout, styles inline on every element, no flexbox, no
-     grid, no custom properties, no web fonts — and NO IMAGES.
+     Same rules as the other templates here: tables, inline styles, no
+     flexbox, no grid, no custom properties, no web fonts.
 
-     The no-images rule matters most here. Most clients block remote
-     images by default, and a signature goes on every message you send.
-     A logo that loads is worth a little; a broken-image icon on every
-     email you have ever sent is worth a lot less than nothing. The
-     brand mark is the champagne keyline, drawn as a table cell, which
-     renders everywhere.
+     ---- about the images -------------------------------------------
+     The logo is a real image now, hosted on our own domain over HTTPS,
+     because email cannot use relative paths and because base64 data
+     URIs are stripped by both Gmail and Outlook.
 
-     Archivo and Barlow cannot load in email, so the stack falls back to
-     the closest widely-installed grotesque. Do not add a webfont link;
-     Outlook ignores it and Gmail strips it.
+     Two rules follow from that, and neither is optional:
 
-     Colours are the site's own tokens, but the accent is --champ-deep
-     (#8A7346), not --champ (#C9B79A). Champagne is the accent for dark
-     bands on the website. On a white email background it measures about
-     1.6:1 against white and is effectively invisible; champ-deep is
-     4.5:1 and passes AA. Do not "correct" it back to the brighter one.
+     1. THESE TWO FILES CAN NEVER BE RENAMED, MOVED OR DELETED.
+        Every email ever sent hotlinks them. Breaking the URL retro-
+        actively breaks the signature in mail people have already
+        received. Replace the artwork only under a NEW filename, the
+        same rule the README sets for og:image.
+
+     2. They carry no ?v= cache-bust, deliberately. tools/stamp.mjs only
+        stamps relative references on the root pages, so it leaves these
+        alone — which is correct. A query string that rotates whenever
+        an unrelated asset changes would break the image in old mail.
+
+     Images are still blocked by default in plenty of clients, so both
+     variants are built to survive it: in A the wordmark is live text
+     sitting next to the mark, and in B the alt text is styled to read
+     as the brand on the dark band rather than as a broken box.
      ====================================================================== -->
 
-<h2 style="font:600 13px Arial,sans-serif;color:#5A6068;margin:0 0 8px">FULL — use on first contact with someone new</h2>
+<div style="font:600 13px Arial,sans-serif;color:#5A6068;margin:0 0 10px">
+  A &nbsp;&mdash;&nbsp; RECOMMENDED. Logo mark plus live type, so the name still reads when images are blocked.
+</div>
 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <!-- The brand mark. A coloured cell, not an image, so it always draws. -->
-    <td width="3" style="width:3px;background-color:#8A7346;font-size:0;line-height:0;">&nbsp;</td>
-    <td width="14" style="width:14px;font-size:0;line-height:0;">&nbsp;</td>
-    <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+    <td valign="top" style="padding:0 14px 0 0;">
+      <img src="https://www.buxtravel.co.uk/assets/bux-travel-mark-email.png"
+           width="48" height="48" alt=""
+           style="display:block;width:48px;height:48px;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;">
+    </td>
+    <td valign="top" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
-      <div style="font-size:15px;line-height:20px;font-weight:700;color:#101418;">
-        Saeed Bux
+      <div style="font-size:16px;line-height:21px;font-weight:700;color:#101418;letter-spacing:-.01em;">
+        Saeed&nbsp;Bux
       </div>
-      <div style="font-size:13px;line-height:18px;color:#8A7346;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-top:2px;">
-        Bux&nbsp;Travel
+      <div style="font-size:11px;line-height:15px;font-weight:700;color:#101418;letter-spacing:.16em;padding-top:3px;">
+        BUX <span style="color:#8A7346;">TRAVEL</span>
       </div>
 
-      <div style="font-size:13px;line-height:21px;color:#101418;padding-top:9px;">
+      <div style="font-size:13px;line-height:21px;color:#101418;padding-top:10px;">
         <a href="tel:+447581234042" style="color:#101418;text-decoration:none;">07581&nbsp;234042</a>
-        <span style="color:#E2E2DE;">&nbsp;|&nbsp;</span>
-        <a href="mailto:bookings@buxtravel.co.uk" style="color:#101418;text-decoration:none;">bookings@buxtravel.co.uk</a>
-      </div>
-      <div style="font-size:13px;line-height:21px;">
+        <span style="color:#D8D6D0;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <a href="mailto:bookings@buxtravel.co.uk" style="color:#101418;text-decoration:none;">bookings@buxtravel.co.uk</a><br>
         <a href="https://www.buxtravel.co.uk/" style="color:#8A7346;text-decoration:none;font-weight:600;">www.buxtravel.co.uk</a>
       </div>
 
-      <div style="font-size:11px;line-height:17px;color:#5A6068;padding-top:9px;border-top:1px solid #E2E2DE;margin-top:9px;">
-        Minibus hire with a driver, 4 to 18 seats &middot; Bolton<br>
-        Licensed PSV and private hire operator &middot; DBS checked drivers<br>
-        Passenger transport contracts with Bolton and Bury Councils
+      <div style="font-size:11px;line-height:17px;color:#5A6068;padding-top:10px;margin-top:10px;border-top:1px solid #E2E2DE;">
+        Minibus hire with a driver, 4 to 18 seats<br>
+        Licensed PSV &amp; private hire &middot; DBS checked drivers<br>
+        Bolton &amp; Bury Council transport contracts
       </div>
 
     </td>
   </tr>
 </table>
 
-<div style="height:40px">&nbsp;</div>
+<div style="height:48px">&nbsp;</div>
 
-<h2 style="font:600 13px Arial,sans-serif;color:#5A6068;margin:0 0 8px">SHORT — use on replies, so threads stay readable</h2>
+<div style="font:600 13px Arial,sans-serif;color:#5A6068;margin:0 0 10px">
+  B &nbsp;&mdash;&nbsp; Dark band. The full lockup, matching the website's own bands. More presence, heavier.
+</div>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:100%;max-width:340px;">
+  <tr>
+    <!-- #12171D is the lockup image's own background and the site's
+         theme-color, so the artwork sits on the band with no seam.
+         Do not substitute --band (#101418): it is four shades off and
+         the join shows as a faint rectangle. -->
+    <td style="background-color:#12171D;padding:18px 20px;">
+      <img src="https://www.buxtravel.co.uk/assets/bux-travel-lockup-email.png"
+           width="150" height="58" alt="Bux Travel"
+           style="display:block;width:150px;height:58px;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;font-weight:700;letter-spacing:.14em;color:#C9B79A;">
+    </td>
+  </tr>
+  <tr>
+    <td style="background-color:#FFFFFF;padding:14px 20px 0 20px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <div style="font-size:16px;line-height:21px;font-weight:700;color:#101418;letter-spacing:-.01em;">Saeed&nbsp;Bux</div>
+      <div style="font-size:13px;line-height:21px;color:#101418;padding-top:7px;">
+        <a href="tel:+447581234042" style="color:#101418;text-decoration:none;">07581&nbsp;234042</a>
+        <span style="color:#D8D6D0;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <a href="mailto:bookings@buxtravel.co.uk" style="color:#101418;text-decoration:none;">bookings@buxtravel.co.uk</a><br>
+        <a href="https://www.buxtravel.co.uk/" style="color:#8A7346;text-decoration:none;font-weight:600;">www.buxtravel.co.uk</a>
+      </div>
+      <div style="font-size:11px;line-height:17px;color:#5A6068;padding-top:10px;margin-top:10px;border-top:1px solid #E2E2DE;">
+        Minibus hire with a driver, 4 to 18 seats<br>
+        Licensed PSV &amp; private hire &middot; DBS checked drivers<br>
+        Bolton &amp; Bury Council transport contracts
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div style="height:48px">&nbsp;</div>
+
+<div style="font:600 13px Arial,sans-serif;color:#5A6068;margin:0 0 10px">
+  SHORT &nbsp;&mdash;&nbsp; for replies, so a long thread stays readable. No image at all.
+</div>
 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
     <td width="3" style="width:3px;background-color:#8A7346;font-size:0;line-height:0;">&nbsp;</td>
-    <td width="14" style="width:14px;font-size:0;line-height:0;">&nbsp;</td>
+    <td width="13" style="width:13px;font-size:0;line-height:0;">&nbsp;</td>
     <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#101418;">
       <strong style="color:#101418;">Saeed Bux</strong> &middot; Bux Travel<br>
       <a href="tel:+447581234042" style="color:#101418;text-decoration:none;">07581&nbsp;234042</a>
-      <span style="color:#E2E2DE;">&nbsp;|&nbsp;</span>
+      <span style="color:#D8D6D0;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
       <a href="https://www.buxtravel.co.uk/" style="color:#8A7346;text-decoration:none;">www.buxtravel.co.uk</a>
     </td>
   </tr>
