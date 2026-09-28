@@ -125,7 +125,8 @@ filled.
 
 ## Email templates
 
-`email/` holds the two customer emails, their merge tags and the setup notes.
+`email/` holds the two customer emails, the email signature, their merge tags
+and the setup notes.
 See `email/README.md` — it covers which tags come from the form and which you
 fill in, and a payment assumption in the confirmation that contradicts this
 site's own FAQ and needs resolving before that one is used.

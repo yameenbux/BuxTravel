@@ -11,10 +11,67 @@ browser and arrives in Outlook as a column of unstyled text.
 |---|---|---|
 | `quote-acknowledgement-email.*` | The moment someone submits the quote form | **Yes** — every tag comes from the form |
 | `booking-confirmation-email.html` | After a price is agreed and the job is booked | **No** — see below |
+| `signature.html` / `.txt` | Every email you send by hand | n/a — pasted into the mail client once |
 
 `quote-acknowledgement-email.txt` is the plain-text half of the same message. Set
 both parts: HTML-only mail scores worse with spam filters. If you edit one, edit
 the other — they carry the same tags on purpose.
+
+## The signature
+
+`signature.html` holds two variants — open it in a browser, select the one you
+want, copy, paste into the mail client. `signature.txt` is the plain-text
+equivalent; set it as the plain-text alternative if your client allows one, and
+keep the two in step.
+
+**Full** goes on first contact with someone new. **Short** goes on replies: a
+signature repeats on every message in a thread, and a six-line block quoted four
+deep is how a conversation becomes unreadable.
+
+### Three decisions worth not reversing
+
+**No logo image.** Most clients block remote images by default, and a signature
+rides on every message you send. A logo that loads is worth a little; a
+broken-image icon on every email you have ever sent is worth considerably less
+than nothing. The brand mark is the champagne keyline, drawn as a table cell
+with a background colour, which renders everywhere including in plain-ish
+clients.
+
+**The accent is `--champ-deep` (#8A7346), not `--champ` (#C9B79A).** Champagne is
+the accent for the website's dark bands. Measured against a white email
+background it is **1.96:1** — effectively invisible. champ-deep is **4.54:1** and
+passes AA. Do not "fix" it back to the brighter one because it looks more like
+the site; the site puts it on #101418, and email does not.
+
+**No web fonts.** Archivo and Barlow cannot load in email — Outlook ignores the
+link and Gmail strips it. The stack falls back to the closest widely installed
+grotesque. Adding a font link achieves nothing and risks the whole block being
+dropped.
+
+Rendered widths are 322px (full) and 237px (short), which is narrow enough to
+survive a phone reply pane without forcing a horizontal scroll. If you add a
+line, re-check that.
+
+### Before you use it: the legal bit
+
+UK trading disclosure rules require a business to identify itself on its
+business correspondence, and email counts. **What you must show depends on how
+Bux Travel is registered:**
+
+- **Sole trader** — the proprietor's name and an address at which documents can
+  be served.
+- **Limited company** — the registered company name, company number, place of
+  registration, and the registered office address.
+
+The signature as written carries the name, phone, email and website, but **no
+address and no company number.** Everything in this repo points to a sole trader,
+in which case an address for service is the gap. That interacts with the decision
+not to publish the street number on the website: an address for service does not
+have to be a home address — an accountant's or a registered-office service
+address is the usual answer where someone trades from home.
+
+Confirm your own position rather than taking this paragraph as advice, then add
+the line to both files.
 
 ## Merge tags
 

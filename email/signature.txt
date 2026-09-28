@@ -1,0 +1,16 @@
+Plain-text signature. Some clients send plain text only, and some
+recipients read it that way whatever you send. Set this as the
+plain-text alternative if your client lets you.
+
+Keep the two in step: if the HTML one changes, change this too.
+
+-----
+Saeed Bux
+Bux Travel
+07581 234042
+bookings@buxtravel.co.uk
+www.buxtravel.co.uk
+
+Minibus hire with a driver, 4 to 18 seats. Bolton.
+Licensed PSV and private hire operator. DBS checked drivers.
+Passenger transport contracts with Bolton and Bury Councils.
