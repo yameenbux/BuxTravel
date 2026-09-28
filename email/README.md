@@ -28,29 +28,68 @@ keep the two in step.
 signature repeats on every message in a thread, and a six-line block quoted four
 deep is how a conversation becomes unreadable.
 
-### Three decisions worth not reversing
+`signature.html` now carries **three** blocks: **A** (logo mark plus live type,
+recommended), **B** (dark band with the full lockup), and **SHORT** for replies.
 
-**No logo image.** Most clients block remote images by default, and a signature
-rides on every message you send. A logo that loads is worth a little; a
-broken-image icon on every email you have ever sent is worth considerably less
-than nothing. The brand mark is the champagne keyline, drawn as a table cell
-with a background colour, which renders everywhere including in plain-ish
-clients.
+### The logo, and the two rules that come with it
+
+The logo is a real image, hosted on our own domain over HTTPS. It has to be:
+email cannot use relative paths, and base64 data URIs are stripped by both Gmail
+and Outlook.
+
+Two rules follow, and neither is optional.
+
+**`assets/bux-travel-mark-email.png` and `assets/bux-travel-lockup-email.png` can
+never be renamed, moved or deleted.** Every email ever sent hotlinks them.
+Breaking the URL retroactively breaks the signature in mail people already have,
+going back however long. Replace the artwork only under a *new* filename — the
+same rule the root README sets for `og:image`, for the same reason.
+
+**They carry no `?v=` cache-bust, deliberately.** `tools/stamp.mjs` only stamps
+relative references on the root pages, so it leaves these alone, which is
+correct. A query string that rotated whenever an unrelated asset changed would
+break the image in old mail.
+
+Both were generated from the existing artwork rather than used raw. The full
+lockups are 2400x760 with the logo occupying only **41% of the width** — pasted
+straight in, the mark would render tiny inside a field of padding. The mark came
+from `bux-travel-mark.png`, the only source file with a genuinely transparent
+background, sized to 112px for a 56px display.
+
+### Why A is the recommendation
+
+Because images get blocked, and the two variants fail very differently. Rendered
+with images off:
+
+| | Blocked-image behaviour |
+|---|---|
+| **A** | Small empty placeholder, but **BUX TRAVEL still reads** — it is live type beside the mark, not part of it |
+| **B** | Broken-image icon in the client's placeholder box on the dark band. The champagne alt text renders as designed, but the chrome around it looks broken |
+
+B is the better-looking of the two when everything loads, and it matches the
+website's dark bands. Use it if you prefer it — just choose it knowing how it
+fails, because a meaningful share of recipients only ever see the failed state.
+
+### Three other decisions worth not reversing
+
+**The band in B is `#12171D`, not `--band` (#101418).** #12171D is the lockup
+image's own background and the site's `theme-color`. Those darks are four shades
+apart, which is enough that substituting `--band` shows the image as a faint
+rectangle against the band.
 
 **The accent is `--champ-deep` (#8A7346), not `--champ` (#C9B79A).** Champagne is
 the accent for the website's dark bands. Measured against a white email
 background it is **1.96:1** — effectively invisible. champ-deep is **4.54:1** and
-passes AA. Do not "fix" it back to the brighter one because it looks more like
-the site; the site puts it on #101418, and email does not.
+passes AA. Champagne is still used *inside* the dark band in B, where it belongs.
 
 **No web fonts.** Archivo and Barlow cannot load in email — Outlook ignores the
 link and Gmail strips it. The stack falls back to the closest widely installed
-grotesque. Adding a font link achieves nothing and risks the whole block being
-dropped.
+grotesque.
 
-Rendered widths are 322px (full) and 237px (short), which is narrow enough to
-survive a phone reply pane without forcing a horizontal scroll. If you add a
-line, re-check that.
+Rendered block widths are 323px (A), 340px (B) and 243px (SHORT), all of which
+clear a phone reply pane. An earlier draft measured 377 and 392 and overflowed;
+the credential lines were shortened to fix it rather than left to wrap. **If you
+add a line, re-measure.**
 
 ### Before you use it: the legal bit
 
