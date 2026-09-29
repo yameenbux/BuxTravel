@@ -159,9 +159,10 @@
      told otherwise. Scoped to the containers rather than to a class, because
      the legal pages never carried the class and went invisible. */
   .on-dark .eyebrow, .eyebrow.on-dark,
-  .hero .eyebrow, .page-head .eyebrow, .hero-404 .eyebrow,
+  .hero .eyebrow, .page-head .eyebrow, .hero-404 .eyebrow, .hero-review .eyebrow,
   .band-dark .eyebrow, .band-deep .eyebrow { color: var(--champ); }
   .hero .eyebrow::before, .page-head .eyebrow::before, .hero-404 .eyebrow::before,
+  .hero-review .eyebrow::before,
   .band-dark .eyebrow::before, .band-deep .eyebrow::before { background: var(--champ); }
 
   .lead  { font-size: var(--t-md); color: var(--muted); max-width: 62ch; }
@@ -1249,6 +1250,46 @@
   .hero-404 .code { font-family: var(--sans); font-size: var(--t-2xs); font-weight: 700;
                     letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--champ); }
   .hero-404 .actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.75rem; }
+
+  /* Review page. The eyebrow, lead and .actions rules are shared with the
+     404 hero above, so only the star row and the three text blocks below
+     the button are new. */
+  .hero-review { background: var(--band); color: var(--on-dark); text-align: center; }
+  .hero-review .container { padding-top: clamp(3rem, 9vw, 5.5rem); padding-bottom: clamp(2.5rem, 7vw, 4.5rem); }
+  .hero-review h1 { color: var(--on-dark); max-width: 24ch; margin: 1.25rem auto 0; }
+  .hero-review .lead { color: var(--on-dark-2); max-width: 54ch; margin: 1rem auto 0; }
+  .hero-review .actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.9rem; }
+  /* The button carries one star at cap height; the row above carries five. */
+  .hero-review .btn svg { width: 1.05em; height: 1.05em; }
+
+  .stars { display: flex; justify-content: center; gap: .3rem;
+           width: max-content; margin: 1.5rem auto 0;
+           color: var(--champ); text-decoration: none;
+           transition: transform var(--d-2) var(--ease); }
+  .stars svg { width: 2rem; height: 2rem; }
+  @media (max-width: 480px) { .stars svg { width: 1.6rem; height: 1.6rem; } }
+  @media (hover: hover) and (pointer: fine) {
+    .stars:hover { transform: scale(1.04); }
+  }
+
+  .rev-time { font-size: var(--t-xs); color: var(--on-dark-3); max-width: 46ch;
+              margin: 1.1rem auto 0; }
+
+  /* Four things worth mentioning. People stall on a blank review box far
+     more often than they refuse to write one, so the prompts are the
+     part of this page that actually earns its place. */
+  .rev-prompts { list-style: none; padding: 0; margin: 2.4rem auto 0; max-width: 34rem;
+                 text-align: left; display: grid; gap: .55rem;
+                 font-size: var(--t-sm); color: var(--on-dark-2); }
+  .rev-prompts li { position: relative; padding-left: 1.5rem; }
+  .rev-prompts li::before { content: ""; position: absolute; left: 0; top: .55em;
+                            width: .45rem; height: .45rem; border-radius: 50%;
+                            background: var(--champ); }
+
+  .rev-alt { font-size: var(--t-xs); color: var(--on-dark-3); max-width: 46ch;
+             margin: 2.4rem auto 0; padding-top: 1.6rem;
+             border-top: 1px solid var(--line-dark); }
+  .rev-alt a { color: var(--champ); }
 
   .quicklinks { display: grid; gap: 1rem; margin-top: 0;
                 grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
