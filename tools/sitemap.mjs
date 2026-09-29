@@ -34,8 +34,10 @@ const CHECK = process.argv.includes('--check');
 const SITEMAP = join(ROOT, 'sitemap.xml');
 
 /* Pages deliberately absent from the sitemap. 404.html is noindex and
-   is reached by a server rewrite, not by a URL anyone should crawl. */
-const NOT_LISTED = new Set(['404.html']);
+   is reached by a server rewrite, not by a URL anyone should crawl.
+   review.html is noindex too: it exists only as a link to hand to a
+   customer after a job, and has nothing on it worth ranking. */
+const NOT_LISTED = new Set(['404.html', 'review.html']);
 
 const today = () => new Date().toISOString().slice(0, 10);
 

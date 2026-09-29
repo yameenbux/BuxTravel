@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>Bux Travel review card — four to a sheet</title>
+<style>
+  /* Four A6 cards on one A4 sheet. Print at 100%, no scaling, then cut
+     along the hairlines. Colours are the site's own, and the QR is
+     embedded as a data URI so the sheet prints with no network. */
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { font-family: "Archivo", Arial, Helvetica, sans-serif; color: #101418; }
+  .sheet { width: 210mm; height: 296.5mm; display: grid;
+           grid-template-columns: 105mm 105mm; grid-template-rows: 148.25mm 148.25mm; }
+  .card { border: 0.2mm dashed #C9B79A; padding: 11mm 10mm;
+          display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .mark { display: flex; align-items: center; gap: 2.5mm; }
+  .mark i { width: 9mm; height: 9mm; border-radius: 2.4mm; flex: none;
+            background: linear-gradient(155deg, #DFCBA8, #C9B79A);
+            display: grid; place-items: center;
+            font-size: 5.6mm; font-weight: 700; font-style: normal; }
+  .mark b { font-size: 5.2mm; font-weight: 600; letter-spacing: -0.02em; }
+  .mark b span { color: #8A7346; font-weight: 500; }
+  .stars { margin-top: 6mm; letter-spacing: 1.2mm; font-size: 6mm; color: #C9B79A; line-height: 1; }
+  h1 { font-size: 5.4mm; line-height: 1.25; margin: 4mm 0 0; font-weight: 700; max-width: 70mm; }
+  p.sub { font-family: "Barlow", Arial, sans-serif; font-size: 3.5mm; line-height: 1.45;
+          color: #5A6068; margin: 2.5mm 0 0; max-width: 72mm; }
+  img.qr { width: 38mm; height: 38mm; margin-top: 6mm; }
+  .url { font-size: 3.6mm; font-weight: 600; margin-top: 3mm; letter-spacing: -0.01em; }
+  .foot { font-family: "Barlow", Arial, sans-serif; font-size: 2.9mm; color: #5A6068;
+          margin-top: auto; padding-top: 3mm; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="card">
+    <div class="mark"><i>B</i><b>Bux<span>Travel</span></b></div>
+    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <h1>How did we do?</h1>
+    <p class="sub">Scan the code and leave us a review on Google. It takes about thirty seconds and it helps other people in Bolton find us.</p>
+    <img class="qr" alt="QR code linking to buxtravel.co.uk/review" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbwAAAG8AQMAAACffoKcAAAABlBMVEUQFBj///+mwtN0AAACDklEQVR42u2cQY7CMBAErf1A/v9L/4AVy3jcY7McwqF9qAihAKmL1erMtCe0x72jN0BAQEDA/8CWx/X8Jt5be73nl/Wyn3bzAAS8eTy1eoVy9SRl+dLqehlaBTRpVWUZX/75ahrvdhmrCniAVoeRxq1ffkWrgOdoVU01RJuKRauAR9Wr0m2lu4aeqVcB7VqVBv/TixwA0K1VPcI8NaQahUENu1hVQI9W1WBn9FrrAS0D0CqgR6u9nsjOQpjq6LBCutQAgEZflTZ/fhxGuvgtWgX0Zlba7+dNf4YDveYGaBXQVQNszf600CrXEWSxqoAOX81zTf4lX51TAUO9aBXQ5asaUkUC0GUqIPcC0CrgMfVquePXwrWKllUFNGlVt/t1clVmA5gHADykBshNgVBphq6Pot7xK6sKaOqttlGrRaIqZupVQL+vdgkE9gkBDbLQKqBFq3L3L2Or1VE1cUWrgMYcQHU7nw28SjEgWSurCmjy1SWkkg5Ln8CitwK016tLmaqPXJXyYBYJrCqgqQa4amC1D7SsPsyqAtp6qxJJbbtXZYgFrQKe8LxVe5df9bZMtKJVQFcNoFGqWmhuYK1FAloFdNWr7c3g3zTSvrdjrCqgWattebpKRFs3CFhVQLdWcx5gn13RPSy0CmivV3srr8Va+d8VwGNygG32b+p2XoOvAh6Qr/JHyoCAgIDfgb9haDkamQsrtgAAAABJRU5ErkJggg==">
+    <div class="url">buxtravel.co.uk/review</div>
+    <div class="foot">Bux Travel &middot; Bolton &middot; 07581 234042</div>
+  </div>
+  <div class="card">
+    <div class="mark"><i>B</i><b>Bux<span>Travel</span></b></div>
+    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <h1>How did we do?</h1>
+    <p class="sub">Scan the code and leave us a review on Google. It takes about thirty seconds and it helps other people in Bolton find us.</p>
+    <img class="qr" alt="QR code linking to buxtravel.co.uk/review" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbwAAAG8AQMAAACffoKcAAAABlBMVEUQFBj///+mwtN0AAACDklEQVR42u2cQY7CMBAErf1A/v9L/4AVy3jcY7McwqF9qAihAKmL1erMtCe0x72jN0BAQEDA/8CWx/X8Jt5be73nl/Wyn3bzAAS8eTy1eoVy9SRl+dLqehlaBTRpVWUZX/75ahrvdhmrCniAVoeRxq1ffkWrgOdoVU01RJuKRauAR9Wr0m2lu4aeqVcB7VqVBv/TixwA0K1VPcI8NaQahUENu1hVQI9W1WBn9FrrAS0D0CqgR6u9nsjOQpjq6LBCutQAgEZflTZ/fhxGuvgtWgX0Zlba7+dNf4YDveYGaBXQVQNszf600CrXEWSxqoAOX81zTf4lX51TAUO9aBXQ5asaUkUC0GUqIPcC0CrgMfVquePXwrWKllUFNGlVt/t1clVmA5gHADykBshNgVBphq6Pot7xK6sKaOqttlGrRaIqZupVQL+vdgkE9gkBDbLQKqBFq3L3L2Or1VE1cUWrgMYcQHU7nw28SjEgWSurCmjy1SWkkg5Ln8CitwK016tLmaqPXJXyYBYJrCqgqQa4amC1D7SsPsyqAtp6qxJJbbtXZYgFrQKe8LxVe5df9bZMtKJVQFcNoFGqWmhuYK1FAloFdNWr7c3g3zTSvrdjrCqgWattebpKRFs3CFhVQLdWcx5gn13RPSy0CmivV3srr8Va+d8VwGNygG32b+p2XoOvAh6Qr/JHyoCAgIDfgb9haDkamQsrtgAAAABJRU5ErkJggg==">
+    <div class="url">buxtravel.co.uk/review</div>
+    <div class="foot">Bux Travel &middot; Bolton &middot; 07581 234042</div>
+  </div>
+  <div class="card">
+    <div class="mark"><i>B</i><b>Bux<span>Travel</span></b></div>
+    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <h1>How did we do?</h1>
+    <p class="sub">Scan the code and leave us a review on Google. It takes about thirty seconds and it helps other people in Bolton find us.</p>
+    <img class="qr" alt="QR code linking to buxtravel.co.uk/review" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbwAAAG8AQMAAACffoKcAAAABlBMVEUQFBj///+mwtN0AAACDklEQVR42u2cQY7CMBAErf1A/v9L/4AVy3jcY7McwqF9qAihAKmL1erMtCe0x72jN0BAQEDA/8CWx/X8Jt5be73nl/Wyn3bzAAS8eTy1eoVy9SRl+dLqehlaBTRpVWUZX/75ahrvdhmrCniAVoeRxq1ffkWrgOdoVU01RJuKRauAR9Wr0m2lu4aeqVcB7VqVBv/TixwA0K1VPcI8NaQahUENu1hVQI9W1WBn9FrrAS0D0CqgR6u9nsjOQpjq6LBCutQAgEZflTZ/fhxGuvgtWgX0Zlba7+dNf4YDveYGaBXQVQNszf600CrXEWSxqoAOX81zTf4lX51TAUO9aBXQ5asaUkUC0GUqIPcC0CrgMfVquePXwrWKllUFNGlVt/t1clVmA5gHADykBshNgVBphq6Pot7xK6sKaOqttlGrRaIqZupVQL+vdgkE9gkBDbLQKqBFq3L3L2Or1VE1cUWrgMYcQHU7nw28SjEgWSurCmjy1SWkkg5Ln8CitwK016tLmaqPXJXyYBYJrCqgqQa4amC1D7SsPsyqAtp6qxJJbbtXZYgFrQKe8LxVe5df9bZMtKJVQFcNoFGqWmhuYK1FAloFdNWr7c3g3zTSvrdjrCqgWattebpKRFs3CFhVQLdWcx5gn13RPSy0CmivV3srr8Va+d8VwGNygG32b+p2XoOvAh6Qr/JHyoCAgIDfgb9haDkamQsrtgAAAABJRU5ErkJggg==">
+    <div class="url">buxtravel.co.uk/review</div>
+    <div class="foot">Bux Travel &middot; Bolton &middot; 07581 234042</div>
+  </div>
+  <div class="card">
+    <div class="mark"><i>B</i><b>Bux<span>Travel</span></b></div>
+    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <h1>How did we do?</h1>
+    <p class="sub">Scan the code and leave us a review on Google. It takes about thirty seconds and it helps other people in Bolton find us.</p>
+    <img class="qr" alt="QR code linking to buxtravel.co.uk/review" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbwAAAG8AQMAAACffoKcAAAABlBMVEUQFBj///+mwtN0AAACDklEQVR42u2cQY7CMBAErf1A/v9L/4AVy3jcY7McwqF9qAihAKmL1erMtCe0x72jN0BAQEDA/8CWx/X8Jt5be73nl/Wyn3bzAAS8eTy1eoVy9SRl+dLqehlaBTRpVWUZX/75ahrvdhmrCniAVoeRxq1ffkWrgOdoVU01RJuKRauAR9Wr0m2lu4aeqVcB7VqVBv/TixwA0K1VPcI8NaQahUENu1hVQI9W1WBn9FrrAS0D0CqgR6u9nsjOQpjq6LBCutQAgEZflTZ/fhxGuvgtWgX0Zlba7+dNf4YDveYGaBXQVQNszf600CrXEWSxqoAOX81zTf4lX51TAUO9aBXQ5asaUkUC0GUqIPcC0CrgMfVquePXwrWKllUFNGlVt/t1clVmA5gHADykBshNgVBphq6Pot7xK6sKaOqttlGrRaIqZupVQL+vdgkE9gkBDbLQKqBFq3L3L2Or1VE1cUWrgMYcQHU7nw28SjEgWSurCmjy1SWkkg5Ln8CitwK016tLmaqPXJXyYBYJrCqgqQa4amC1D7SsPsyqAtp6qxJJbbtXZYgFrQKe8LxVe5df9bZMtKJVQFcNoFGqWmhuYK1FAloFdNWr7c3g3zTSvrdjrCqgWattebpKRFs3CFhVQLdWcx5gn13RPSy0CmivV3srr8Va+d8VwGNygG32b+p2XoOvAh6Qr/JHyoCAgIDfgb9haDkamQsrtgAAAABJRU5ErkJggg==">
+    <div class="url">buxtravel.co.uk/review</div>
+    <div class="foot">Bux Travel &middot; Bolton &middot; 07581 234042</div>
+  </div>
+</div>
+</body>
+</html>
