@@ -1,0 +1,38 @@
+{
+  "_comment": "Fictional worked example. Copy this into documents/jobs/ (gitignored) and edit — never put a real customer's details in this file, the repository is public.",
+
+  "type": "quotation",
+  "ref": "BX-Q-01011234",
+  "issued": "1 January 2026",
+  "validUntil": "15 January 2026",
+
+  "customer": {
+    "name": "A Customer",
+    "address": ["Example Organisation", "1 Example Street", "Bolton BL1 1AA"]
+  },
+
+  "journey": [
+    ["Date", "<strong>Saturday 1 January 2026</strong>"],
+    ["Pick-up", "1 Example Street, Bolton BL1 1AA<br><strong>9:00am</strong>"],
+    ["Destination", "Example destination"],
+    ["Return", "Departing <strong>5:00pm</strong>, arriving back approximately 6:30pm"],
+    ["Passengers", "12"],
+    ["Vehicle", "16-seater minibus"]
+  ],
+
+  "includes": [
+    "16-seater minibus with an experienced driver for the whole day",
+    "Driver remains with the group &mdash; this is not a drop-off and collect",
+    "All fuel, parking and driver hours"
+  ],
+
+  "lines": [
+    { "desc": "Minibus hire &mdash; example journey", "amount": 300.00 },
+    { "desc": "Example discount", "amount": -25.00 }
+  ],
+
+  "note": {
+    "title": "This price is fixed.",
+    "body": "It is agreed before you travel and does not change on the day. One-off trips are settled before or on the day of travel. To accept this quotation, reply to the email it came with or call 07581&nbsp;234042."
+  }
+}
