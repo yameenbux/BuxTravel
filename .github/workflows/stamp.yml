@@ -61,6 +61,13 @@ jobs:
         if: github.event_name == 'pull_request'
         run: node tools/sitemap.mjs --check
 
+      # FAQ copy lives twice on every page — once for the reader, once
+      # in the FAQPage schema. They drift silently and nothing on the
+      # rendered page looks wrong. Check only; there is nothing to fix
+      # automatically, since only a human knows which copy is right.
+      - name: Check FAQ schema
+        run: node tools/faq.mjs --check
+
       - name: Restamp
         if: github.event_name != 'pull_request'
         run: node tools/stamp.mjs

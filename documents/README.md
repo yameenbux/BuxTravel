@@ -119,6 +119,12 @@ are set out with your quote."* They were left off rather than invented. Add them
 to `note.body`, or as a row, once the operator has decided what they are — until
 then the quotation contradicts the website.
 
+**A quotation to a new customer should state the deposit in `note.body`.** The
+site now says a first booking is secured with one (`terms.html` section 3, and
+the FAQ on the homepage), so a quote that stays silent about it and then springs
+a deposit on acceptance contradicts the published terms. Astley Grange only
+worked out cleanly because they asked first.
+
 **VAT is not shown.** Passenger transport in a vehicle constructed to carry ten
 or more passengers is zero-rated, so a VAT-registered operator would want a line
 saying so to pre-empt the question from a customer's finance team. A

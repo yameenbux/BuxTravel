@@ -9,7 +9,7 @@ airport-transfers.html           weddings.html
 school-college-transport.html    days-out-sports.html
 .nojekyll   CNAME   robots.txt   sitemap.xml
 assets/     <-- 55 files (32 source + 23 generated WebP)
-tools/      <-- stamp.mjs, sitemap.mjs, images.mjs
+tools/      <-- stamp.mjs, sitemap.mjs, images.mjs, faq.mjs
 documents/  <-- quotation and invoice template + renderer
 ```
 
@@ -38,6 +38,14 @@ cuts cannot interpolate.
 
 WhatsApp number `447581234042` and email `bookings@buxtravel.co.uk` appear across
 all twenty pages. Find and replace in all of them if either changes.
+
+**Payment terms appear in four places and must agree:** the payment FAQ and the
+deposit FAQ on `index.html`, the account question on
+`corporate-minibus-hire-bolton.html`, section 3 of `terms.html`, and the default
+note in `documents/`. A deposit is taken on a first booking with a new customer;
+after that, one-off trips settle before or on the day, and account work is
+invoiced monthly. `tools/faq.mjs` catches the FAQ half of that drifting; the
+other two need a human.
 
 `bookings@` is the only public address, including in the privacy policy's
 data-controller block and the complaints contact in the booking terms. That is
@@ -195,6 +203,30 @@ moved, because the only legitimate change is inserting `?v=<hash>` inside an
 attribute value. That guard exists because an earlier version swallowed the
 closing quote of every `href` and produced 20 pages of malformed HTML that still
 *looked* right in a grep. Do not remove it.
+
+## The FAQ, twice over
+
+Every page with an FAQ carries the same questions **twice**: once as the
+`<details>` blocks a person reads, and once inside the `FAQPage` JSON-LD that
+Google reads. They must say the same thing.
+
+```sh
+node tools/faq.mjs           # report
+node tools/faq.mjs --check   # report and exit 1 on any mismatch
+```
+
+This is not tidiness. Google's structured data policy requires FAQPage content
+to be present and visible on the page — markup saying something the reader
+cannot see is ineligible at best. And the failure is **completely silent**: the
+page looks right, the JSON validates, and the two simply disagree.
+
+The checker was written while adding the deposit question and immediately found
+a pre-existing mismatch: the 16-seater luggage answer had its closing sentence
+in the visible text and not in the schema. Nobody would have found that by eye.
+
+It runs in CI on pull requests and on `main`. Unlike the stamper and the sitemap
+there is **nothing to fix automatically** — only a person knows which of the two
+copies is the correct one — so it reports and fails, and never edits.
 
 ## The sitemap
 
