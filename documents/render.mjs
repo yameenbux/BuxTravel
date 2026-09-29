@@ -54,7 +54,12 @@ const job = JSON.parse(readFileSync(resolve(jobPath), 'utf8'));
 
 /* ---- required fields, checked up front so a typo fails here rather
        than as a blank box on a document in front of a customer ---- */
-const need = ['type', 'ref', 'issued', 'customer', 'journey', 'includes', 'lines'];
+/* journey and includes are required on a quotation and an invoice — a
+   quote with no journey on it is not a quote. A receipt does not carry
+   them: it acknowledges money, and the customer already has the
+   booking details on the quotation. */
+const need = ['type', 'ref', 'issued', 'customer', 'lines',
+              ...(job.type === 'receipt' ? [] : ['journey', 'includes'])];
 const missing = need.filter((k) => job[k] === undefined);
 if (missing.length) { console.error('FAIL: job file is missing: ' + missing.join(', ')); process.exit(1); }
 const TYPES = ['quotation', 'invoice', 'receipt'];
@@ -82,10 +87,16 @@ const metaRows = [
   ...(!isQuote && !isReceipt && job.dueDate ? [['Payment due', job.dueDate]] : []),
 ].map(([k, v]) => `<div><span class="k">${esc(k)}</span> &nbsp;<span class="v">${esc(v)}</span></div>`).join('\n');
 
-const journeyRows = job.journey
-  .map(([k, v]) => `<tr><td class="k">${esc(k)}</td><td>${v}</td></tr>`).join('\n');
+const journeyBlock = job.journey?.length
+  ? `<h2>${esc(job.journeyHeading ?? 'The journey')}</h2>\n<table class="detail">\n`
+    + job.journey.map(([k, v]) => `<tr><td class="k">${esc(k)}</td><td>${v}</td></tr>`).join('\n')
+    + '\n</table>'
+  : '';
 
-const includeItems = job.includes.map((i) => `<li>${i}</li>`).join('\n');
+const includesBlock = job.includes?.length
+  ? `<h2>${esc(job.includesHeading ?? (job.type === 'receipt' ? 'Your booking' : 'What the price includes'))}</h2>\n`
+    + '<ul class="inc">\n' + job.includes.map((i) => `<li>${i}</li>`).join('\n') + '\n</ul>'
+  : '';
 
 const total = job.lines.reduce((a, l) => a + l.amount, 0);
 const priceRows = job.lines.map((l, i) =>
@@ -99,9 +110,7 @@ const fill = {
   subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.'
                                      : isReceipt ? 'Payment received with thanks.' : ''),
   partyLabel: isQuote ? 'Quotation for' : isReceipt ? 'Received from' : 'Invoice to',
-  /* A receipt's list is about the state of the booking, not about what a
-     price covers, so the heading cannot be shared with the other two. */
-  includesHeading: job.includesHeading ?? (isReceipt ? 'Your booking' : 'What the price includes'),
+  priceHeading: job.priceHeading ?? (isReceipt ? 'Payment received' : 'Price'),
   logo: pathToFileURL(join(ROOT, 'assets', 'bux-travel-lockup-print.png')).href,
   customerName: esc(job.customer.name),
   customerAddress: job.customer.address.map(esc).join('<br>'),
@@ -110,7 +119,7 @@ const fill = {
   noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
   noteBody: job.note?.body ?? '',
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
-  metaRows, journeyRows, includeItems, priceRows,
+  metaRows, journeyBlock, includesBlock, priceRows,
 };
 
 let html = readFileSync(join(DOCS, 'template.html'), 'utf8');
