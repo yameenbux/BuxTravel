@@ -66,6 +66,9 @@ const TYPES = ['quotation', 'invoice', 'receipt'];
 if (!TYPES.includes(job.type)) {
   console.error(`FAIL: type must be one of ${TYPES.join(', ')} — got "${job.type}"`); process.exit(1);
 }
+if (job.deposit !== undefined && (typeof job.deposit !== 'number' || job.deposit <= 0)) {
+  console.error('FAIL: "deposit" must be a positive number.'); process.exit(1);
+}
 if (job.type === 'receipt' && !job.paidOn) {
   console.error('FAIL: a receipt needs "paidOn" — the date the money actually arrived.');
   console.error('Do not issue a receipt before the payment has landed.');
@@ -105,6 +108,45 @@ const priceRows = job.lines.map((l, i) =>
   `\n<tr class="total"><td>${isQuote ? 'Total payable' : isReceipt ? 'Amount received' : 'Amount due'}</td>` +
   `<td class="amt">${money(total)}</td></tr>`;
 
+/* The default terms box.
+
+   This used to default to an empty string, which meant a quotation
+   raised without someone remembering to write a note carried no terms
+   at all — no deposit, no settlement, nothing. The site says a first
+   booking is secured with a deposit (terms.html section 3, and the FAQ
+   on the homepage), so a quote that stays silent and then springs one
+   on acceptance contradicts our own published terms. The one care-home
+   booking where that nearly happened only went smoothly because the
+   customer thought to ask first.
+
+   Set "deposit" on the job and the figures are stated exactly. Leave it
+   out and the wording covers both cases without committing to a number,
+   matching the site, which deliberately does not quote a percentage.
+
+   A full "note" on the job still overrides all of this. */
+function defaultNote() {
+  if (isReceipt) return '';
+  const fixed = 'It is agreed before you travel and does not change on the day.';
+
+  const terms = job.deposit
+    ? `A deposit of ${money(job.deposit)} secures the date, with the balance of ` +
+      `${money(total - job.deposit)} due before travel.`
+    : 'If this is your first booking with us, a deposit secures the date and the ' +
+      'balance is due before travel. Otherwise the trip is settled before or on the day.';
+
+  const accept = isQuote
+    ? ' To accept this quotation, reply to the email it came with or call 07581&nbsp;234042.'
+    : '';
+
+  return `${fixed} ${terms}${accept}`;
+}
+
+if (job.deposit !== undefined && job.deposit >= total) {
+  console.error(`FAIL: deposit ${money(job.deposit)} is not less than the total ${money(total)}.`);
+  console.error('A deposit is a part payment; if it covers the whole job it is not a deposit.');
+  process.exit(1);
+}
+
 const fill = {
   type: isQuote ? 'QUOTATION' : isReceipt ? 'RECEIPT' : 'INVOICE',
   subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.'
@@ -117,7 +159,7 @@ const fill = {
   fromName: esc(job.from?.name ?? 'Saeed Bux'),
   fromAddress: (job.from?.address ?? ['Bux Travel', 'Grasmere Street', 'Bolton BL1 8LH']).map(esc).join('<br>'),
   noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
-  noteBody: job.note?.body ?? '',
+  noteBody: job.note?.body ?? defaultNote(),
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
   metaRows, journeyBlock, includesBlock, priceRows,
 };
