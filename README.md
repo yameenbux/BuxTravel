@@ -10,6 +10,7 @@ school-college-transport.html    days-out-sports.html
 .nojekyll   CNAME   robots.txt   sitemap.xml
 assets/     <-- 55 files (32 source + 23 generated WebP)
 tools/      <-- stamp.mjs, sitemap.mjs, images.mjs
+documents/  <-- quotation and invoice template + renderer
 ```
 
 The page list above is out of date — there are 20 `.html` files now, not eight.
@@ -309,6 +310,13 @@ had to be added for this. srcset is a comma-separated list, so the
 leading-quote trick that keeps the stamper off absolute URLs does not work past
 the first entry. Until it was taught to read them, all 22 WebP files would have
 been served with no cache-busting at all.
+
+## Quotations and invoices
+
+`documents/` holds one template that renders both, plus the renderer. See
+`documents/README.md`. Job files carry customer names and addresses, so
+`documents/jobs/` and `documents/out/` are gitignored — **this repository is
+public**.
 
 ## The coverage map
 

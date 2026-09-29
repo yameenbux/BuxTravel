@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"><title>{{type}} {{ref}}</title>
+<style>
+  /* ====================================================================
+     Bux Travel — quotation / invoice letterhead.
+
+     Rendered to PDF by documents/render.mjs. Not a web page: it is only
+     ever loaded from a file:// URL by Chromium's print engine, so there
+     is no cache-busting, no responsive work and no web fonts.
+
+     Archivo and Barlow cannot be used — they are not installed and the
+     renderer has no network. Liberation Sans is metric-compatible with
+     Arial and is the closest grotesque available.
+     ==================================================================== */
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    color: #101418; font-size: 9.5pt; line-height: 1.42;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  /* Exact height and clipped, NOT min-height. A min-height of 297mm on a
+     zero-margin A4 page rounds a fraction over and Chromium emits a
+     blank second page. render.mjs checks for that and for overflow. */
+  .sheet { width: 210mm; height: 296.5mm; overflow: hidden;
+           display: flex; flex-direction: column; }
+
+  .band { background: #12171D; padding: 9mm 16mm 6mm; flex: 0 0 auto; }
+  .band img { width: 38mm; display: block; }
+  .band .strap { color: #C9B79A; font-size: 8pt; letter-spacing: .22em;
+                 text-transform: uppercase; margin-top: 4.5mm; font-weight: 700; }
+  /* flex: 0 0 — a bare height on a flex child gets shrunk to nothing. */
+  .rule { flex: 0 0 2.2mm; background: #C9B79A; }
+
+  .body { padding: 7mm 16mm 0; flex: 1 1 auto; }
+
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12mm; }
+  h1 { font-size: 19pt; letter-spacing: .03em; margin: 0; font-weight: 700; }
+  h1 + .sub { color: #5A6068; font-size: 9pt; margin-top: 1.5mm; }
+  .meta { text-align: right; font-size: 9pt; line-height: 1.75; white-space: nowrap; }
+  .meta .k { color: #5A6068; }
+  .meta .v { font-weight: 700; }
+
+  .parties { display: flex; gap: 6mm; margin-top: 5.5mm; }
+  .party { flex: 1; background: #F6F6F4; border: 1px solid #E2E2DE;
+           border-radius: 2mm; padding: 3.5mm 5mm; }
+  .label { font-size: 7.5pt; letter-spacing: .16em; text-transform: uppercase;
+           color: #8A7346; font-weight: 700; margin-bottom: 2.5mm; }
+  .party strong { display: block; font-size: 11pt; }
+  .party .l { color: #5A6068; font-size: 9pt; }
+
+  h2 { font-size: 8pt; letter-spacing: .16em; text-transform: uppercase;
+       color: #8A7346; margin: 4.5mm 0 2mm; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  .detail td { padding: 1.4mm 0; border-bottom: 1px solid #E2E2DE;
+               vertical-align: top; font-size: 9.5pt; }
+  .detail td.k { color: #5A6068; width: 42mm; }
+  .detail tr:last-child td { border-bottom: 0; }
+
+  ul.inc { margin: 0; padding-left: 5mm; }
+  ul.inc li { margin: 0.9mm 0; }
+
+  .money { margin-top: 3mm; }
+  .money td { padding: 2mm 0; font-size: 10pt; }
+  .money td.amt { text-align: right; width: 34mm; font-variant-numeric: tabular-nums; }
+  .money tr.sep td { border-top: 1px solid #E2E2DE; }
+  .money tr.total td { border-top: 2px solid #101418; padding-top: 2.5mm;
+                       font-size: 13pt; font-weight: 700; }
+  .money tr.disc td { color: #8A7346; }
+
+  .note { margin-top: 6mm; background: #F6F6F4; border-left: 2.5mm solid #C9B79A;
+          padding: 3.5mm 4.5mm; font-size: 9pt; border-radius: 0 2mm 2mm 0; }
+  .note b { display: block; margin-bottom: 1mm; }
+
+  footer { margin-top: auto; padding: 6mm 16mm 7mm; font-size: 7.5pt;
+           color: #5A6068; line-height: 1.6; flex: 0 0 auto; }
+  footer .line { height: 1px; background: #E2E2DE; margin-bottom: 4mm; }
+  footer .cols { display: flex; justify-content: space-between; gap: 8mm; }
+  footer a { color: #8A7346; text-decoration: none; }
+</style></head>
+<body>
+<div class="sheet">
+
+  <div class="band">
+    <img src="{{logo}}" alt="Bux Travel">
+    <div class="strap">Minibus hire with a driver &nbsp;&middot;&nbsp; Bolton</div>
+  </div>
+  <div class="rule"></div>
+
+  <div class="body">
+
+    <div class="top">
+      <div>
+        <h1>{{type}}</h1>
+        <div class="sub">{{subtitle}}</div>
+      </div>
+      <div class="meta">{{metaRows}}</div>
+    </div>
+
+    <div class="parties">
+      <div class="party">
+        <div class="label">{{partyLabel}}</div>
+        <strong>{{customerName}}</strong>
+        <div class="l">{{customerAddress}}</div>
+      </div>
+      <div class="party">
+        <div class="label">Prepared by</div>
+        <strong>{{fromName}}</strong>
+        <div class="l">{{fromAddress}}</div>
+      </div>
+    </div>
+
+    <h2>The journey</h2>
+    <table class="detail">{{journeyRows}}</table>
+
+    <h2>What the price includes</h2>
+    <ul class="inc">{{includeItems}}</ul>
+
+    <h2>Price</h2>
+    <table class="money">{{priceRows}}</table>
+
+    <div class="note"><b>{{noteTitle}}</b>{{noteBody}}</div>
+
+  </div>
+
+  <footer>
+    <div class="line"></div>
+    <div class="cols">
+      <div><strong style="color:#101418">Bux Travel</strong><br>Grasmere Street, Bolton BL1 8LH</div>
+      <div>07581 234042<br><a href="mailto:bookings@buxtravel.co.uk">bookings@buxtravel.co.uk</a></div>
+      <div style="text-align:right"><a href="https://www.buxtravel.co.uk/">www.buxtravel.co.uk</a><br>Licensed PSV and private hire operator</div>
+    </div>
+  </footer>
+
+</div>
+</body></html>

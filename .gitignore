@@ -18,6 +18,12 @@ secrets.json
 # Tool logs, written into whatever directory the CLI is run from
 vibe-session.log
 
+# Customer paperwork. This repository is public, so a real job file —
+# which carries a customer's name and address — must never be committed.
+# documents/example.json is fictional and IS tracked, as the worked example.
+documents/jobs/
+documents/out/
+
 # Dependencies and build output
 node_modules/
 dist/
