@@ -37,11 +37,13 @@ which is why it is the only one tracked. **Do not put a real customer in
 | `validUntil` | Quotations only — a quote with no expiry is an open-ended offer |
 | `dueDate` | Invoices only |
 | `paidOn` | **Receipts only, and required** — the date the money actually arrived |
-| `includesHeading` | Optional override. Defaults to "What the price includes", or "Your booking" on a receipt |
+| `includesHeading` | Optional override, defaults to "What the price includes" |
 | `customer` | `name` plus `address` as an array of lines |
 | `from` | Optional; defaults to Saeed Bux / Grasmere Street |
-| `journey` | Array of `[label, value]` pairs. The value takes HTML, so `<strong>` works |
-| `includes` | Array of bullet strings |
+| `journey` | Array of `[label, value]` pairs. The value takes HTML, so `<strong>` works. **Required on a quotation and an invoice; omit on a receipt** |
+| `includes` | Array of bullet strings. Same rule — omit on a receipt |
+| `journeyHeading` | Optional override, defaults to "The journey" |
+| `priceHeading` | Optional override. Defaults to "Price", or "Payment received" on a receipt |
 | `lines` | Array of `{desc, amount}`. A **negative** amount renders as a discount in champagne and the total is the sum |
 | `note` | `{title, body}` for the box at the bottom |
 | `filename` | Optional override for the output filename |
@@ -77,6 +79,13 @@ add rows to a job, watch that `content` number.
 It also fails fast on a missing required field, an unknown `type`, and any
 `{{placeholder}}` the job did not fill — all of which are better as an error in
 the terminal than as a blank box on a document in front of a customer.
+
+**Keep a receipt short.** Omit `journey` and `includes` and those sections
+disappear entirely — a receipt acknowledges money and says what is still owed.
+The customer already has the journey on the quotation, and restating it turns a
+one-glance confirmation into a document somebody has to read. The renderer still
+*requires* both on a quotation and an invoice, where leaving out the journey
+would make the document useless.
 
 **A receipt without `paidOn` is refused.** A receipt is a record that money
 *arrived*. Issuing one before it has is how a supplier ends up having
