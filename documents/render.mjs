@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 /* ======================================================================
-   Quotation and invoice renderer.
+   Quotation, invoice and receipt renderer.
 
      npm i playwright
      node documents/render.mjs documents/jobs/blackpool-trip.json
 
-   Writes an A4 PDF into documents/out/. One template produces both
-   documents — set "type" to "quotation" or "invoice" — so the wording,
-   the letterhead and the figures cannot drift apart between the quote
-   you sent and the invoice you raise from it.
+   Writes an A4 PDF into documents/out/. One template produces all
+   three documents — set "type" to "quotation", "invoice" or "receipt"
+   — so the wording, the letterhead and the figures cannot drift apart
+   between the quote you sent, the invoice you raised from it and the
+   receipt you issue on payment.
+
+   A receipt requires "paidOn". That is deliberate: a receipt records
+   that money ARRIVED, and issuing one before it has is how a supplier
+   ends up with no claim on a balance it has already acknowledged.
 
    THE OUTPUT IS CHECKED BEFORE IT IS KEPT. The first version of this
    document silently lost its price table, its terms and its whole
@@ -52,21 +57,29 @@ const job = JSON.parse(readFileSync(resolve(jobPath), 'utf8'));
 const need = ['type', 'ref', 'issued', 'customer', 'journey', 'includes', 'lines'];
 const missing = need.filter((k) => job[k] === undefined);
 if (missing.length) { console.error('FAIL: job file is missing: ' + missing.join(', ')); process.exit(1); }
-if (!['quotation', 'invoice'].includes(job.type)) {
-  console.error(`FAIL: type must be "quotation" or "invoice", got "${job.type}"`); process.exit(1);
+const TYPES = ['quotation', 'invoice', 'receipt'];
+if (!TYPES.includes(job.type)) {
+  console.error(`FAIL: type must be one of ${TYPES.join(', ')} — got "${job.type}"`); process.exit(1);
+}
+if (job.type === 'receipt' && !job.paidOn) {
+  console.error('FAIL: a receipt needs "paidOn" — the date the money actually arrived.');
+  console.error('Do not issue a receipt before the payment has landed.');
+  process.exit(1);
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const money = (n) => (n < 0 ? '&minus;£' : '£') + Math.abs(n).toFixed(2);
-const isQuote = job.type === 'quotation';
+const isQuote   = job.type === 'quotation';
+const isReceipt = job.type === 'receipt';
 
 /* ---- build the variable blocks ---- */
+const refLabel = isQuote ? 'Quote no.' : isReceipt ? 'Receipt no.' : 'Invoice no.';
 const metaRows = [
-  [isQuote ? 'Quote no.' : 'Invoice no.', job.ref],
+  [refLabel, job.ref],
   ['Date of issue', job.issued],
-  ...(isQuote
-      ? (job.validUntil ? [['Valid until', job.validUntil]] : [])
-      : (job.dueDate    ? [['Payment due',  job.dueDate]]   : [])),
+  ...(isQuote   ? (job.validUntil ? [['Valid until', job.validUntil]] : []) : []),
+  ...(isReceipt ? [['Payment received', job.paidOn]] : []),
+  ...(!isQuote && !isReceipt && job.dueDate ? [['Payment due', job.dueDate]] : []),
 ].map(([k, v]) => `<div><span class="k">${esc(k)}</span> &nbsp;<span class="v">${esc(v)}</span></div>`).join('\n');
 
 const journeyRows = job.journey
@@ -78,19 +91,23 @@ const total = job.lines.reduce((a, l) => a + l.amount, 0);
 const priceRows = job.lines.map((l, i) =>
   `<tr class="${l.amount < 0 ? 'disc ' : ''}${i ? 'sep' : ''}"><td>${l.desc}</td>` +
   `<td class="amt">${money(l.amount)}</td></tr>`).join('\n') +
-  `\n<tr class="total"><td>${isQuote ? 'Total payable' : 'Amount due'}</td>` +
+  `\n<tr class="total"><td>${isQuote ? 'Total payable' : isReceipt ? 'Amount received' : 'Amount due'}</td>` +
   `<td class="amt">${money(total)}</td></tr>`;
 
 const fill = {
-  type: isQuote ? 'QUOTATION' : 'INVOICE',
-  subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.' : ''),
-  partyLabel: isQuote ? 'Quotation for' : 'Invoice to',
+  type: isQuote ? 'QUOTATION' : isReceipt ? 'RECEIPT' : 'INVOICE',
+  subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.'
+                                     : isReceipt ? 'Payment received with thanks.' : ''),
+  partyLabel: isQuote ? 'Quotation for' : isReceipt ? 'Received from' : 'Invoice to',
+  /* A receipt's list is about the state of the booking, not about what a
+     price covers, so the heading cannot be shared with the other two. */
+  includesHeading: job.includesHeading ?? (isReceipt ? 'Your booking' : 'What the price includes'),
   logo: pathToFileURL(join(ROOT, 'assets', 'bux-travel-lockup-print.png')).href,
   customerName: esc(job.customer.name),
   customerAddress: job.customer.address.map(esc).join('<br>'),
   fromName: esc(job.from?.name ?? 'Saeed Bux'),
   fromAddress: (job.from?.address ?? ['Bux Travel', 'Grasmere Street', 'Bolton BL1 8LH']).map(esc).join('<br>'),
-  noteTitle: job.note?.title ?? 'This price is fixed.',
+  noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
   noteBody: job.note?.body ?? '',
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
   metaRows, journeyRows, includeItems, priceRows,

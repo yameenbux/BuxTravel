@@ -1,8 +1,9 @@
-# Quotations and invoices
+# Quotations, invoices and receipts
 
-One template produces both documents. That is the point: the wording, the
-letterhead and the figures on the quote you sent and the invoice you raise from
-it cannot drift apart, because they come from the same file.
+One template produces all three. That is the point: the wording, the letterhead
+and the figures on the quote you sent, the invoice you raised from it and the
+receipt you issue on payment cannot drift apart, because they come from the same
+file.
 
 ```sh
 npm i playwright
@@ -30,11 +31,13 @@ which is why it is the only one tracked. **Do not put a real customer in
 
 | Field | |
 |---|---|
-| `type` | `"quotation"` or `"invoice"` — switches the title, the party label, "Total payable" vs "Amount due", and which date is shown |
+| `type` | `"quotation"`, `"invoice"` or `"receipt"` — switches the title, the party label, the totals line ("Total payable" / "Amount due" / "Amount received"), the includes heading and which date is shown |
 | `ref` | Your reference. Quotes follow the site's own scheme, `BX-Q-<ddmm><4 digits>` |
 | `issued` | Date on the document |
 | `validUntil` | Quotations only — a quote with no expiry is an open-ended offer |
 | `dueDate` | Invoices only |
+| `paidOn` | **Receipts only, and required** — the date the money actually arrived |
+| `includesHeading` | Optional override. Defaults to "What the price includes", or "Your booking" on a receipt |
 | `customer` | `name` plus `address` as an array of lines |
 | `from` | Optional; defaults to Saeed Bux / Grasmere Street |
 | `journey` | Array of `[label, value]` pairs. The value takes HTML, so `<strong>` works |
@@ -74,6 +77,11 @@ add rows to a job, watch that `content` number.
 It also fails fast on a missing required field, an unknown `type`, and any
 `{{placeholder}}` the job did not fill — all of which are better as an error in
 the terminal than as a blank box on a document in front of a customer.
+
+**A receipt without `paidOn` is refused.** A receipt is a record that money
+*arrived*. Issuing one before it has is how a supplier ends up having
+acknowledged a payment it never received, with no claim left on the balance. The
+renderer will not produce one until you can name the date.
 
 ## If you change the layout
 
