@@ -45,7 +45,8 @@ which is why it is the only one tracked. **Do not put a real customer in
 | `journeyHeading` | Optional override, defaults to "The journey" |
 | `priceHeading` | Optional override. Defaults to "Price", or "Payment received" on a receipt |
 | `lines` | Array of `{desc, amount}`. A **negative** amount renders as a discount in champagne and the total is the sum |
-| `note` | `{title, body}` for the box at the bottom |
+| `deposit` | Optional number. When set, the default terms state the deposit and the balance exactly. Must be positive and less than the total |
+| `note` | `{title, body}` for the box at the bottom. **Overrides the default terms entirely** |
 | `filename` | Optional override for the output filename |
 
 Values are HTML, not plain text, so `&mdash;` and `&nbsp;` work — and an
@@ -119,11 +120,27 @@ are set out with your quote."* They were left off rather than invented. Add them
 to `note.body`, or as a row, once the operator has decided what they are — until
 then the quotation contradicts the website.
 
-**A quotation to a new customer should state the deposit in `note.body`.** The
-site now says a first booking is secured with one (`terms.html` section 3, and
-the FAQ on the homepage), so a quote that stays silent about it and then springs
-a deposit on acceptance contradicts the published terms. Astley Grange only
-worked out cleanly because they asked first.
+**The deposit is now in the default terms.** `note.body` used to default to an
+empty string, which meant a quotation raised without someone remembering to
+write a note carried no terms at all — no deposit, no settlement, nothing. It now
+defaults to real wording that matches `terms.html` section 3 and the homepage
+FAQ.
+
+Set `deposit` on the job and the figures are stated exactly:
+
+> A deposit of £125.00 secures the date, with the balance of £125.00 due before
+> travel.
+
+Leave it out and the wording covers both cases without committing to a number,
+the same way the site does:
+
+> If this is your first booking with us, a deposit secures the date and the
+> balance is due before travel. Otherwise the trip is settled before or on the
+> day.
+
+A `note` on the job still overrides all of it. **Prefer setting `deposit` over
+writing a custom note** — the arithmetic is then done for you and cannot
+disagree with the total.
 
 **VAT is not shown.** Passenger transport in a vehicle constructed to carry ten
 or more passengers is zero-rated, so a VAT-registered operator would want a line
