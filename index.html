@@ -524,10 +524,17 @@
             <span class="hint" style="color:var(--on-dark-3);">Optional, but it usually means a firmer price first time.</span>
           </div>
 
-          <!-- Spam trap. Real people never see this; bots fill everything. -->
+          <!-- Spam trap. Real people never see this; bots fill everything.
+               Deliberately NOT called "company", "organisation" or anything
+               else a browser's address autofill recognises. This field used
+               to be labelled Company, and Chrome filled it in for real
+               visitors: autocomplete="off" is ignored for profile fields,
+               and the trap is hidden by clipping rather than display:none
+               so that bots still see it. Autofilled visitors were then
+               treated as bots and their enquiry was thrown away. -->
           <div class="hp" aria-hidden="true">
-            <label for="q-company">Company</label>
-            <input id="q-company" type="text" tabindex="-1" autocomplete="off">
+            <label for="q-hp2">Do not fill this in</label>
+            <input id="q-hp2" type="text" tabindex="-1" autocomplete="off">
           </div>
 
           <div class="form-actions">
@@ -984,6 +991,11 @@ var REVIEWS = [
   var WA = '447581234042';
 
   function val(id) { return (document.getElementById(id).value || '').trim(); }
+
+  /* The spam trap, read in one place. It gates what we send to our own
+     server and nothing else: a false positive here is an enquiry we
+     never find out was made, which is far worse than a junk email. */
+  function trapped() { return !!val('q-hp2'); }
   function mark(f, bad) {
     f.classList.toggle('invalid', bad);
     /* A picker-backed field hides its native input behind a trigger
@@ -1126,7 +1138,6 @@ var REVIEWS = [
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     if (!validate()) return;
-    if (val('q-company')) { say('Thanks, we will be in touch.'); return; }
     var d = details();
 
     var lines = [
@@ -1158,13 +1169,20 @@ var REVIEWS = [
     d.route = 'whatsapp';
     d.subject = 'Minibus enquiry from ' + d.name + ' (via WhatsApp)';
     Object.keys(EXTRA).forEach(function (k) { d[k] = EXTRA[k]; });
-    logQuietly(d);
+    if (!trapped()) logQuietly(d);
   });
 
   if (emailBtn) emailBtn.addEventListener('click', function () {
-    /* Bots fill every field they find, including the hidden one. Say
-       nothing useful back to them. */
-    if (val('q-company')) { say('Thanks, we will be in touch.'); return; }
+    /* Bots fill every field they find, including the hidden one, so the
+       enquiry is not sent. But we tell them what we would tell anyone
+       whose send failed, rather than claiming success: a bot does not
+       read it, and a visitor who tripped the trap by accident is left
+       with a route that works instead of a false reassurance. */
+    if (trapped()) {
+      say('That did not send \u2014 please use the WhatsApp button, or email '
+        + 'bookings@buxtravel.co.uk directly.');
+      return;
+    }
     if (!validate()) return;
 
     var original = emailBtn.innerHTML;
