@@ -448,8 +448,9 @@
         <span class="eyebrow on-dark rev-in">Bookings &amp; quotes</span>
         <h2 class="rev-in">Tell us where you&rsquo;re going.</h2>
         <p class="lead rev-in" id="quoteLead">
-          Fill this in and it opens WhatsApp with the details ready to send. If you&rsquo;d rather
-          just type it yourself, message us directly.
+          Fill this in and it opens WhatsApp with the details ready to send. We price every
+          job on its own &mdash; distance, hours and the size of vehicle all move the figure
+          &mdash; and come back with one fixed price, usually within 30 minutes.
         </p>
       </div>
 
@@ -1008,11 +1009,27 @@ var REVIEWS = [
        2. Add the provider's SPF and DKIM records to buxtravel.co.uk, or
           anything sent as bookings@ lands in spam and the customer
           assumes we never replied. */
-  var FORM_ENDPOINT = '';
-  var EXTRA = {};
+  var FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+
+  /* Web3Forms access key. Get one free at web3forms.com: enter
+     bookings@buxtravel.co.uk and the key is emailed straight back.
+     Paste it between the quotes and the email route switches itself on.
+
+     Until a key is present the page behaves exactly as it did before —
+     the email button stays hidden and every enquiry goes by WhatsApp —
+     so a half-finished setup can never show a button that fails. */
+  var ACCESS_KEY = '';
+
+  var EXTRA = ACCESS_KEY
+    ? { access_key: ACCESS_KEY, from_name: 'Bux Travel website' }
+    : {};
+
+  /* Both routes ask this rather than testing FORM_ENDPOINT on its own,
+     so the endpoint and the key can never get out of step. */
+  function formReady() { return !!(FORM_ENDPOINT && ACCESS_KEY); }
 
   var emailBtn = document.getElementById('sendEmail');
-  if (emailBtn && FORM_ENDPOINT) {
+  if (emailBtn && formReady()) {
     emailBtn.hidden = false;
     /* The static copy describes the WhatsApp route only, which is the
        truth until an endpoint exists. Once it does, say so here too
@@ -1020,7 +1037,8 @@ var REVIEWS = [
     var lead = document.getElementById('quoteLead');
     if (lead) lead.textContent =
       'Fill this in once, then send it whichever way suits you — straight to WhatsApp, '
-      + 'or by email if you need it in writing. Either reaches the same person.';
+      + 'or by email if you need it in writing. Either reaches the same person, and you '
+      + 'will have one fixed price back, usually within 30 minutes.';
   }
 
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -1081,7 +1099,10 @@ var REVIEWS = [
       phone: val('q-phone'), email: val('q-email'),
       pickup: val('q-pickup'), dropoff: val('q-dropoff'),
       date: val('q-date'), time: val('q-time'),
-      passengers: val('q-pax'), journey: val('q-type'), notes: val('q-notes')
+      passengers: val('q-pax'), journey: val('q-type'), notes: val('q-notes'),
+      /* Sets the Reply-To on the notification, so hitting reply in the
+         inbox answers the customer rather than the form provider. */
+      replyto: val('q-email')
     };
   }
 
@@ -1092,7 +1113,7 @@ var REVIEWS = [
      even if the browser is backgrounded when the app takes over, which
      on a phone is the normal case rather than the exception. */
   function logQuietly(payload) {
-    if (!FORM_ENDPOINT) return;
+    if (!formReady()) return;
     try {
       fetch(FORM_ENDPOINT, {
         method: 'POST', keepalive: true,
@@ -1204,6 +1225,11 @@ var REVIEWS = [
     "addressLocality": "Bolton",
     "addressRegion": "Greater Manchester",
     "addressCountry": "GB"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 53.594591,
+    "longitude": -2.430168
   },
   "areaServed": [
     {
