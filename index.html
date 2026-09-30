@@ -716,10 +716,14 @@
 
 <script>
 /* =====================================================================
-   REVIEWS. Paste the nine reviews from the Google profile here, word
-   for word. Nothing else needs editing: the section renders itself,
-   counts what it finds, and keeps the placeholder state until a
-   review actually has text.
+   REVIEWS. Paste each review from the Google profile here, word for
+   word. Nothing else needs editing: the section renders itself, counts
+   what it finds, and keeps the placeholder state until a review
+   actually has text.
+
+   Do not write a count into these comments. Two of them already said
+   nine while TOTAL_REVIEWS said ten, because a number in prose goes
+   stale the moment someone adds a review and nothing checks it.
 
    Set RATING to the score Google shows. It is intentionally blank
    rather than guessed.
@@ -730,14 +734,21 @@ var RATING = 5.0;                  // the score Google shows
    reviews we reproduce; this is the total the profile shows. They were
    conflated until the totals diverged at ten. Update this whenever the
    profile total changes. */
-var TOTAL_REVIEWS = 10;
-/* Nine Google reviews. Seven carry written text and are reproduced
-   verbatim. Two are a star rating with no written review, so they
-   count toward the total but there is nothing to quote.
+var TOTAL_REVIEWS = 12;
+/* The reviews we reproduce. Some carry written text and are quoted
+   verbatim; the rest are a star rating with no written review, so they
+   belong in the array as a record but there is nothing to show. This
+   array is not the profile total — TOTAL_REVIEWS above is.
 
    The only change to any wording is Peter Barkow's paragraph break,
    joined into one line so it sets as a single quote. */
 var REVIEWS = [
+  { text: "The best in the game! Always punctual, have competitive prices and are very friendly. Have used on multiple occasions and they have never let me down.",
+    name: "Zahid Tapas", journey: "", stars: 5 },
+
+  { text: "Bux travel provided a friendly and professional service. Had a good chat and would happily use again, thank you.",
+    name: "Zed", journey: "", stars: 5 },
+
   { text: "We used Bux Travel to pick the bridal party up from a wedding and take us back to the hotel. We needed someone reliable so that we could guarantee we wouldn't be stranded in a field! Communication was excellent and when the bus arrived, they were happy to include some additional guests who hadn't been able to get a taxi. Great service. Thank you.",
     name: "Tiffany Brett", journey: "Wedding", stars: 5 },
 
