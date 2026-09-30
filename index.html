@@ -1105,17 +1105,54 @@ var REVIEWS = [
     return {
       ref: reference(),
       name: name,
-      /* The templates greet on a first name; the form asks for a full
-         one. Split here rather than asking the mail provider to do it. */
-      firstName: name.split(/\s+/)[0] || name,
       phone: val('q-phone'), email: val('q-email'),
       pickup: val('q-pickup'), dropoff: val('q-dropoff'),
       date: val('q-date'), time: val('q-time'),
-      passengers: val('q-pax'), journey: val('q-type'), notes: val('q-notes'),
-      /* Sets the Reply-To on the notification, so hitting reply in the
-         inbox answers the customer rather than the form provider. */
-      replyto: val('q-email')
+      passengers: val('q-pax'), journey: val('q-type'), notes: val('q-notes')
     };
+  }
+
+  /* The provider lists whatever fields it is given, using the field name
+     as the label, in the order they appear. So the notification is only
+     as readable as the object we hand it.
+
+     details() stays machine-shaped: it feeds the WhatsApp message and the
+     validator, where short lowercase keys are what the code wants. This
+     builds the other thing — what a person reads at five in the morning
+     on a phone, deciding whether they can take the job. Answer that in
+     the first four lines: when, where, how many. Who can wait.
+
+     Nothing internal goes in. access_key, subject, from_name and replyto
+     are added separately because the provider consumes those rather than
+     printing them. */
+  function notification(d, route) {
+    return {
+      'Pick-up': d.pickup,
+      'Going to': d.dropoff,
+      'When': readableDate(d.date) + ' at ' + d.time,
+      'Passengers': d.passengers,
+      'Trip type': d.journey,
+      'Name': d.name,
+      'Phone': d.phone,
+      'Email': d.email,
+      'Notes': d.notes || '\u2014',
+      'Reference': d.ref,
+      'Came in by': route === 'whatsapp' ? 'Website form, sent to WhatsApp' : 'Website form, sent by email'
+    };
+  }
+
+  /* 2026-11-20 is unreadable at a glance and ambiguous to anyone who
+     reads month-first. Anything that is not a plain ISO date is passed
+     through untouched rather than guessed at. */
+  function readableDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '';
+    var dt = new Date(+m[1], +m[2] - 1, +m[3]);
+    if (isNaN(dt.getTime())) return iso;
+    var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return days[dt.getDay()] + ' ' + (+m[3]) + ' ' + mons[+m[2] - 1] + ' ' + m[1];
   }
 
   /* Post the enquiry without waiting for it. Used by the WhatsApp route,
@@ -1166,10 +1203,11 @@ var REVIEWS = [
     /* Log it too, so an enquiry that dies at the handoff — WhatsApp not
        installed, the tab blocked, second thoughts — is still something
        we know happened rather than a lead that was never visible. */
-    d.route = 'whatsapp';
-    d.subject = 'Minibus enquiry from ' + d.name + ' (via WhatsApp)';
-    Object.keys(EXTRA).forEach(function (k) { d[k] = EXTRA[k]; });
-    if (!trapped()) logQuietly(d);
+    var note = notification(d, 'whatsapp');
+    note.subject = 'Minibus enquiry from ' + d.name + ' (via WhatsApp)';
+    note.replyto = d.email;
+    Object.keys(EXTRA).forEach(function (k) { note[k] = EXTRA[k]; });
+    if (!trapped()) logQuietly(note);
   });
 
   if (emailBtn) emailBtn.addEventListener('click', function () {
@@ -1190,9 +1228,10 @@ var REVIEWS = [
     emailBtn.textContent = 'Sending…';
     say('Sending your enquiry…');
 
-    var payload = details();
-    payload.route = 'email';
-    payload.subject = 'Minibus enquiry from ' + payload.name + ' (by email)';
+    var d = details();
+    var payload = notification(d, 'email');
+    payload.subject = 'Minibus enquiry from ' + d.name + ' (by email)';
+    payload.replyto = d.email;
     Object.keys(EXTRA).forEach(function (k) { payload[k] = EXTRA[k]; });
 
     fetch(FORM_ENDPOINT, {

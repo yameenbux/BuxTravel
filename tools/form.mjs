@@ -79,11 +79,20 @@ if (!trap) {
    to press send in the app — so there is nothing to protect there, and
    blocking it costs the enquiry. The trap gates the call to our own
    server and nothing else. */
-if (!/if \(!trapped\(\)\) logQuietly\(d\);/.test(html)) {
-  fail('spam trap wiring', 'logQuietly is not gated by trapped() — either the trap no longer '
-    + 'protects the inbox, or it is gating something else');
+/* Match the intent, not a line of source. An earlier version of this
+   check looked for one exact statement and went red on a variable
+   rename, which is how a checker teaches people to ignore it. What
+   matters is that every call is guarded, whatever the argument is
+   called: count the calls, count the guarded ones, compare. */
+const calls = (html.match(/(?<!function )\blogQuietly\(/g) || []).length;
+const guarded = (html.match(/if \(!trapped\(\)\) logQuietly\(/g) || []).length;
+if (!calls) {
+  fail('spam trap wiring', 'logQuietly is never called — the enquiry is no longer logged at all');
+} else if (guarded < calls) {
+  fail('spam trap wiring', `${calls} call(s) to logQuietly, only ${guarded} guarded by trapped() — `
+    + 'an unguarded call lets a bot reach the inbox');
 } else {
-  ok.push('trap gates logQuietly only');
+  ok.push(`trap gates all ${calls} logQuietly call(s)`);
 }
 
 const submitBody = (html.match(/form\.addEventListener\('submit'[\s\S]*?window\.open\(/) || [''])[0];
