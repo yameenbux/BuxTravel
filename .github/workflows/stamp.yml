@@ -68,6 +68,16 @@ jobs:
       - name: Check FAQ schema
         run: node tools/faq.mjs --check
 
+      # The booking form is the only place a stranger can reach us, and
+      # every way it can break is silent: the page looks right, the
+      # customer believes they got through, nothing arrives. A spam trap
+      # named "company" and a browser that autofills it cost us an
+      # unknown number of enquiries over several months before anyone
+      # noticed. Runs on push as well as on PRs, because a change made
+      # in the web editor never sees a pull request.
+      - name: Check quote form
+        run: node tools/form.mjs --check
+
       - name: Restamp
         if: github.event_name != 'pull_request'
         run: node tools/stamp.mjs
