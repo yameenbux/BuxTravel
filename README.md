@@ -36,7 +36,7 @@ defined anywhere on purpose. Archivo is loaded as a variable font
 (`wght@100..900`) because the nav animates its weight per letter — the static
 cuts cannot interpolate.
 
-WhatsApp number `447581234042` and email `bookings@buxtravel.co.uk` appear across
+WhatsApp number `447729247248` and email `bookings@buxtravel.co.uk` appear across
 all twenty pages. Find and replace in all of them if either changes.
 
 **Payment terms appear in four places and must agree:** the payment FAQ and the

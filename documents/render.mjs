@@ -135,7 +135,7 @@ function defaultNote() {
       'balance is due before travel. Otherwise the trip is settled before or on the day.';
 
   const accept = isQuote
-    ? ' To accept this quotation, reply to the email it came with or call 07581&nbsp;234042.'
+    ? ' To accept this quotation, reply to the email it came with or call 07729&nbsp;247248.'
     : '';
 
   return `${fixed} ${terms}${accept}`;
