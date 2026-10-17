@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
 
-<link rel="stylesheet" href="/assets/site.css?v=8507fe2d">
+<link rel="stylesheet" href="/assets/site.css?v=7037a128">
 <noscript>
   <style>.rev-in{opacity:1;transform:none}</style>
 </noscript>
@@ -115,48 +115,56 @@
       </div>
 
       <nav class="foot-col" aria-labelledby="foot-services">
-        <h4 id="foot-services">Services</h4>
-        <ul>
-          <li><a href="/airport-transfers.html">Airport transfers</a></li>
-          <li><a href="/school-college-transport.html">Schools &amp; colleges</a></li>
-          <li><a href="/weddings.html">Weddings</a></li>
-          <li><a href="/days-out-sports.html">Days out &amp; sport</a></li>
-          <li><a href="/corporate-minibus-hire-bolton.html">Corporate travel</a></li>
-          <li><a href="/wheelchair-accessible-minibus-hire-bolton.html">Wheelchair accessible</a></li>
-        </ul>
+        <details class="foot-acc" open>
+          <summary><h4 id="foot-services">Services</h4></summary>
+          <ul>
+            <li><a href="/airport-transfers.html">Airport transfers</a></li>
+            <li><a href="/school-college-transport.html">Schools &amp; colleges</a></li>
+            <li><a href="/weddings.html">Weddings</a></li>
+            <li><a href="/days-out-sports.html">Days out &amp; sport</a></li>
+            <li><a href="/corporate-minibus-hire-bolton.html">Corporate travel</a></li>
+            <li><a href="/wheelchair-accessible-minibus-hire-bolton.html">Wheelchair accessible</a></li>
+          </ul>
+        </details>
       </nav>
 
       <nav class="foot-col" aria-labelledby="foot-company">
-        <h4 id="foot-company">Company</h4>
-        <ul>
-          <li><a href="/about.html">About us</a></li>
-          <li><a href="/#fleet">The fleet</a></li>
-          <li><a href="/#coverage">Where we go</a></li>
-          <li><a href="/#reviews">Reviews</a></li>
-          <li><a href="/#faq">FAQs</a></li>
-          <li><a href="/#booking">Get a quote</a></li>
-        </ul>
+        <details class="foot-acc" open>
+          <summary><h4 id="foot-company">Company</h4></summary>
+          <ul>
+            <li><a href="/about.html">About us</a></li>
+            <li><a href="/#fleet">The fleet</a></li>
+            <li><a href="/#coverage">Where we go</a></li>
+            <li><a href="/#reviews">Reviews</a></li>
+            <li><a href="/#faq">FAQs</a></li>
+            <li><a href="/#booking">Get a quote</a></li>
+          </ul>
+        </details>
       </nav>
 
       <nav class="foot-col" aria-labelledby="foot-sizes">
-        <h4 id="foot-sizes">Minibus sizes</h4>
-        <ul>
-          <li><a href="/8-seater-minibus-hire-bolton.html">8 seater</a></li>
-          <li><a href="/12-seater-minibus-hire-bolton.html">12 seater</a></li>
-          <li><a href="/16-seater-minibus-hire-bolton.html">16 seater</a></li>
-        </ul>
+        <details class="foot-acc" open>
+          <summary><h4 id="foot-sizes">Minibus sizes</h4></summary>
+          <ul>
+            <li><a href="/8-seater-minibus-hire-bolton.html">8 seater</a></li>
+            <li><a href="/12-seater-minibus-hire-bolton.html">12 seater</a></li>
+            <li><a href="/16-seater-minibus-hire-bolton.html">16 seater</a></li>
+          </ul>
+        </details>
       </nav>
 
       <nav class="foot-col" aria-labelledby="foot-areas">
-        <h4 id="foot-areas">Areas</h4>
-        <ul>
-          <li><a href="/minibus-hire-bury.html">Bury</a></li>
-          <li><a href="/minibus-hire-horwich.html">Horwich</a></li>
-          <li><a href="/minibus-hire-westhoughton.html">Westhoughton</a></li>
-          <li><a href="/minibus-hire-farnworth.html">Farnworth</a></li>
-          <li><a href="/minibus-hire-manchester.html">Manchester</a></li>
-          <li><a href="/minibus-hire-liverpool.html">Liverpool</a></li>
-        </ul>
+        <details class="foot-acc" open>
+          <summary><h4 id="foot-areas">Areas</h4></summary>
+          <ul>
+            <li><a href="/minibus-hire-bury.html">Bury</a></li>
+            <li><a href="/minibus-hire-horwich.html">Horwich</a></li>
+            <li><a href="/minibus-hire-westhoughton.html">Westhoughton</a></li>
+            <li><a href="/minibus-hire-farnworth.html">Farnworth</a></li>
+            <li><a href="/minibus-hire-manchester.html">Manchester</a></li>
+            <li><a href="/minibus-hire-liverpool.html">Liverpool</a></li>
+          </ul>
+        </details>
       </nav>
 
 
@@ -184,6 +192,22 @@
     document.querySelectorAll("[data-year]").forEach(function (el) {
       el.textContent = new Date().getFullYear();
     });
+
+    /* The footer's link columns are authored <details open>, so they work
+       with JavaScript off and crawlers see them expanded. They are closed
+       only on a narrow screen, where four stacked lists ran to more than
+       a screen on their own. matchMedia fires on crossing the breakpoint,
+       not on every resize, so a column the reader opened stays open. */
+    (function () {
+      var narrow = window.matchMedia("(max-width: 560px)");
+      var cols = document.querySelectorAll(".foot-acc");
+      function sync(mq) {
+        for (var i = 0; i < cols.length; i++) { cols[i].open = !mq.matches; }
+      }
+      sync(narrow);
+      if (narrow.addEventListener) { narrow.addEventListener("change", sync); }
+      else if (narrow.addListener) { narrow.addListener(sync); }
+    })();
   </script>
 </footer>
 

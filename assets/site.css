@@ -995,6 +995,60 @@
     text-transform: uppercase; color: var(--champ);
   }
   .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+
+  /* ---- Footer link columns, phone ----
+     Four stacked lists ran to 1,367px on a 390px screen, which put a
+     second screenful of footer under the first and read, fairly, as two
+     footers. Phones get collapsed rows instead.
+
+     <details> does this natively: no ARIA, keyboard and screen reader
+     behaviour for free, and every link stays in the DOM for crawlers.
+     The elements are authored open, so desktop needs no script and a
+     phone without JavaScript still shows every link. */
+  .foot-acc > summary { list-style: none; }
+  .foot-acc > summary::-webkit-details-marker { display: none; }
+
+  /* Above the breakpoint the summary is a heading, not a control. */
+  @media (min-width: 561px) {
+    .foot-acc > summary { cursor: default; pointer-events: none; }
+  }
+
+  @media (max-width: 560px) {
+    .foot-acc > summary {
+      position: relative; display: block; cursor: pointer;
+      margin: 0; padding: 15px 34px 15px 0;
+      border-bottom: 1px solid var(--line-dark);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .foot-acc > summary h4 { margin: 0; }
+    /* The +/- is two drawn bars rather than a glyph, so it stays optically
+       centred and the vertical one can rotate away into a minus. */
+    .foot-acc > summary::before,
+    .foot-acc > summary::after {
+      content: ""; position: absolute; right: 3px; top: 50%;
+      width: 13px; height: 1.5px; border-radius: 1px; background: var(--champ);
+      transition: transform var(--d-2) var(--ease);
+    }
+    .foot-acc > summary::after  { transform: translateY(-50%); }
+    .foot-acc > summary::before { transform: translateY(-50%) rotate(90deg); }
+    .foot-acc[open] > summary::before { transform: translateY(-50%) rotate(0deg); }
+    .foot-acc > ul { padding: 12px 0 16px; }
+
+    /* The sticky header carries this same lockup roughly 100px above, so
+       on a phone the footer's copy of it is pure repetition. */
+    .foot-brand > .brand { display: none; }
+
+    /* The rows carry their own hairlines, so the grid's gap and its
+       closing border would both double up: a 30px void between rules and
+       two lines under AREAS. The rows stack flush instead and the last
+       one's border closes the block. */
+    .foot-grid { gap: 0; padding-bottom: 0; border-bottom: none; }
+    .foot-brand { margin-bottom: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .foot-acc > summary::before, .foot-acc > summary::after { transition: none; }
+  }
+
   .foot-col a {
     position: relative; display: inline-block;
     color: var(--on-dark-2); text-decoration: none; font-size: var(--t-sm);
