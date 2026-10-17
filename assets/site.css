@@ -1009,6 +1009,25 @@
     transition: transform var(--d-3) var(--ease);
   }
 
+  /* Third-party listing badge. It is a cream card served from another
+     origin, so it gets its own row rather than being dropped into the
+     .foot-bot text line, where a 80px box would wreck that row's rhythm.
+
+     width/height are set on the <img> element too. The file is fetched
+     cross-origin on every page, and without an intrinsic box reserved up
+     front a slow response reflows the legal line underneath it. The CSS
+     then lets it shrink on a narrow phone rather than overflow. */
+  .foot-vouched { padding-top: 30px; }
+  .foot-vouched[hidden] { display: none; }
+  .foot-vouched a {
+    display: inline-block; border-radius: 14px; line-height: 0;
+    transition: transform var(--d-2) var(--ease);
+  }
+  .foot-vouched img { display: block; width: 240px; max-width: 100%; height: auto; }
+  @media (hover: hover) and (pointer: fine) {
+    .foot-vouched a:hover { transform: translateY(-2px); }
+  }
+
   .foot-bot {
     padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 28px;
     align-items: center; justify-content: space-between; font-size: var(--t-xs);
