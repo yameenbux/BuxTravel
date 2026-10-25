@@ -1157,6 +1157,49 @@
   }
   @keyframes heroPar  { from { transform: scale(1.08) translateY(-2%); } to { transform: scale(1.08) translateY(6%); } }
 
+  /* ---------------- Hero entrance ----------------
+     The hero is above the fold, so it does not wait for the observer:
+     the sequence runs from CSS on load. Two things fall out of that.
+     The headline no longer needs JavaScript to become visible, and the
+     timing can be written as a timeline instead of the uniform 70ms
+     stagger reveal.js applies to everything else.
+
+     Weight is carried by duration and travel, not by effects. The
+     headline rises furthest and slowest because it is the thing being
+     read; the chips arrive last, one at a time, because they are the
+     reassurance you notice after the claim.
+
+     Only opacity and transform animate. Both are composited, so the
+     whole sequence stays off the main thread and costs the LCP nothing.
+
+     fill-mode is backwards, not both, on purpose. Backwards applies the
+     hidden start state only while an animation is actually pending, so
+     if animations are disabled by something other than the reduced
+     motion query the hero simply renders normally rather than staying
+     invisible. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-copy > .eyebrow,
+    .hero-copy > h1,
+    .hero-copy > .lead-hero,
+    .hero-copy > .hero-cta,
+    .hero-copy > .hero-chips > .chip {
+      animation: heroRise var(--hero-dur, 520ms) var(--ease) backwards;
+      animation-delay: var(--hero-in, 0ms);
+    }
+    .hero-copy > .eyebrow   { --hero-dur: 420ms; --hero-in:  60ms; --hero-lift: 10px; }
+    .hero-copy > h1         { --hero-dur: 680ms; --hero-in: 150ms; --hero-lift: 26px; }
+    .hero-copy > .lead-hero { --hero-dur: 540ms; --hero-in: 310ms; --hero-lift: 18px; }
+    .hero-copy > .hero-cta  { --hero-dur: 500ms; --hero-in: 430ms; --hero-lift: 16px; }
+    .hero-copy > .hero-chips > .chip { --hero-dur: 440ms; --hero-lift: 12px; }
+    .hero-copy > .hero-chips > .chip:nth-child(1) { --hero-in: 560ms; }
+    .hero-copy > .hero-chips > .chip:nth-child(2) { --hero-in: 640ms; }
+    .hero-copy > .hero-chips > .chip:nth-child(3) { --hero-in: 720ms; }
+  }
+  @keyframes heroRise {
+    from { opacity: 0; transform: translate3d(0, var(--hero-lift, 14px), 0); }
+    to   { opacity: 1; transform: none; }
+  }
+
   /* The rail dimmed whichever row was not centred, which made sense when
      the sizes were stacked and read one at a time. Four cards side by side
      are all on screen at once, so dimming three of them just made three
