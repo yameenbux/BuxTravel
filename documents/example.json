@@ -1,8 +1,8 @@
 {
-  "_comment": "Fictional worked example. Copy this into documents/jobs/ (gitignored) and edit — never put a real customer's details in this file, the repository is public.",
+  "_comment": "Fictional worked example. Copy this into documents/jobs/ (gitignored) and edit — never put a real customer's details in this file, the repository is public. A real job leaves the ref field out and the next number is assigned from documents/counters.json \u2014 the non-numeric ref here stops this example from consuming one.",
 
   "type": "quotation",
-  "ref": "BX-Q-01011234",
+  "ref": "BX-QUO-EXAMPLE",
   "issued": "1 January 2026",
   "validUntil": "15 January 2026",
 
