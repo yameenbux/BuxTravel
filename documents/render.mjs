@@ -28,13 +28,14 @@
    address. documents/example.json is fictional and is tracked.
    ====================================================================== */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync, readdirSync } from 'fs';
 import { join, dirname, resolve, basename } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { createRequire } from 'module';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = join(ROOT, 'documents');
+const JOBS = join(DOCS, 'jobs');
 
 let chromium;
 try {
@@ -58,7 +59,7 @@ const job = JSON.parse(readFileSync(resolve(jobPath), 'utf8'));
    quote with no journey on it is not a quote. A receipt does not carry
    them: it acknowledges money, and the customer already has the
    booking details on the quotation. */
-const need = ['type', 'ref', 'issued', 'customer', 'lines',
+const need = ['type', 'issued', 'customer', 'lines',
               ...(job.type === 'receipt' ? [] : ['journey', 'includes'])];
 const missing = need.filter((k) => job[k] === undefined);
 if (missing.length) { console.error('FAIL: job file is missing: ' + missing.join(', ')); process.exit(1); }
@@ -74,6 +75,98 @@ if (job.type === 'receipt' && !job.paidOn) {
   console.error('Do not issue a receipt before the payment has landed.');
   process.exit(1);
 }
+
+/* ---- the reference number ---------------------------------------------
+   Numbers come from documents/counters.json, which holds the last number
+   issued for each type and nothing else -- no names, no addresses, no
+   amounts -- so it is safe in a public repository.
+
+   OMIT "ref" FROM THE JOB FILE. The next number is then assigned and written
+   back into the job file, and re-rendering reuses it. A number is spent once,
+   when the document is first created, not every time it is rendered: fixing a
+   typo must not silently renumber an invoice the customer already has.
+
+   Write "ref" by hand and it is kept, but the counter is moved up to it so the
+   same number cannot be handed out again later.
+
+   {{ref}} anywhere in the job file is replaced with the reference at render
+   time -- use it for the bank transfer reference in the note, so that can
+   never drift away from the number printed at the top of the page.
+
+   The job files in documents/jobs/ are read as a second opinion and the
+   counter is never allowed below the highest number already sitting in one.
+   counters.json is tracked, so it should never go missing -- but if it ever
+   did, the numbering would otherwise restart at 0001 and quietly put a used
+   number on a new invoice, which is the one thing this is here to prevent.
+   ---------------------------------------------------------------------- */
+const PREFIX = { quotation: 'BX-QUO', invoice: 'BX-INV', receipt: 'BX-REC' };
+const COUNTERS = join(DOCS, 'counters.json');
+const counters = { quotation: 0, invoice: 0, receipt: 0 };
+
+if (existsSync(COUNTERS)) {
+  let raw;
+  try { raw = JSON.parse(readFileSync(COUNTERS, 'utf8')); }
+  catch (e) {
+    console.error(`FAIL: documents/counters.json is not valid JSON \u2014 ${e.message}`);
+    console.error('Repair it by hand; do not delete it. It is the only record of which');
+    console.error('numbers have been used, and starting again from zero would put the');
+    console.error('same number on two different documents.');
+    process.exit(1);
+  }
+  for (const t of Object.keys(counters)) {
+    if (raw[t] === undefined) continue;
+    if (!Number.isInteger(raw[t]) || raw[t] < 0) {
+      console.error(`FAIL: counters.json "${t}" must be a whole number \u2014 got ${JSON.stringify(raw[t])}.`);
+      process.exit(1);
+    }
+    counters[t] = raw[t];
+  }
+}
+
+let countersChanged = false;
+let issued = false;
+
+/* The floor: the highest number already written into a job file. A job file
+   that will not parse is skipped rather than fatal -- one broken job must not
+   block an unrelated document from being rendered. */
+for (const f of existsSync(JOBS) ? readdirSync(JOBS) : []) {
+  if (!f.endsWith('.json')) continue;
+  let other;
+  try { other = JSON.parse(readFileSync(join(JOBS, f), 'utf8')); } catch { continue; }
+  const t = other?.type;
+  if (!PREFIX[t]) continue;
+  const seq = new RegExp(`^${PREFIX[t]}-(\\d+)$`).exec(String(other.ref ?? ''));
+  if (seq && +seq[1] > counters[t]) { counters[t] = +seq[1]; countersChanged = true; }
+}
+
+if (job.ref === undefined || String(job.ref).trim() === '') {
+  counters[job.type] += 1;
+  job.ref = `${PREFIX[job.type]}-${String(counters[job.type]).padStart(4, '0')}`;
+  countersChanged = issued = true;
+  console.log(`  assigned ${job.ref}`);
+} else {
+  const seq = new RegExp(`^${PREFIX[job.type]}-(\\d+)$`).exec(String(job.ref));
+  if (seq && +seq[1] > counters[job.type]) { counters[job.type] = +seq[1]; countersChanged = true; }
+}
+
+/* The counter is saved BEFORE the job file and before anything renders. If this
+   run dies later the number is spent and the sequence skips one. A gap is
+   harmless; the same number on two documents is not. */
+if (countersChanged) writeFileSync(COUNTERS, JSON.stringify(counters, null, 2) + '\n');
+if (issued) {
+  writeFileSync(resolve(jobPath),
+    JSON.stringify({ type: job.type, ref: job.ref, ...job }, null, 2) + '\n');
+}
+
+/* {{ref}} resolved for this render only -- the job file on disk keeps the
+   placeholder, so the reference follows the job if it is ever renumbered. */
+const refSubst = (v) =>
+  typeof v === 'string' ? v.replaceAll('{{ref}}', job.ref)
+  : Array.isArray(v) ? v.map(refSubst)
+  : v && typeof v === 'object'
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, refSubst(x)]))
+  : v;
+for (const k of Object.keys(job)) if (k !== 'ref') job[k] = refSubst(job[k]);
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const money = (n) => (n < 0 ? '&minus;£' : '£') + Math.abs(n).toFixed(2);
@@ -147,6 +240,34 @@ if (job.deposit !== undefined && job.deposit >= total) {
   process.exit(1);
 }
 
+/* ---- the review ask ----------------------------------------------------
+   Opt in per job with "review": true. It is NOT automatic on every receipt,
+   because a deposit receipt is issued before the journey and asking someone
+   to rate a trip they have not taken yet reads badly.
+
+   Both the QR and the surrounding link point at buxtravel.co.uk/review, our
+   own page, not at Google. The page forwards to the Google review form, so
+   the Google link can be reissued without reprinting a single QR code -- and
+   the same code is already on the printed cards.
+
+   The whole box is one <a>, which Chromium turns into a link annotation in
+   the PDF. That matters more than the QR: a customer reading this on the
+   phone it was sent to cannot scan a code on that same screen, but they can
+   tap it or hold it down. The QR is for a printed copy or a second handset. */
+const REVIEW_URL = 'https://www.buxtravel.co.uk/review';
+const reviewBlock = job.review
+  ? `<a class="rev" href="${REVIEW_URL}">\n`
+    + `  <img class="qr" src="${pathToFileURL(join(ROOT, 'assets', 'review-qr.png')).href}" alt="">\n`
+    + '  <span class="txt">\n'
+    + '    <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>\n'
+    + `    <b>${esc(job.reviewTitle ?? 'How did we do?')}</b>\n`
+    + `    <p>${job.reviewBody ?? 'If the driver got you there on time, a line on Google '
+         + 'helps other people in Bolton decide whether to trust us. It takes about thirty seconds.'}</p>\n`
+    + '    <span class="go">buxtravel.co.uk/review &rarr;</span>\n'
+    + '  </span>\n'
+    + '</a>'
+  : '';
+
 const fill = {
   type: isQuote ? 'QUOTATION' : isReceipt ? 'RECEIPT' : 'INVOICE',
   subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.'
@@ -161,7 +282,7 @@ const fill = {
   noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
   noteBody: job.note?.body ?? defaultNote(),
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
-  metaRows, journeyBlock, includesBlock, priceRows,
+  metaRows, journeyBlock, includesBlock, priceRows, reviewBlock,
 };
 
 let html = readFileSync(join(DOCS, 'template.html'), 'utf8');

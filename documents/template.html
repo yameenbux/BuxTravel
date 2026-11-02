@@ -73,6 +73,24 @@
           padding: 3.5mm 4.5mm; font-size: 9pt; border-radius: 0 2mm 2mm 0; }
   .note b { display: block; margin-bottom: 1mm; }
 
+  /* The review ask. Two ways in, deliberately: the customer reading this on
+     the phone it was sent to cannot scan a code on that same screen, so the
+     whole block is a link they can tap or long-press, and the QR is there for
+     when the receipt is printed or shown on another handset. Both point at
+     buxtravel.co.uk/review rather than at Google, so the Google link can be
+     reissued without reprinting anything. */
+  .rev { margin-top: 6mm; border: 0.3mm solid #E2E2DE; border-radius: 2mm;
+         padding: 4.5mm 5mm; display: flex; align-items: center; gap: 5mm;
+         text-decoration: none; color: inherit; }
+  .rev .qr { width: 23mm; height: 23mm; flex: none; display: block; }
+  .rev .txt { flex: 1; }
+  .rev .stars { color: #C9B79A; font-size: 4.2mm; letter-spacing: 0.9mm;
+                line-height: 1; margin-bottom: 1.6mm; }
+  .rev b { display: block; font-size: 9.5pt; margin-bottom: 1mm; }
+  .rev p { margin: 0; font-size: 8pt; color: #5A6068; line-height: 1.5; }
+  .rev .go { display: inline-block; margin-top: 2mm; font-size: 8.5pt;
+             font-weight: 600; color: #8A7346; }
+
   footer { margin-top: auto; padding: 6mm 16mm 7mm; font-size: 7.5pt;
            color: #5A6068; line-height: 1.6; flex: 0 0 auto; }
   footer .line { height: 1px; background: #E2E2DE; margin-bottom: 4mm; }
@@ -117,7 +135,7 @@
     <table class="money">{{priceRows}}</table>
 
     <div class="note"><b>{{noteTitle}}</b>{{noteBody}}</div>
-
+{{reviewBlock}}
   </div>
 
   <footer>

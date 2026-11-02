@@ -32,7 +32,7 @@ which is why it is the only one tracked. **Do not put a real customer in
 | Field | |
 |---|---|
 | `type` | `"quotation"`, `"invoice"` or `"receipt"` — switches the title, the party label, the totals line ("Total payable" / "Amount due" / "Amount received"), the includes heading and which date is shown |
-| `ref` | Your reference. Quotes follow the site's own scheme, `BX-Q-<ddmm><4 digits>` |
+| `ref` | **Leave it out.** The next number is assigned from `counters.json` and written back into the job file — see [Reference numbers](#reference-numbers) |
 | `issued` | Date on the document |
 | `validUntil` | Quotations only — a quote with no expiry is an open-ended offer |
 | `dueDate` | Invoices only |
@@ -47,12 +47,97 @@ which is why it is the only one tracked. **Do not put a real customer in
 | `lines` | Array of `{desc, amount}`. A **negative** amount renders as a discount in champagne and the total is the sum |
 | `deposit` | Optional number. When set, the default terms state the deposit and the balance exactly. Must be positive and less than the total |
 | `note` | `{title, body}` for the box at the bottom. **Overrides the default terms entirely** |
-| `filename` | Optional override for the output filename |
+| `review` | `true` adds the review ask with the QR code. **Off by default** — see [Asking for a review](#asking-for-a-review) |
+| `reviewTitle` | Optional override, defaults to "How did we do?" |
+| `reviewBody` | Optional override for the sentence under it |
+| `filename` | Optional override. Defaults to `Bux-Travel-<Type>-<ref>.pdf`, which is usually what you want — an override has to be kept in step with the ref by hand |
 
 Values are HTML, not plain text, so `&mdash;` and `&nbsp;` work — and an
 ampersand in a customer's name must be written `&amp;`. Names and addresses are
 escaped for you; the journey, includes, lines and note are not, because they need
 the markup.
+
+One exception: `dueDate` **is** escaped, along with the other fields in the block
+at the top right. Write `£50 deposit on booking` there, not `&pound;50` — an
+entity comes out on the page as the literal text `&pound;50`.
+
+## Reference numbers
+
+`documents/counters.json` holds the last number issued for each type:
+
+```json
+{ "quotation": 0, "invoice": 2, "receipt": 0 }
+```
+
+It is tracked, because it is the only record of which numbers have been used.
+It holds nothing else — no names, no addresses, no amounts — so it is safe in a
+public repository.
+
+**Omit `ref` from a job file.** The renderer takes the next number, prints what
+it assigned, and writes it back into the job file:
+
+```
+  assigned BX-INV-0003
+```
+
+Re-rendering then reuses it. A number is spent once, when the document is first
+created — not every time it renders. That is the point: correcting a typo must
+not silently renumber an invoice the customer already has in their inbox.
+
+Prefixes are `BX-QUO`, `BX-INV` and `BX-REC`, each counting separately. Write a
+`ref` by hand and it is kept, but the counter moves up to it so the same number
+cannot be handed out again later.
+
+### Keeping the bank reference in step
+
+`{{ref}}` anywhere in a job file is replaced with the reference when the document
+renders, while the job file on disk keeps the placeholder:
+
+```json
+"body": "… Reference <strong>{{ref}}</strong>"
+```
+
+Use it for the bank transfer reference. Typed by hand it is one more thing to
+remember to change, and a payment arriving under last invoice's reference is
+genuinely hard to chase.
+
+## Asking for a review
+
+Set `"review": true` and a box appears under the note with a QR code, five
+stars and a tappable link.
+
+**It is off by default, and should stay off on a deposit receipt.** A deposit
+is taken before the journey; asking someone to rate a trip they have not been
+on yet reads badly and is the sort of thing a customer remembers. Turn it on
+for the receipt you issue once they are home.
+
+### Why there is a link as well as a code
+
+A customer reading the receipt on the phone it was sent to **cannot scan a QR
+code on that same screen.** The whole box is therefore one link, which Chromium
+turns into a real annotation in the PDF, so it can be tapped or held down. The
+QR is for the case where the receipt has been printed or is being shown on
+somebody else's handset. Neither is a substitute for the other.
+
+### Why it points at our own site
+
+The QR and the link both go to `buxtravel.co.uk/review`, not to Google. That
+page forwards to the Google review form. So if the Google link is ever
+reissued, only `review.html` changes — no QR is reprinted, and the review
+cards already sitting in the vehicle keep working. `assets/review-qr.png` is
+the same code that is on those printed cards.
+
+### If it goes wrong
+
+A `counters.json` that will not parse is a **hard failure**, not something the
+renderer works around. Repair it; do not delete it. Falling back to zero would
+put a used number on a new document, which is the one outcome worth failing a
+build over.
+
+As a second line of defence the renderer also reads the refs already in
+`documents/jobs/` and never drops the counter below the highest it finds, so a
+deleted `counters.json` does not restart the sequence at `0001`. That only helps
+while those job files are still around — keep them.
 
 ## The guard, and why it is there
 
