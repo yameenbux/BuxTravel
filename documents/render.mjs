@@ -240,6 +240,34 @@ if (job.deposit !== undefined && job.deposit >= total) {
   process.exit(1);
 }
 
+/* ---- the review ask ----------------------------------------------------
+   Opt in per job with "review": true. It is NOT automatic on every receipt,
+   because a deposit receipt is issued before the journey and asking someone
+   to rate a trip they have not taken yet reads badly.
+
+   Both the QR and the surrounding link point at buxtravel.co.uk/review, our
+   own page, not at Google. The page forwards to the Google review form, so
+   the Google link can be reissued without reprinting a single QR code -- and
+   the same code is already on the printed cards.
+
+   The whole box is one <a>, which Chromium turns into a link annotation in
+   the PDF. That matters more than the QR: a customer reading this on the
+   phone it was sent to cannot scan a code on that same screen, but they can
+   tap it or hold it down. The QR is for a printed copy or a second handset. */
+const REVIEW_URL = 'https://www.buxtravel.co.uk/review';
+const reviewBlock = job.review
+  ? `<a class="rev" href="${REVIEW_URL}">\n`
+    + `  <img class="qr" src="${pathToFileURL(join(ROOT, 'assets', 'review-qr.png')).href}" alt="">\n`
+    + '  <span class="txt">\n'
+    + '    <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>\n'
+    + `    <b>${esc(job.reviewTitle ?? 'How did we do?')}</b>\n`
+    + `    <p>${job.reviewBody ?? 'If the driver got you there on time, a line on Google '
+         + 'helps other people in Bolton decide whether to trust us. It takes about thirty seconds.'}</p>\n`
+    + '    <span class="go">buxtravel.co.uk/review &rarr;</span>\n'
+    + '  </span>\n'
+    + '</a>'
+  : '';
+
 const fill = {
   type: isQuote ? 'QUOTATION' : isReceipt ? 'RECEIPT' : 'INVOICE',
   subtitle: job.subtitle ?? (isQuote ? 'This is a quotation, not a request for payment.'
@@ -254,7 +282,7 @@ const fill = {
   noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
   noteBody: job.note?.body ?? defaultNote(),
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
-  metaRows, journeyBlock, includesBlock, priceRows,
+  metaRows, journeyBlock, includesBlock, priceRows, reviewBlock,
 };
 
 let html = readFileSync(join(DOCS, 'template.html'), 'utf8');

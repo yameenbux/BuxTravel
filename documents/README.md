@@ -47,6 +47,9 @@ which is why it is the only one tracked. **Do not put a real customer in
 | `lines` | Array of `{desc, amount}`. A **negative** amount renders as a discount in champagne and the total is the sum |
 | `deposit` | Optional number. When set, the default terms state the deposit and the balance exactly. Must be positive and less than the total |
 | `note` | `{title, body}` for the box at the bottom. **Overrides the default terms entirely** |
+| `review` | `true` adds the review ask with the QR code. **Off by default** — see [Asking for a review](#asking-for-a-review) |
+| `reviewTitle` | Optional override, defaults to "How did we do?" |
+| `reviewBody` | Optional override for the sentence under it |
 | `filename` | Optional override. Defaults to `Bux-Travel-<Type>-<ref>.pdf`, which is usually what you want — an override has to be kept in step with the ref by hand |
 
 Values are HTML, not plain text, so `&mdash;` and `&nbsp;` work — and an
@@ -97,6 +100,32 @@ renders, while the job file on disk keeps the placeholder:
 Use it for the bank transfer reference. Typed by hand it is one more thing to
 remember to change, and a payment arriving under last invoice's reference is
 genuinely hard to chase.
+
+## Asking for a review
+
+Set `"review": true` and a box appears under the note with a QR code, five
+stars and a tappable link.
+
+**It is off by default, and should stay off on a deposit receipt.** A deposit
+is taken before the journey; asking someone to rate a trip they have not been
+on yet reads badly and is the sort of thing a customer remembers. Turn it on
+for the receipt you issue once they are home.
+
+### Why there is a link as well as a code
+
+A customer reading the receipt on the phone it was sent to **cannot scan a QR
+code on that same screen.** The whole box is therefore one link, which Chromium
+turns into a real annotation in the PDF, so it can be tapped or held down. The
+QR is for the case where the receipt has been printed or is being shown on
+somebody else's handset. Neither is a substitute for the other.
+
+### Why it points at our own site
+
+The QR and the link both go to `buxtravel.co.uk/review`, not to Google. That
+page forwards to the Google review form. So if the Google link is ever
+reissued, only `review.html` changes — no QR is reprinted, and the review
+cards already sitting in the vehicle keep working. `assets/review-qr.png` is
+the same code that is on those printed cards.
 
 ### If it goes wrong
 
