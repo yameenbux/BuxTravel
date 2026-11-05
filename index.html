@@ -768,14 +768,19 @@ var RATING = 5.0;                  // the score Google shows
    reviews we reproduce; this is the total the profile shows. They were
    conflated until the totals diverged at ten. Update this whenever the
    profile total changes. */
-var TOTAL_REVIEWS = 12;
+var TOTAL_REVIEWS = 13;
 /* The reviews we reproduce. Some carry written text and are quoted
    verbatim; the rest are a star rating with no written review, so they
    belong in the array as a record but there is nothing to show. This
    array is not the profile total — TOTAL_REVIEWS above is.
 
-   The only change to any wording is Peter Barkow's paragraph break,
-   joined into one line so it sets as a single quote. */
+   Two changes to wording, both typographical and both listed here so
+   nobody has to diff against Google to find them:
+     - Peter Barkow's paragraph break, joined into one line so it sets
+       as a single quote.
+     - A stray double quote mid-sentence in M M's review, after
+       "excellent.", dropped. It reads as a site bug rather than as the
+       reviewer's own punctuation. Nothing else in that review is altered. */
 var REVIEWS = [
   { text: "The best in the game! Always punctual, have competitive prices and are very friendly. Have used on multiple occasions and they have never let me down.",
     name: "Zahid Tapas", journey: "", stars: 5 },
@@ -803,6 +808,12 @@ var REVIEWS = [
 
   { text: "Mr Bux was amazing driver very safe and got me to where i needed to be. Well organised and on time. Would recommend",
     name: "Ethan Wood", journey: "", stars: 5 },
+
+  { text: "My go-to every time! Great service and always on time. Would definitely recommend!",
+    name: "Javeed Mitha", journey: "", stars: 5 },
+
+  { text: "Fantastic service from start to finish! We booked a minibus for a group trip, and the entire experience was flawless. The booking process was incredibly easy, and the communication leading up to our trip was excellent. The vehicle arrived right on time and was absolutely spotless, spacious, and very comfortable for our whole group. Our driver was professional, polite, and navigated the traffic perfectly, making us feel completely safe throughout the journey. It took all the stress out of our group travel. I highly recommend them and will definitely be booking again for our next outing!",
+    name: "M M", journey: "Group trip", stars: 5 },
 
   /* Star rating only, no written review. Counted, not quoted. */
   { text: "", name: "Zebunnisha Bux", journey: "", stars: 5 },
