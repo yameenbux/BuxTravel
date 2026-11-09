@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=dcce4ac4">
+<link rel="stylesheet" href="/assets/site.css?v=97a2c103">
 <noscript>
   <!-- Scroll-entry elements start at opacity 0 and are revealed by
        script. With script off, nothing would ever reveal them, so the
@@ -437,6 +437,10 @@
            target="_blank" rel="noopener">Read all reviews on Google</a>
       </div>
 
+      <!-- One pinned review, set with "featured": true in REVIEWS below.
+           It is lifted out of the scrolling wall so it is not shown twice. -->
+      <div class="rev-in" id="revFeature"></div>
+
       <div class="rev-in" id="revSlot"></div>
     </div>
   </section>
@@ -819,7 +823,7 @@ var REVIEWS = [
     name: "Farid Patel", journey: "", stars: 5 },
 
   { text: "Wonderful service, even gave us a discount due to the home raising the funds to use the minibus. Helped support our residents and very flexible with times. I would 100% use again!",
-    name: "Sophie Rice", journey: "Care home trip", stars: 5 },
+    name: "Sophie Rice", journey: "Care home trip", stars: 5, featured: true },
 
   /* Star rating only, no written review. Counted, not quoted. */
   { text: "", name: "Zebunnisha Bux", journey: "", stars: 5 },
@@ -830,6 +834,18 @@ var REVIEWS = [
   var slot = document.getElementById('revSlot');
   if (!slot) return;
   var filled = REVIEWS.filter(function (r) { return r.text && r.text.trim(); });
+
+  /* One review can be pinned as a standing pull quote: set "featured": true
+     on it. It is then removed from the scrolling wall, because a review that
+     appears in both places reads as a glitch rather than as emphasis. Pin at
+     most one; the first is used and any others stay in the wall. */
+  var featured = null;
+  for (var fi = 0; fi < filled.length; fi++) {
+    if (filled[fi].featured) { featured = filled[fi]; break; }
+  }
+  if (featured) {
+    filled = filled.filter(function (r) { return r !== featured; });
+  }
 
   var score = document.getElementById('score');
   if (score) score.textContent = RATING == null ? '\u2014' : Number(RATING).toFixed(1);
@@ -885,6 +901,39 @@ var REVIEWS = [
     li.appendChild(quote);
     return li;
   }
+
+  function renderFeature(r) {
+    var host = document.getElementById('revFeature');
+    if (!host) return;
+    var fig = document.createElement('figure');
+    fig.className = 'rev-feature';
+
+    var quote = document.createElement('blockquote');
+    var p = document.createElement('p');
+    p.textContent = '\u201C' + r.text.trim() + '\u201D';
+    quote.appendChild(p);
+
+    var cap = document.createElement('figcaption');
+    var mono = document.createElement('span');
+    mono.className = 'rev-mono';
+    mono.setAttribute('aria-hidden', 'true');
+    mono.textContent = initials(r.name);
+
+    var who = document.createElement('div');
+    who.className = 'rev-who';
+    var cite = document.createElement('cite');
+    cite.textContent = r.name;
+    var role = document.createElement('span');
+    role.className = 'rev-role';
+    role.textContent = r.journey || 'Google review';
+    who.appendChild(cite); who.appendChild(role);
+
+    cap.appendChild(mono); cap.appendChild(who);
+    fig.appendChild(quote); fig.appendChild(cap);
+    host.appendChild(fig);
+  }
+
+  if (featured) { renderFeature(featured); }
 
   /* Round-robin, so the columns stay close in height whatever the review
      count is. Three columns; CSS collapses to two and then one. */
