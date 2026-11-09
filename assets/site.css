@@ -1672,6 +1672,28 @@
   .rev-wall:hover .rev-col ul,
   .rev-wall:focus-within .rev-col ul { animation-play-state: paused; }
 
+  /* The pinned review. Lifted out of the scrolling wall so one testimonial
+     stays still long enough to be read, rather than drifting past with the
+     rest. Set "featured": true on a review in index.html to move it here. */
+  .rev-feature {
+    margin: 0 0 22px; padding: 28px 30px;
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 3px solid var(--champ); border-radius: 14px;
+  }
+  .rev-feature blockquote { margin: 0; }
+  .rev-feature blockquote p {
+    margin: 0; font-family: var(--sans); font-size: var(--t-md);
+    line-height: var(--lh-body); letter-spacing: var(--ls-normal);
+    color: var(--ink); text-wrap: pretty;
+  }
+  .rev-feature figcaption {
+    display: flex; align-items: center; gap: 12px; margin-top: 20px;
+  }
+  @media (max-width: 560px) {
+    .rev-feature { padding: 22px 20px; }
+    .rev-feature blockquote p { font-size: var(--t-sm); }
+  }
+
   .rev-card {
     margin: 0; background: var(--card); border: 1px solid var(--line);
     border-radius: 14px; padding: 22px 24px;
