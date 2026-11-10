@@ -278,7 +278,7 @@ const fill = {
   customerName: esc(job.customer.name),
   customerAddress: job.customer.address.map(esc).join('<br>'),
   fromName: esc(job.from?.name ?? 'Saeed Bux'),
-  fromAddress: (job.from?.address ?? ['Bux Travel', 'Grasmere Street', 'Bolton BL1 8LH']).map(esc).join('<br>'),
+  fromAddress: (job.from?.address ?? ['Bux Travel Minibuses', 'Grasmere Street', 'Bolton BL1 8LH']).map(esc).join('<br>'),
   noteTitle: job.note?.title ?? (isReceipt ? 'Thank you' : 'This price is fixed.'),
   noteBody: job.note?.body ?? defaultNote(),
   ref: esc(job.ref),          // the <title>, which becomes the PDF's document title
