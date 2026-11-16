@@ -444,6 +444,20 @@
     }
     .rot i { position: static; display: none; white-space: normal; transform: none; }
     .rot i.on { display: inline; opacity: 1; }
+
+    /* Reserve the headline's tallest state. Flowing the phrases inline fixed
+       the overflow above, but the phrases are different lengths, so swapping
+       one re-wrapped the headline between three and four lines and moved
+       everything under it — the paragraph, both buttons and the trust bar —
+       by a whole line, every 2.9 seconds. Measured 320-619px, the tallest
+       state is always four lines, so this is scale-invariant rather than a
+       pixel value per breakpoint.
+
+       This does leave a gap under a short phrase, which is what the desktop
+       per-phrase width measurement exists to avoid. On a phone that trade
+       runs the other way: a static gap costs a little polish, whereas a
+       recurring jump moves the WhatsApp button out from under a thumb. */
+    .hero h1 { min-height: calc(4 * var(--lh-display) * 1em); }
   }
 
   .hero-cta { display: flex; flex-wrap: wrap; gap: 11px; }
