@@ -1,5 +1,5 @@
 {
-  "quotation": 0,
+  "quotation": 1,
   "invoice": 2,
   "receipt": 4
 }
